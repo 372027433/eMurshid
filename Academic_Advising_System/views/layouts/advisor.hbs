@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <!-- head start  -->
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المرشد الأكاديمي</title>
+  <link href="/assets/css/general.css" rel="stylesheet" />
+
+  <!-- head end  -->
+</head>
+
+<body>
+  {{!-- ====================================================== --}}
+
+  <div class="app">
+    <!-- header  -->
+    {{> header }}
+    <!-- /header  -->
+
+    <nav class="navigation">
+      <div class="toggle-bar">
+        <button type="button" id="toggle-btn" class="toggle-btn btn">
+          <!-- need to review how to embed SVG image -->
+          <img src="/assets/img/toggle-btn-26.svg" alt="toggle btn" />
+        </button>
+      </div>
+      <div class="nav-body">
+        <div class="brown-img">
+          <button type="button" class="btn">
+            <img src="/assets/img/close-button.svg" height="20px" class="close-nav" alt="close navigation button" />
+          </button>
+        </div>
+        <div class="nav-links">
+          <ul>
+            <li>
+              <a href="#"> تعديل ملفي الشخصي </a>
+            </li>
+            <li>
+              <a href="#"> الطلاب لدي </a>
+            </li>
+            <li>
+              <a href="#"> اطلب تقرير نسبة الغياب  </a>
+            </li>
+            <li>
+              <a href="#"> اطلب الدرجات والنتائج</a>
+            </li>
+            <li>
+              <a href="#">تحديث حجز المواعيد</a>
+            </li>
+            <li>
+              <a href="#"> تأكيد المواعيد المرسلة  </a>
+            </li>
+            <li>
+              <a href="#">المحادثة مع الطالب</a>
+            </li>
+            <li>
+              <a href="#">ابحث عن محادثة</a>
+            </li>
+            <li>
+              <a href="#">تقديم شكوى إلى وحدة الإرشاد الأكاديمي </a>
+            </li> 
+            <li>
+              <a href="#">إرسال العذر إلى وحدة الإرشاد الأكاديمي</a>
+            </li> 
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    {{!-- all the code from under here should change --}}
+
+      {{{body}}}
+
+    {{!-- until here should we change the things --}}
+
+    {{!-- The footer should be once in all pages --}}
+    
+    <!-- /footer  -->
+      {{> footer }}
+    <!-- /footer  -->
+
+  </div>
+
+  <!-- scripts at the bottom to reduce load time -->
+  <script type="application/javascript">
+    "use strict";
+    let toggleBtn = document.querySelector(".toggle-btn");
+    let navBody = document.querySelector(".nav-body");
+    let mainContent = document.querySelector(".main-content");
+    let closeNav = document.querySelector(".close-nav");
+
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 800) {
+        // add the margins
+
+      } else if (window.innerWidth < 800) {
+        // removes the margin
+      }
+    })
+
+    closeNav.addEventListener("click", () => {
+      // this would remove the class show-nav from list of classes
+      navBody.classList.toggle("show-nav");
+      setTimeout(() => {
+        // we will display the toggleBtn again
+        // but after someTime because the transiiton property
+        toggleBtn.style.display = "initial";
+        if (
+          !navBody.classList.contains("show-nav") &&
+          window.innerWidth > 450
+        ) {
+          mainContent.style.gridColumn = "1/3";
+          mainContent.style.minWidth = "72vw";
+        }
+      }, 300);
+    });
+
+    toggleBtn.addEventListener("click", () => {
+      // to hide the toggleBtn, to make the link upper on the screen
+      toggleBtn.style.display = "none";
+
+      // add the show-nav class to the classes of the element
+      navBody.classList.toggle("show-nav");
+      if (navBody.classList.contains("show-nav") && window.innerWidth > 450) {
+        mainContent.style.gridColumn = "2/3";
+        mainContent.style.minWidth = "55vw";
+      }
+    });
+  </script>
+
+  {{!-- ====================================================== --}}
+</body>
+
+</html>

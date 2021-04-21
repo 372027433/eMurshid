@@ -1,0 +1,159 @@
+@font-face {
+    font-family: midFont;
+    src: url(../fonts/MidFont.otf);
+}
+@font-face {
+    font-family: lightFont;
+    src: url(../fonts/LightFont.otf);
+}
+/**
+==============================
+=       Variables Root       =
+==============================
+*/
+:root {
+  --center-width: 60vw;
+  --inputs-height: 3rem;
+  --big-width: 40vw;
+  --inputs-big-width: 30vw;
+  --transition: all 0.3s linear ;
+
+}
+
+/**
+==============================
+=       Global Styles        =
+==============================
+*/
+*,
+::before,
+::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.app {
+  background-image: url(../img/bg2.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+}
+
+.container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  min-height: 60vh;
+  border-radius: 20px;
+  background-color: #f8f9faad;
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+/**
+==============================
+=  what inside container     =
+==============================
+*/
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.center * {
+  margin: 0.5rem 0;
+  box-sizing: border-box;
+}
+
+.center h2 {
+  font-family: midFont ;
+  font-weight: lighter;
+  color: #1e506c;
+  text-align: center;
+}
+
+.center input {
+  width: var(--center-width);
+  height: var(--inputs-height);
+  font-family: lightFont;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: transparent;
+  outline: transparent;
+}
+.center button {
+  width: var(--center-width);
+  height: var(--inputs-height);
+  font-family: lightFont;
+  background-color: #005a85;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+}
+.btn-container{
+    transition: var(--transition);
+}
+    
+.btn {
+  border-radius: 10px;
+  border: none;
+  cursor: pointer ;
+}
+.btn-container:hover {
+    transform: translate(0,-4px);
+}
+
+.helper {
+    font-family: lightFont;
+    color: #073e67;
+    transition: var(--transition) ;
+    border-bottom: 2px solid transparent ;
+}
+.helper:hover {
+    border-bottom: 2px solid #d8bf76;
+}
+
+
+@media screen and (min-width: 600px) {
+  .container {
+    left: 50%;
+    top: 50%;
+    transform: translate(-30%, -50%);
+    width: 60vw;
+    height: 60vh;
+    /* background-color: lawngreen; */
+  }
+  .center input {
+    width: 50vw;
+  }
+  .center button{
+      width: 50vw;
+  }
+}
+
+@media screen and (min-width: 800px) {
+    .container {
+      left: 50%;
+      top: 50%;
+      transform: translate(-20%, -50%);
+      width: 50vw;
+      height: 60vh;
+      /* background-color: lawngreen; */
+    }
+    .center input {
+      width: 30vw;
+    }
+    .center button{
+        width: 30vw;
+    }
+  }
