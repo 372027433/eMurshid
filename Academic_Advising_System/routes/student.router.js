@@ -7,5 +7,6 @@ const controller = require('../controllers/student.controller');
 
 studentRouter.get('/', controller.renderMainPage)
 
+studentRouter.post('/',controller.renderMainPage)
 
 module.exports = studentRouter ;

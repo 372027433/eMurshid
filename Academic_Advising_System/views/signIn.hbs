@@ -3,8 +3,8 @@
         <div>
           <h2>صفحة الدخول إلى الإرشاد الأكاديمي</h2>
         </div>
-
-        <form action="/registration/login" method="POST" id="register">
+        {{!-- demo route --}}
+        <form action="/student" method="POST" id="register">
           <div>
             <input
               type="text"
@@ -12,6 +12,7 @@
               name="universityID"
               placeholder="الرقم الجامعي "
               autofocus
+              required
             />
           </div>
 
@@ -21,6 +22,7 @@
               id="password"
               name="password"
               placeholder="كلمة السر"
+              required
             />
           </div>
 
