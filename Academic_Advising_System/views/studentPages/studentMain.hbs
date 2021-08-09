@@ -1,4 +1,4 @@
-<main class="main-content">
+<div class="main-content">
     <div class="content">
         <div class="body-header">
             <header>
@@ -7,13 +7,22 @@
             <hr>
         </div>
         <div class="body-content">
-            <ul>
-               
-            </ul>
+            <button id="bobo">Change lang</button>
+            <script>
+                
+                let btn = document.getElementById('bobo');
+                btn.addEventListener('click',(event) => {
+                    let hoho = document.getElementsByTagName('html')[0]
+                    let truthy = hoho.getAttribute('lang') === 'en' ;
+                    if(!truthy){
+                        hoho.setAttribute('lang','en')
+                        hoho.setAttribute('dir','ltr')
+                    } else {
+                        hoho.setAttribute('lang','ar')
+                        hoho.setAttribute('dir','rtl')
+                    }
+                })
+            </script>
         </div>
     </div>
-</main>
-
-<aside class="aside-container">
-    <div class="aside-content"></div>
-</aside>
+</div>

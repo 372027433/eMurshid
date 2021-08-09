@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+  <head>
+    <!-- head start  -->
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الطالب</title>
+    <link href="/assets/css/general.css" rel="stylesheet" />
+
+    <!-- head end  -->
+  </head>
+
+  <body>
+    {{!-- ====================================================== --}}
+
+    <div class="app">
+      <!-- header  -->
+      {{> header }}
+      <!-- /header  -->
+
+      <div class="content-container">
+
+        <nav class="navigation">
+          <div class="toggle-bar">
+            <button type="button" id="toggle-btn" class="toggle-btn btn">
+              <!-- need to review how to embed SVG image -->
+              <img src="/assets/img/toggle-btn-26.svg" alt="toggle btn" />
+            </button>
+          </div>
+          <div class="nav-body">
+            <div class="brown-img">
+              <button type="button" class="btn">
+                <img src="/assets/img/close-button.svg" height="20px" class="close-nav" alt="close navigation button" />
+              </button>
+            </div>
+            <div class="nav-links">
+              <ul>
+                <li>
+                  <a href="#"> الملف الشخصي</a>
+                </li>
+                <li>
+                  <a href="#">التواصل مع المرشد الأكاديمي</a>
+                </li>
+                <li>
+                  <a href="#">البحث في قائمة الرسائل</a>
+                </li>
+                <li>
+                  <a href="#">حجز موعد لدى المرشد الأكاديمي</a>
+                </li>
+                <li>
+                  <a href="#">تحديث الدرجات للمواد</a>
+                </li>
+                <li>
+                  <a href="#">تحديث نسبة الغياب للمواد</a>
+                </li>
+                <li>
+                  <a href="#">رفع شكوى لوحدة الإرشاد الإكاديمي</a>
+                </li>
+                <li>
+                  <a href="#">التقديم لعذر غياب أو عذر عدم حضور اختبار</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        {{!-- all the code from under here should change --}}
+
+        {{{body}}}
+
+        {{!-- until here should we change the things --}}
+      </div>
+
+      {{!-- The footer should be once in all pages --}}
+
+      <!-- /footer  -->
+      {{> footer }}
+      <!-- /footer  -->
+
+    </div>
+
+    <!-- scripts at the bottom to reduce load time -->
+    <script src="/assets/js/navigation.js" type="application/javascript"></script>
+
+    {{!-- ====================================================== --}}
+  </body>
+
+</html>
