@@ -55,7 +55,8 @@ a {
   min-height: 60vh;
   border-radius: 20px;
   background-color: #f8f9faad;
-  transition: var(--transition);
+  /* it was casuing container to slide from right-bottom corner to center and we don't want that */
+  /* transition: var(--transition); */
   overflow: hidden;
 }
 
