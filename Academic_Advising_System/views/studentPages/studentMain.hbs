@@ -2,27 +2,12 @@
     <div class="content">
         <div class="body-header">
             <header>
-                <h1>صفحة الطالب </h1>
+                <h1><span class="trn">Student Page</span></h1>
             </header>
             <hr>
         </div>
         <div class="body-content">
-            <button id="bobo">Change lang</button>
-            <script>
-                
-                let btn = document.getElementById('bobo');
-                btn.addEventListener('click',(event) => {
-                    let hoho = document.getElementsByTagName('html')[0]
-                    let truthy = hoho.getAttribute('lang') === 'en' ;
-                    if(!truthy){
-                        hoho.setAttribute('lang','en')
-                        hoho.setAttribute('dir','ltr')
-                    } else {
-                        hoho.setAttribute('lang','ar')
-                        hoho.setAttribute('dir','rtl')
-                    }
-                })
-            </script>
+           
         </div>
     </div>
 </div>

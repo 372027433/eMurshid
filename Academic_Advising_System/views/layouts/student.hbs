@@ -9,6 +9,8 @@
     <title>الطالب</title>
     <link href="/assets/css/general.css" rel="stylesheet" />
 
+    {{> externalLibraries}}
+    
     <!-- head end  -->
   </head>
 
@@ -38,28 +40,28 @@
             <div class="nav-links">
               <ul>
                 <li>
-                  <a href="#"> الملف الشخصي</a>
+                  <a href="#"><span class="trn">personal file</span></a>
                 </li>
                 <li>
-                  <a href="#">التواصل مع المرشد الأكاديمي</a>
+                  <a href="#"><span class="trn">contact with advisor</span></a>
                 </li>
                 <li>
-                  <a href="#">البحث في قائمة الرسائل</a>
+                  <a href="#"><span class="trn">search in message list</span></a>
                 </li>
                 <li>
-                  <a href="#">حجز موعد لدى المرشد الأكاديمي</a>
+                  <a href="#"><span class="trn">book an appoinment with advisor</span></a>
                 </li>
                 <li>
-                  <a href="#">تحديث الدرجات للمواد</a>
+                  <a href="#"><span class="trn">update subjects degrees</span></a>
                 </li>
                 <li>
-                  <a href="#">تحديث نسبة الغياب للمواد</a>
+                  <a href="#"><span class="trn">update absence percentage</span></a>
                 </li>
                 <li>
-                  <a href="#">رفع شكوى لوحدة الإرشاد الإكاديمي</a>
+                  <a href="#"><span class="trn">upload a complaint to academic advising unit</span></a>
                 </li>
                 <li>
-                  <a href="#">التقديم لعذر غياب أو عذر عدم حضور اختبار</a>
+                  <a href="#"><span class="trn">submit absence execuse or exam unattendance</span></a>
                 </li>
               </ul>
             </div>
@@ -82,8 +84,7 @@
     </div>
 
     <!-- scripts at the bottom to reduce load time -->
-    <script src="/assets/scripts/navigation.js" type="application/javascript"></script>
-
+    {{> pageScripts}}
     {{!-- ====================================================== --}}
   </body>
 

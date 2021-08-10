@@ -9,6 +9,8 @@
   <title>المرشد الأكاديمي</title>
   <link href="/assets/css/general.css" rel="stylesheet" />
 
+  {{> externalLibraries}}
+    
   <!-- head end  -->
 </head>
 
@@ -37,34 +39,34 @@
           <div class="nav-links">
             <ul>
               <li>
-                <a href="#"> تعديل ملفي الشخصي </a>
+                <a href="#"><span class="trn">edit personal file</span></a>
               </li>
               <li>
-                <a href="#"> الطلاب لدي </a>
+                <a href="#"><span class="trn">my students</span></a>
               </li>
               <li>
-                <a href="#"> اطلب تقرير نسبة الغياب  </a>
+                <a href="#"><span class="trn">request persentage absence report</span></a>
               </li>
               <li>
-                <a href="#"> اطلب الدرجات والنتائج</a>
+                <a href="#"><span class="trn">request marks and results report</span></a>
               </li>
               <li>
-                <a href="#">تحديث حجز المواعيد</a>
+                <a href="#"><span class="trn">update reservation schedules</span></a>
               </li>
               <li>
-                <a href="#"> تأكيد المواعيد المرسلة  </a>
+                <a href="#"><span class="trn">confirm sent reservations</span></a>
               </li>
               <li>
-                <a href="#">المحادثة مع الطالب</a>
+                <a href="#"><span class="trn">talk to student</span></a>
               </li>
               <li>
-                <a href="#">ابحث عن محادثة</a>
+                <a href="#"><span class="trn">search for a message</span></a>
               </li>
               <li>
-                <a href="#">تقديم شكوى إلى وحدة الإرشاد الأكاديمي </a>
+                <a href="#"><span class="trn">upload a complaint to academic advising unit</span></a>
               </li> 
               <li>
-                <a href="#">إرسال العذر إلى وحدة الإرشاد الأكاديمي</a>
+                <a href="#"><span class="trn">forward execuse to academic advising unit</span></a>
               </li> 
             </ul>
           </div>
@@ -88,7 +90,7 @@
   </div>
 
   <!-- scripts at the bottom to reduce load time -->
-  <script src="/assets/scripts/navigation.js" type="application/javascript"></script>
+  {{> pageScripts}}
  
 
   {{!-- ====================================================== --}}

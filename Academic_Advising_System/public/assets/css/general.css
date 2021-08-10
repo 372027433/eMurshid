@@ -120,6 +120,7 @@ ul {
 ===========================
 **/
 .navigation {
+  text-transform: capitalize;
   flex-grow: 0 ;
   flex-shrink: 0 ;
   width: 20vw;
