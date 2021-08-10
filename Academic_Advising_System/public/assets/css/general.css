@@ -57,6 +57,11 @@ ul {
 
 .content-container {
   display: flex !important;
+  flex-direction: row;
+}
+
+.dn {
+  display: none;
 }
 
 /**
@@ -123,11 +128,9 @@ ul {
 
 .close-navigation {
   width: 0 !important;
-  transition: var(--transition);
 }
 
 .toggle-btn {
-  display: none;
   margin: 0.5rem;
   transition: var(--transition);
 }
@@ -137,11 +140,10 @@ ul {
 }
 
 .nav-body {
- 
   background-color: #005a85;
   transition: var(--transition);
-  
 }
+
 .show-nav {
   transform: translateX(0) !important ;
 }
@@ -162,7 +164,7 @@ ul {
 
 .nav-links {
   background-color: transparent;
-  height: 74vh;
+  min-height: 75vh;
 }
 
 .nav-links li {
@@ -186,6 +188,7 @@ ul {
 .main-content {
   width: 50vw;
   margin: 50px auto;
+  /* flex-grow: 1; */
 }
 
 .content {

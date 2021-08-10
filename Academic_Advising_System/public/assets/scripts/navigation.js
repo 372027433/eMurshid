@@ -8,29 +8,28 @@ let navigation = document.querySelector(".navigation");
 
 closeNav.addEventListener("click", () => {
 
-    // navigation.style.width = '0vw'; 
     navigation.classList.add('close-navigation')
-
-    navBody.style.display = 'none'; // to remove text inside the element
-    toggleBtn.style.display = "initial";
+    navBody.classList.add('dn'); // to remove text inside the element
+    toggleBtn.classList.remove('dn');
 });
 
 toggleBtn.addEventListener("click", () => {
+    
     navigation.classList.remove('close-navigation')
-
-    // navigation.style.width = '20vw'; 
-    // navigation.classList.add
-    navBody.style.display = 'block';
-    toggleBtn.style.display = "none";
+    navBody.classList.remove('dn')  
+    toggleBtn.classList.add('dn');
    
 });
 
-let scrollHeight = Math.max(
-    document.body.scrollHeight,document.body.offsetHeight,document.body.clientHeight,
-    document.documentElement.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight, 
-    )
 window.addEventListener('resize',(e)=> {
+ 
     if(e.currentTarget.outerWidth <= 450){
-        console.log('make changes now')
-    }
+        // make changes when screen is small here..!
+        
+    } 
 })
+
+// let scrollHeight = Math.max(
+//     document.body.scrollHeight,document.body.offsetHeight,document.body.clientHeight,
+//     document.documentElement.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight, 
+//     )
