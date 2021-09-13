@@ -3,11 +3,16 @@
 **/
 const dotenv = require('dotenv').config()
 const express = require('express')
-// const mongoose = require('mongoose')
+const mongoose = require('mongoose')
 const hbs = require('express-handlebars')
 
-// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology:true })
-// mongoose.connection.once('open',() => console.log('\tConnection to DB established'))
+// mongoose connection to Database
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology:true })
+
+// mongoose connection check
+mongoose.connection.once('open',() => console.log('\tConnection to DB established'))
+mongoose.connection.on('error',() => console.log('\tHey, bad boy we have some errors'))
+
 const app = express();
 
 //> nodeJS native libraries
