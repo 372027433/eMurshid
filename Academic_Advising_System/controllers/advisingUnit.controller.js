@@ -33,8 +33,7 @@ exports.renderStudentRegisterPage = (req, res) => {
 };
 
 exports.registerStudents = (req, res) => {
-  // console.log(req.body);
-  // console.log(req.file);
+
   let { filename } = req.file;
   let filepath = path.join(__dirname, "..", "uploads", filename);
 
