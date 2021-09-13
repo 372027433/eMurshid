@@ -2,13 +2,24 @@
     <div class="content">
         <div class="body-header">
             <header>
-                <h1>تسجيل الطلاب في النظام</h1>
+                <h1><span class="trn">Add students to system</span></h1>
             </header>
             <hr>
         </div>
         <div class="body-content">
             
-            {{!-- here should go a form to register students --}}
+            <form action="/advisingUnit/registerStudents" method="post" enctype="multipart/form-data">
+
+                <label for="reg_file_students"><span class="trn">Attach student register file (EXCEL):</span></label>
+                {{!-- remove after --}}
+                <br>
+                <input type="file" name="students_register_file">
+                {{!-- remove after --}}
+                <br>
+                <input type="text" name="testing" id="">
+                <button type="submit"><span class="trn">Add Students</span></button>
+            </form>
+
             
         </div>
     </div>

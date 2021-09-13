@@ -5,6 +5,8 @@ const dotenv = require('dotenv').config()
 const express = require('express')
 const hbs = require('express-handlebars')
 
+const app = express();
+
 //> nodeJS native libraries
 const path = require('path')
 
@@ -15,7 +17,10 @@ const router = require('./router')
  * setting up variables
 **/
 
-const app = express();
+// encode request bodies
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+
 const PORT = process.env.PORT || 5000 ;
 
 //> configuring handlebars
@@ -39,6 +44,11 @@ app.use(express.static(path.join(__dirname,"public")))
 
 app.use('/',router);
 
+// should add error handlers in here
+app.use(function (err, req, res, next) {
+    console.log('This is the invalid field ->', err.field)
+    next(err)
+  })
 /**
  * listening port on the browser on development
 **/
