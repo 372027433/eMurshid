@@ -3,8 +3,11 @@
 **/
 const dotenv = require('dotenv').config()
 const express = require('express')
+// const mongoose = require('mongoose')
 const hbs = require('express-handlebars')
 
+// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology:true })
+// mongoose.connection.once('open',() => console.log('\tConnection to DB established'))
 const app = express();
 
 //> nodeJS native libraries

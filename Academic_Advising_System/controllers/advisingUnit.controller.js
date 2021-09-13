@@ -3,6 +3,17 @@ const excelReader = require("read-excel-file/node");
 const nodemailer = require("nodemailer");
 const sgTransport = require("nodemailer-sendgrid-transport");
 const path = require("path");
+
+const SENDER_EMAIL = 'emurshid.iu@gmail.com';
+
+let transporter = nodemailer.createTransport(
+  sgTransport({
+    auth: {
+      api_key: process.env.SENDGRID_TRANSPORT,
+    },
+  })
+);
+
 /**
  * ===================== CONTROLLERS ==================
  */
@@ -19,31 +30,86 @@ exports.renderStudentRegisterPage = (req, res) => {
 };
 
 exports.registerStudents = (req, res) => {
-  console.log(req.body);
-  console.log(req.file);
-//   let { filename } = req.file;
-//   let filepath = path.join(__dirname, "..", "uploads", filename);
+  // console.log(req.body);
+  // console.log(req.file);
+  let { filename } = req.file;
+  let filepath = path.join(__dirname, "..", "uploads", filename);
 
-//   let info = excelReader(filepath).then((rows) => {
-//     // create a studentRecords here
-//     let studentRecords = [];
+  let info = excelReader(filepath).then((rows) => {
+    // create a studentRecords here
+    let studentRecords = [];
+    // here I should check the structure of the file
 
-//     for (let i = 1; i < rows.length; i++) {
-//       // i starts from 1 because first line is heading in the file so ignore it
-//       let password = generator.generate({
-//         length: 10,
-//         numbers: true,
-//       });
-//       studentRecords.push({
-//         name: rows[i][0],
-//         id: rows[i][1],
-//         password,
-//       });
-//     }
-//     console.log(studentRecords);
-//     return studentRecords;
-//   });
+    if(rows[0][0].toLocaleLowerCase() !== 'students' || rows[0][1].toLocaleLowerCase() !== 'id' ){
+      console.log('error')
+      throw new Error('file not formatted correctly')
+    }
+    for (let i = 1; i < rows.length; i++) {
+      let password = generator.generate({
+        length: 10,
+        numbers: true,
+      });
+      studentRecords.push({
+        name: rows[i][0],
+        id: rows[i][1],
+        password,
+      });
+    }
+    console.log(studentRecords);
+    return studentRecords;
+    
+  });
+  info.then((records) => {
+    if (records.length <= 0) return res.status(400).send("not enouph students");
 
+    // create user
+    let bulkStudentWrite = [];
+    for (record of records) {
+      let obj = JSON.parse(JSON.stringify(record));
+
+      obj.email = `${record.id}@stu.iu.edu.sa`;
+      obj.status = "undergraduate";
+      bulkStudentWrite.push(obj);
+    }
+
+    return bulkStudentWrite;
+  })
+  .then((studentRecords) => {
+    studentRecords.forEach((student) => {
+      let {email,password} = student ;
+
+      const output = `
+          <h1>Welcome to Academic Advising In Islamic University</h1>
+          <div> <h2>you have been registered at Academic Advising Unit</h2></div>
+          <div><h4>email: <b>${email}</b></h4></div>
+          <div><h4>Password: <b>${password}</b></h4></div>
+
+          <p> Ignore this message if you don't know what it mean </p>
+      `;
+      /// transporter
+      let mailOptions = {
+        from: `"Abdullah Salim Basalamah" <${SENDER_EMAIL}>`, // sender address 
+        to: email, // list of receivers
+        subject: "Node mailing service ✔",
+        html: output,
+      };
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) { console.log(err) } 
+        else { console.log(info)  }
+      });
+    });
+  })
+  .then(result => {
+    res.render("advisingUnitPages/registerStudents", {
+      layout: "advisingUnit",
+    });
+  })
+
+  info.catch(err => {
+    console.log("============== err ====================")
+    console.log(err)
+    res.status(400).json({err:"file not formatted correctly"})
+  })
   /**
    * here student should be added to system
    * 1- the sheet file should be read using some third party library
@@ -53,7 +119,5 @@ exports.registerStudents = (req, res) => {
    */
 
   // I should add a message here
-  res.render("advisingUnitPages/registerStudents", {
-    layout: "advisingUnit",
-  });
+  
 };
