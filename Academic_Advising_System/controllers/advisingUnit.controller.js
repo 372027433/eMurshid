@@ -4,6 +4,9 @@ const nodemailer = require("nodemailer");
 const sgTransport = require("nodemailer-sendgrid-transport");
 const path = require("path");
 
+const Students = require('../models/student.model')
+
+// SENDER EMAIL USED IN SEND_GRID
 const SENDER_EMAIL = 'emurshid.iu@gmail.com';
 
 let transporter = nodemailer.createTransport(
@@ -55,7 +58,6 @@ exports.registerStudents = (req, res) => {
         password,
       });
     }
-    console.log(studentRecords);
     return studentRecords;
     
   });
@@ -66,7 +68,7 @@ exports.registerStudents = (req, res) => {
     let bulkStudentWrite = [];
     for (record of records) {
       let obj = JSON.parse(JSON.stringify(record));
-
+      obj.faculty_id = '', // should be taken from advisingUnit
       obj.email = `${record.id}@stu.iu.edu.sa`;
       obj.status = "undergraduate";
       bulkStudentWrite.push(obj);
@@ -75,6 +77,9 @@ exports.registerStudents = (req, res) => {
     return bulkStudentWrite;
   })
   .then((studentRecords) => {
+
+    let notSentEmails = []
+
     studentRecords.forEach((student) => {
       let {email,password} = student ;
 
@@ -94,12 +99,31 @@ exports.registerStudents = (req, res) => {
         html: output,
       };
       transporter.sendMail(mailOptions, (err, info) => {
-        if (err) { console.log(err) } 
-        else { console.log(info)  }
+        if (err) { 
+          // if an is not sent
+          notSentEmails.push(email)
+
+          console.log(err) 
+        } 
+
       });
     });
+    return studentRecords
   })
   .then(result => {
+    console.log(result)
+    return new Promise((resolve, reject) => {
+      console.log(result)
+      Students.create(result, (err, data) => {
+        if(err) reject( new Error('We could not enter the database') )
+        console.log('if this after, this will not good')
+        resolve(data)
+  
+      })
+    })
+  })
+  .then((result) => {
+    console.log('are we sending to database')
     res.render("advisingUnitPages/registerStudents", {
       layout: "advisingUnit",
     });

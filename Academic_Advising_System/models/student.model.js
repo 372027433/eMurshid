@@ -1,4 +1,6 @@
-const {Schema} = require('mongoose')
+
+const mongoose = require('mongoose')
+const { Schema } = mongoose ;
 
 const studentSchema = new Schema({
     id: {
@@ -17,15 +19,18 @@ const studentSchema = new Schema({
         type: String,
         required: true,
     },
-    advisor_id : String ,
-    Faculity_id: String, // should be Faculity IDs which taken from advisingUnit since each advisingUnit will add their students
+    advisor_id : {
+        type: String,
+    } ,
+    faculty_id: String, // should be Faculity IDs which taken from advisingUnit since each advisingUnit will add their students
     // so once added we will be adding advisingUnitMemberFaculityID and add to student
     // and advisors
+    
     status: String , // should be undergraduate
     major: String,
     phone: {
         type: Number,
-        max: [10, 'phone numbers do not have more than 10 digits'],
+        max: [9999999999, 'phone numbers do not have more than 10 digits'],
     },
     cgpa: {
         type: Number,
