@@ -1,29 +1,29 @@
 let navTrans = {
 
     /* Student Nav */
-    "personal file": { 
+    "personal file": {
         ar: 'الملف الشخصي',
     },
-    "contact with advisor": {
+    "contact my advisor": {
         ar: 'التواصل مع المرشد الأكاديمي',
     },
-    "search in message list": {
-        ar: "البحث في قائمة الرسائل",
+    "my messages": {
+        ar: "الرسائل",
     },
-    "book an appoinment with advisor": {
+    "book an appointment with advisor": {
         ar: "حجز موعد لدى المرشد الأكاديمي",
     },
-    "update subjects degrees": {
+    "update marks": {
         ar: "تحديث الدرجات للمواد",
     },
     "update absence percentage": {
         ar: "تحديث نسبة الغياب للمواد",
     },
-    "upload a complaint to academic advising unit": {
+    "issue a complaint to academic advising unit": {
         ar: "تقديم شكوى إلى وحدة الإرشاد الأكاديمي",
     },
-    "submit absence execuse or exam unattendance": {
-        ar: "التقديم لعذر غياب أو عذر عدم حضور اختبار",
+    "submit absence excuse or exam absence": {
+        ar: "تقديم عذر غياب أو عذر عدم حضور اختبار",
     },
     /* Advisor Nav */
     "edit personal file": {
@@ -109,30 +109,43 @@ let navTrans = {
     "": {
         ar: "",
     },
-    
+
 }
 let mainContentTrans = {
     // student main pages
     "Student Page": {
         ar: "صفحة الطالب",
     },
-    "": {
-        ar: "",
+
+    "Personal Profile": {
+        ar: "الملف الشخصي",
     },
-    "": {
-        ar: "",
+    "Contact Advisor":{
+        ar: "التواصل مع المرشد الأكاديمي"
     },
-    "": {
-        ar: "",
+    "My Messages":{
+        ar:"رسائلي"
     },
-    "": {
-        ar: "",
+    "Book An Appointment with my Advisor":{
+        ar:"حجز موعد لدى المرشد الأكاديمي"
     },
-    "": {
-        ar: "",
+    "Update Absence Percentage": {
+        ar: "تحديث نسبة الغياب",
+    },
+    "Update Attendance": {
+        ar: "تحديث نسبة الغياب",
+    },
+    "issue a new Complaint": {
+        ar: "تقديم شكوى جديدة",
+    },
+    "Update Marks": {
+        ar: "تحديث الدرجات",
+    },
+    "Submit a New Excuse": {
+        ar: "تقديم عذر جديد",
     },
 
-    // advisor main pages
+
     "Advisor Page": {
         ar: "صفحة المرشد الأكاديمي",
     }, // 
