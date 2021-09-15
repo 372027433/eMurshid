@@ -124,6 +124,7 @@ exports.registerStudents = (req, res) => {
         //   console.log('\tSuccessful sending..!')
         // }
       });
+      // delete the plainText password from object
       delete student.toBeSentThenDeletedPassword
     });
     // console.log("Not sent emails: ")
