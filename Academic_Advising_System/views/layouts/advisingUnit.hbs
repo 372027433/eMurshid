@@ -8,6 +8,9 @@
     <title>وحدة الإرشاد الأكاديمي</title>
     <link href="/assets/css/general.css" rel="stylesheet" />
 
+    
+    {{> externalLibraries}}
+    
     <!-- head end  -->
   </head>
 
@@ -42,22 +45,22 @@
             <div class="nav-links">
               <ul>
                 <li>
-                  <a href="#">طلاب الكلية</a>
+                  <a href="#"><span class="trn">colleage students</span></a>
                 </li>
                 <li>
-                  <a href="#">معالجة الشكاوى</a>
+                  <a href="#"><span class="trn">process excuses</span></a>
                 </li>
                 <li>
-                  <a href="/advisingUnit/registerStudents">أضف طلاب إلى النظام</a>
+                  <a href="/advisingUnit/registerStudents"><span class="trn">add students</span></a>
                 </li>
                 <li>
-                  <a href="#">أضف المرشديين الأكاديميين إلى النظام</a>
+                  <a href="#"><span class="trn">add advisors</span></a>
                 </li>
                 <li>
-                  <a href="#">أضف الطلاب إلى المرشديين الأكاديميين</a>
+                  <a href="#"><span class="trn">assign students to advisors</span></a>
                 </li>
                 <li>
-                  <a href="#">إرسال الأعذار إلى عميد الكلية أو نائبه</a>
+                  <a href="#"><span class="trn">forward excuses to dean or vice-dean</span></a>
                 </li>
               </ul>
             </div>
@@ -80,7 +83,7 @@
     </div>
 
     <!-- scripts at the bottom to reduce load time -->
-    <script src="/assets/scripts/navigation.js" type="application/javascript"></script>
+    {{> pageScripts}}
 
     {{!-- ====================================================== --}}
   </body>

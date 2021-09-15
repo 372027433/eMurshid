@@ -120,6 +120,7 @@ ul {
 ===========================
 **/
 .navigation {
+  text-transform: capitalize;
   flex-grow: 0 ;
   flex-shrink: 0 ;
   width: 20vw;
@@ -197,6 +198,7 @@ ul {
   height: 70vh;
   border-radius: 5px;
   width: inherit;
+  height: max-content;
 }
 
 .body-header header {
@@ -205,6 +207,7 @@ ul {
 
 .body-content {
   padding: 20px 10px;
+  text-align: center;
 }
 
 .content-container:after {
@@ -237,5 +240,41 @@ ul {
     .footer-container{
         
     }
+}
+/*this add in add student in acdimic advising unit*/
+label {
+  font-weight: bold;
+  font-family: Arial;
+  font-size: large;
+  margin: 31px auto 3px;
+  display: inline-block;
+}
+#submitbtn {
+  background-color: #c6a569;
+  border: none;
+  color: white;
+  padding: 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 31px auto 3px;
+  cursor: pointer;
+  border-radius: 28px;
+  width: inherit;
+}
+#fileread{
+  background-color: #c6a569;
+border: none;
+color: whitesmoke;
+padding: 25px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 14px;
+margin: 43px auto 3px;
+cursor: pointer;
+border-radius: 28px;
+width: inherit;
 }
 

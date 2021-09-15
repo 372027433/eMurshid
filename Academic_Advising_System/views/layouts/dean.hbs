@@ -9,6 +9,8 @@
   <title>عميد الكلية ونائبه</title>
   <link href="/assets/css/general.css" rel="stylesheet" />
 
+  {{> externalLibraries}}
+    
   <!-- head end  -->
 </head>
 
@@ -38,19 +40,19 @@
           <div class="nav-links">
             <ul>
               <li>
-                <a href="#"> أظهر الأعذار القديمة</a>
+                <a href="#"><span class="trn">show prevoise execuses</span></a>
               </li>
               <li>
-                <a href="#">قبول أعذار الطلاب</a>
+                <a href="#"><span class="trn">acceptencse of students excuses</span></a>
               </li>
               <li>
-                <a href="#">أظهر الشكاوى</a>
+                <a href="#"><span class="trn">show complaints</span></a>
               </li>
               <li>
-                <a href="#">معالجة الشكاوى بين الطلاب والمرشديين الأكاديميين</a>
+                <a href="#"><span class="trn">resolve problems between students and advisors</span></a>
               </li>
               <li>
-                <a href="#">طلاب الكلية المسجلون في الإرشاد الأكاديمي</a>
+                <a href="#"><span class="trn">registered colleage students</span></a>
               </li>
             </ul>
           </div>
@@ -74,7 +76,7 @@
   </div>
 
   <!-- scripts at the bottom to reduce load time -->
-  <script src="/assets/scripts/navigation.js" type="application/javascript"></script>
+  {{> pageScripts}}
 
   {{!-- ====================================================== --}}
 </body>
