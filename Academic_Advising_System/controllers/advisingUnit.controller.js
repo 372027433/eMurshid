@@ -68,7 +68,7 @@ exports.registerStudents = (req, res) => {
         numbers: true,
       });
       let hashedPassword = await bcrypt.hash(generatedPassword, 10)
-      console.log("hashedPassword:",hashedPassword)
+
       studentRecords.push({
         name: rows[i][0],
         id: rows[i][1],
