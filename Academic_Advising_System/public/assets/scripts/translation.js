@@ -72,6 +72,12 @@ let navTrans = {
     "forward excuses to dean or vice-dean": {
         ar: "إرسال الأعذار إلى عميد الكلية أو نائبه",
     },
+    "Attach student register file (EXCEL)":{
+        ar:"الملف المطلوب لتسجيل الطلب يجب ان يكون (أكسيل )"
+    },
+    "Add students to system":{
+        ar:"إضافة طلاب الى النظام"
+    },
     /* Dean or Vice-dean Nav */
     "show prevoise execuses": {
         ar: "أظهر الأعذار القديمة",

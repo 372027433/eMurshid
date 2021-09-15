@@ -14,6 +14,7 @@ const Students = require('../models/student.model')
 // SENDER EMAIL CONFIGURED IN SEND_GRID
 const SENDER_EMAIL = 'emurshid.iu@gmail.com'
 
+
 let transporter = nodemailer.createTransport(
   sgTransport({
     auth: {
@@ -25,11 +26,13 @@ let transporter = nodemailer.createTransport(
 /**
  * ===================== CONTROLLERS ==================
  */
+
 exports.renderMainPage = (req, res) => {
   res.render("advisingUnitPages/advisingUnitMain", {
     layout: "advisingUnit",
   });
 };
+
 
 exports.renderStudentRegisterPage = (req, res) => {
   res.render("advisingUnitPages/registerStudents", {
@@ -154,3 +157,4 @@ exports.registerStudents = (req, res) => {
     res.status(400).json({err:"file not formatted correctly"})
   })
 };
+
