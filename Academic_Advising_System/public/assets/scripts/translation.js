@@ -72,6 +72,12 @@ let navTrans = {
     "forward excuses to dean or vice-dean": {
         ar: "إرسال الأعذار إلى عميد الكلية أو نائبه",
     },
+    "Attach student register file (EXCEL)":{
+        ar:"الملف المطلوب لتسجيل الطلب يجب ان يكون (أكسيل )"
+    },
+    "Add students to system":{
+        ar:"إضافة طلاب الى النظام"
+    },
     /* Dean or Vice-dean Nav */
     "show prevoise execuses": {
         ar: "أظهر الأعذار القديمة",
@@ -106,9 +112,11 @@ let navTrans = {
 
 }
 let mainContentTrans = {
+    // student main pages
     "Student Page": {
         ar: "صفحة الطالب",
     },
+
     "Personal Profile": {
         ar: "الملف الشخصي",
     },
@@ -137,14 +145,52 @@ let mainContentTrans = {
         ar: "تقديم عذر جديد",
     },
 
+
     "Advisor Page": {
         ar: "صفحة المرشد الأكاديمي",
+    }, // 
+    "": {
+        ar: "",
     },
+    "": {
+        ar: "",
+    },
+    "": {
+        ar: "",
+    },
+
+    // adivisng unit pages
     "Advising Unit Page": {
         ar: "صفحة وحدة الإرشاد الأكاديمي",
     },
+    "Add students to system": {
+        ar: "تسجيل الطلاب في النظام",
+    },
+    "Attach student register file (EXCEL):": {
+        ar: "أدخل ملف إضافة الطلاب (EXCEL) :",
+    },
+    "Add Students": {
+        ar: "أضف الطلاب",
+    },
+    "": {
+        ar: "",
+    },
+
+    // dean and vice dean pages
     "Dean and Vice-Dean Page": {
         ar: "صفحة عميد الكلية ونائبه",
+    },
+    "": {
+        ar: "",
+    },
+    "": {
+        ar: "",
+    },
+    "": {
+        ar: "",
+    },
+    "": {
+        ar: "",
     },
 }
 /**
