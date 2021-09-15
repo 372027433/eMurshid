@@ -3,7 +3,17 @@
 **/
 const dotenv = require('dotenv').config()
 const express = require('express')
+const mongoose = require('mongoose')
 const hbs = require('express-handlebars')
+
+// mongoose connection to Database
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology:true })
+
+// mongoose connection check
+mongoose.connection.once('open',() => console.log('\tConnection to DB established'))
+mongoose.connection.on('error',() => console.log('\tHey, bad boy we have some errors'))
+
+const app = express();
 
 //> nodeJS native libraries
 const path = require('path')
@@ -15,7 +25,10 @@ const router = require('./router')
  * setting up variables
 **/
 
-const app = express();
+// encode request bodies
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+
 const PORT = process.env.PORT || 5000 ;
 
 //> configuring handlebars
@@ -39,6 +52,11 @@ app.use(express.static(path.join(__dirname,"public")))
 
 app.use('/',router);
 
+// should add error handlers in here
+app.use(function (err, req, res, next) {
+    console.log('This is the invalid field ->', err.field)
+    next(err)
+  })
 /**
  * listening port on the browser on development
 **/
