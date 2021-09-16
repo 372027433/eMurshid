@@ -46,6 +46,11 @@ app.engine('hbs', hbs({
 **/
 app.use(express.static(path.join(__dirname,"public")))
 
+/// Authrization middleware
+function isAuthorized() {
+
+}
+
 /**
  * setting router file
 **/
