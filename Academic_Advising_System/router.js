@@ -21,6 +21,12 @@ router.post('/login', loginController.login)
 
 // Users Routes
 
+
+/**
+ * need to implement something that prevent anybody from going to someother other user page
+ * like prevent student from going to dean page may be implement 
+ * a function that says isDean(), isAdvisingUnit(), isStudent(), isAdvisor() as a middleware which will redirect user to his page
+ */
 router.use('/advisingUnit', advisingUnitRouter )
 
 router.use('/student', isAuthorized, studentRouter )

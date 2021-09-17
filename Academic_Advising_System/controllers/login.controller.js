@@ -32,13 +32,11 @@ exports.login = async (req, res) => {
             let token = await jwt.sign(tokenBody,process.env.JWT_ACCESS_KEY);
 
             res.setHeader('Set-Cookie', `authorization=Bearer ${token}; HttpOnly`)
-            // res.cookie('auth-token', `Bearer ${token}`, { httpOnly: true })
-
-            // the proplem is I want to send token together with redirecting
+            // res.cookie('authorization', `Bearer ${token}`, { httpOnly: true }) // another way to set cookie
 
             // WyDKiHIgCG
             // now how add token to header
-            return res.status(200).redirect('/')
+            return res.status(200).redirect('/student')
 
         }
         catch(e){

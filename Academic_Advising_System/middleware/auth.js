@@ -8,9 +8,10 @@ exports.isAuthorized = async (req, res, next) => {
     let authToken = req.cookies['authorization'];
     let token = authToken.split(' ')[1] // take the token content
     try {
-
+        console.log('we are trying something')
+        console.log(token)
         let currentUser = await jwt.verify(token, process.env.JWT_ACCESS_KEY)
-        console.log(verified)
+        console.log(currentUser)
         res.user = currentUser
         next()
     } catch(e){

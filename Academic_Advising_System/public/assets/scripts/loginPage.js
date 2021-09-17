@@ -4,10 +4,10 @@ const pass = document.getElementById("password");
 const uniId = document.getElementById("universityID");
 
 // uniId.addEventListener('keypress',(event) => {return /[a,b,j,d,r,s,x,t,e,g,k,l,z,n,h,u,v]/i.test(event.key)})
-uniId.onkeyup = (event) => {
-  console.log(event.key);
-  return /[0-9]/i.test(event.key);
-};
+// uniId.onkeyup = (event) => {
+//   console.log(event.key);
+//   return /[0-9]/i.test(event.key);
+// };
 
 document.body.addEventListener("submit", (e) => {
   e.preventDefault();
