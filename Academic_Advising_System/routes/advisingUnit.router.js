@@ -8,8 +8,6 @@ const path = require('path')
 
 const controller = require('../controllers/advisingUnit.controller');
 
-
-
 // configure the storage place
 const storage = multer.diskStorage({
   destination: path.join(__dirname, '..', "uploads"),

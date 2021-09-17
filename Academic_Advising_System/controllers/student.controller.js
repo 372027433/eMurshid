@@ -5,6 +5,11 @@ exports.renderMainPage = (req, res) => {
     })
 };
 
+exports.seeThings = (req, res) => {
+    console.log('hi')
+    res.status(200).redirect('/student')
+}
+
 
 exports.renderStudentProfile = (req, res) => {
     res.render('studentPages/studentProfile', {

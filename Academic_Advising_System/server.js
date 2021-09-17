@@ -4,6 +4,7 @@
 const dotenv = require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
+const cookieParser = require('cookie-parser')
 const hbs = require('express-handlebars')
 
 // mongoose connection to Database
@@ -24,6 +25,8 @@ const router = require('./router')
 /**
  * setting up variables
 **/
+// parse cookies
+app.use(cookieParser())
 
 // encode request bodies
 app.use(express.json())
@@ -45,11 +48,6 @@ app.engine('hbs', hbs({
  * use nginx to serve public files, it's faster then express
 **/
 app.use(express.static(path.join(__dirname,"public")))
-
-/// Authrization middleware
-function isAuthorized() {
-
-}
 
 /**
  * setting router file
