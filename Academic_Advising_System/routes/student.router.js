@@ -8,7 +8,6 @@ const controller = require('../controllers/student.controller');
 //student navBar navigation and route handling
 //main page get + post router
 studentRouter.get('/', controller.renderMainPage)
-studentRouter.post('/',controller.seeThings)
 
 // ** Post,Put.. reqs must be added and handled later **
 

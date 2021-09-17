@@ -7,7 +7,10 @@ const Students = require('../models/student.model')
 
 exports.login = async (req, res) => {
     //
-    // get req.body
+
+    // here we load the Roles variable to compare other users
+
+    // destructure req.body and get id and password
     const {id, password} = req.body ;
 
     // check if id is 9 digits (nothing else) else check if it is less
@@ -47,9 +50,37 @@ exports.login = async (req, res) => {
         }
     } else if (/^[0-9]{8,0}$/.test(id)){
         // Advisor or Acadmeic unit or Dean
+
+        // NEED TO CREATE A ROLES COLLECTION IN DATABASE
+        // from this role collec we compare just like enum 
         
+        // query DB for the id
+        // once you get the id, 
+        // compare passwords
+        // take the user Role from DB
+        // create jwt with {{_id, role}} from DB
+        // assign cookie
+        // go into switch statement 2 route to right page
+        // in the switch statment
+
         // we need to query Advisor, AdvisingUnit, Dean DBs searching for id
         // if we found the id then hash password and send it
+        switch(userRole){
+            case role.Advisor: 
+                // return to advisor
+                break;
+            case role.AdvisingUnit: 
+                // return advisor
+                break ;
+            case role.Dean : 
+                // route to dean pages
+                break ;
+            default: 
+                // not a user
+                // return to login page
+                break ;
+            
+        }
     } else {
         return res.status(400).redirect('/') // fraud user
     }
@@ -60,4 +91,9 @@ exports.login = async (req, res) => {
     // then creat auth header to be saved as header in client
 
     // res.status(400).redirect('/advisingUnit')
+}
+
+exports.logout = (req, res) => {
+    res.clearCookie('authorization')
+    return res.status(401).redirect('/')
 }

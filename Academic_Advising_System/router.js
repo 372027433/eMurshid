@@ -19,6 +19,8 @@ router.get('/', (req,res) => {
 
 router.post('/login', loginController.login)
 
+router.get('/logout',loginController.logout)
+
 // Users Routes
 
 

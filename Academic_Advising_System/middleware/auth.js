@@ -19,6 +19,4 @@ exports.isAuthorized = async (req, res, next) => {
         res.clearCookie('authorization')
         return res.status(401).redirect('/')
     }
-    
-    
   }
