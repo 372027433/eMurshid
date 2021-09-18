@@ -133,5 +133,5 @@ exports.login = async (req, res) => {
 
 exports.logout = (req, res) => {
     res.clearCookie('authorization')
-    return res.status(401).redirect('/')
+    res.status(200).redirect('/')
 }
