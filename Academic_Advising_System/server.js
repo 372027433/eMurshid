@@ -57,7 +57,9 @@ app.use('/',router);
 
 // should add error handlers in here
 app.use(function (err, req, res, next) {
+    console.log(process.env.NODE_ENV)
     console.log('This is the invalid field ->', err.field)
+    console.log(err.stack)
     next(err)
   })
 /**

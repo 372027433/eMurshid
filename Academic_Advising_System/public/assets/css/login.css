@@ -60,6 +60,10 @@ a {
   overflow: hidden;
 }
 
+.error{
+  color: red ; 
+}
+
 /**
 ==============================
 =  what inside container     =

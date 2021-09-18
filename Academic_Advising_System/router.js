@@ -5,7 +5,10 @@ const router = require('express').Router();
 const loginController = require('./controllers/login.controller')
 
 // authorization
-const {isAuthorized} = require('./middleware/auth');
+const {isAuthorized, isStudent, checkUser} = require('./middleware/auth');
+
+// user roles
+const roles = require('./utils/roles');
 
 // other routes
 const advisingUnitRouter = require('./routes/advisingUnit.router');
@@ -29,13 +32,13 @@ router.get('/logout',loginController.logout)
  * like prevent student from going to dean page may be implement 
  * a function that says isDean(), isAdvisingUnit(), isStudent(), isAdvisor() as a middleware which will redirect user to his page
  */
-router.use('/advisingUnit', advisingUnitRouter )
+router.use('/advisingUnit', isAuthorized, checkUser(roles.advisingUnit), advisingUnitRouter )
 
-router.use('/student', isAuthorized, studentRouter )
+router.use('/student', isAuthorized, checkUser(roles.student), studentRouter )
 
-router.use('/dean', deanRouter)
+router.use('/dean', isAuthorized, checkUser(roles.dean), deanRouter)
 
-router.use('/advisor', advisorRouter)
+router.use('/advisor', isAuthorized, checkUser(roles.advisor), advisorRouter)
 
 
 module.exports = router ;

@@ -4,7 +4,14 @@
           <h2>صفحة الدخول إلى الإرشاد الأكاديمي</h2>
         </div>
         {{!-- demo route --}}
-        <form action="/" method="POST" id="register">
+        <form action="/login" method="POST" id="register">
+            {{#if err}}
+              {{!-- if we have en error --}}
+              <span id="errorMsg" class="error">{{errMsg}}</span>
+            {{else}}
+              {{!-- if we do not have an error --}}
+              
+            {{/if}}
           <div>
             <input
               type="text"
