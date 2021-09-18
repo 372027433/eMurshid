@@ -5,7 +5,7 @@ const router = require('express').Router();
 const loginController = require('./controllers/login.controller')
 
 // authorization
-const {isAuthorized, isStudent, checkUser} = require('./middleware/auth');
+const {isAuthorized, checkUser} = require('./middleware/auth');
 
 // user roles
 const roles = require('./utils/roles');
@@ -25,7 +25,6 @@ router.post('/login', loginController.login)
 router.get('/logout',loginController.logout)
 
 // Users Routes
-
 
 /**
  * need to implement something that prevent anybody from going to someother other user page

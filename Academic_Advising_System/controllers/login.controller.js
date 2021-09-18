@@ -19,7 +19,7 @@ exports.login = async (req, res) => {
        // we have 9 digits which is student
 
         try {
-            // get student from DB
+            // get student from DB _id, id 
             const student = await Students.findOne({id: id}).select('password').exec();
             // if no student present with this id this gonna be a bad request
             if(!student) return res.status(400).render('signIn',{
@@ -55,7 +55,7 @@ exports.login = async (req, res) => {
 
             console.log(err) // should add en error page that renders what should be displayed
         }
-    } else if (/^[0-9]{0,8}$/.test(id)){
+    } else if (/^[0-9]{1,8}$/.test(id)){
 
         // Advisor or Acadmeic unit or Dean
 
