@@ -1,8 +1,8 @@
 // needed libraries
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 
-// will need the models of Users 
+// Users Models
 const Students = require('../models/student.model')
 const Staff = require('../models/staff.model')
 
@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
         try {
             // get student from DB
             const student = await Students.findOne({id: id}).select('password').exec();
-            // if no student present with this id this is bad request
+            // if no student present with this id this gonna be a bad request
             if(!student) return res.status(400).render('signIn',{
                 err: true, 
                 errMsg: "Invalide id or password"
@@ -37,7 +37,6 @@ exports.login = async (req, res) => {
 
             /// we should have expiration data, but we don't have a way to refresh token
             /// so keep token valid forever 
-            // might add Role to user
             let tokenBody = {
                 userId: student._id , // _id student in DB [not his uni id]
                 role: roles.student,
@@ -53,8 +52,8 @@ exports.login = async (req, res) => {
 
         }
         catch(err){
-            console.log(err) // should add en error page that renders what should be displayed
 
+            console.log(err) // should add en error page that renders what should be displayed
         }
     } else if (/^[0-9]{0,8}$/.test(id)){
 
@@ -66,31 +65,29 @@ exports.login = async (req, res) => {
             // once you get the id,
             // check if user exists
             
-            if(!staff) return res.render('signIn',{ 
+            if(!staff) return res.status(400).render('signIn',{ 
                 err: true,
                 errMsg: "Invalide id or password"
-            }) // this rendering is not working because fetch made the reqesuts 
+            }) // this rendering is not working because fetch made the reqesuts -> fall-back to form-submit
             
             // compare passwords
             const comparePassword = await bcrypt.compare(password, staff.password)
-            if(!comparePassword) return res.status(400).render('/',{
+            if(!comparePassword) return res.status(400).render('signIn',{
                 err: true, 
                 errMsg: "Invalide id or password"
             })
-            // take the user Role from DB
+            // add user role
             let tokenBody = {
-                userId: staff._id , // _id student in DB [not his uni id]
+                userId: staff._id , // _id staff in DB [not his uni id]
                 role: staff.role ,
             }
-            // create jwt with {{_id, role}} from DB
+
             let token = await jwt.sign(tokenBody, process.env.JWT_ACCESS_KEY);
-            // assign cookie
+            // assign cookie to responsce
             res.setHeader('Set-Cookie', `authorization=Bearer ${token}; HttpOnly`)
 
-            // go into switch statement 2 route to right page
-            // in the switch statment
+            // go into switch statement to route to right page
 
-            // we need to query Advisor, AdvisingUnit, Dean DBs searching for id
             // if we found the id then hash password and send it
         } catch(err){
 
@@ -98,17 +95,18 @@ exports.login = async (req, res) => {
         }
         // might add user name in the screen
         switch(staff.role){
+
             case roles.advisor: 
                 return res.status(200).redirect('/advisor')
-                break;
+            break;
 
             case roles.advisingUnit: 
                 return res.status(200).redirect('/advisingUnit')
-                break ;
+            break ;
 
             case roles.dean : 
                 return res.status(200).redirect('/dean')
-                break ;
+            break ;
 
             default: 
                 // not a user
@@ -116,19 +114,11 @@ exports.login = async (req, res) => {
                 res.setHeader('Set-Cookie', `authorization= ; HttpOnly`)
                 return res.status(200).redirect('/')
 
-                break ;
-            
+            break ;
         }
     } else {
         return res.status(400).redirect('/') // fraud user
     }
-
-
-
-
-    // then creat auth header to be saved as header in client
-
-    // res.status(400).redirect('/advisingUnit')
 }
 
 exports.logout = (req, res) => {
