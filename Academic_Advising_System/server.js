@@ -4,6 +4,7 @@
 const dotenv = require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
+const cookieParser = require('cookie-parser')
 const hbs = require('express-handlebars')
 
 // mongoose connection to Database
@@ -24,6 +25,8 @@ const router = require('./router')
 /**
  * setting up variables
 **/
+// parse cookies
+app.use(cookieParser())
 
 // encode request bodies
 app.use(express.json())
@@ -54,7 +57,9 @@ app.use('/',router);
 
 // should add error handlers in here
 app.use(function (err, req, res, next) {
+    console.log(process.env.NODE_ENV)
     console.log('This is the invalid field ->', err.field)
+    console.log(err.stack)
     next(err)
   })
 /**

@@ -11,6 +11,9 @@ const path = require("path")
 /// DATABASE MODELS
 const Students = require('../models/student.model')
 
+// functions and libraries
+const roles = require('../utils/roles')
+
 // SENDER EMAIL CONFIGURED IN SEND_GRID
 const SENDER_EMAIL = 'emurshid.iu@gmail.com'
 
@@ -72,6 +75,7 @@ exports.registerStudents = (req, res) => {
       studentRecords.push({
         name: rows[i][0],
         id: rows[i][1],
+        role: roles.student,
         password: hashedPassword,
         toBeSentThenDeletedPassword: generatedPassword,
       });

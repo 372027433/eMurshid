@@ -5,7 +5,6 @@ exports.renderMainPage = (req, res) => {
     })
 };
 
-
 exports.renderStudentProfile = (req, res) => {
     res.render('studentPages/studentProfile', {
         layout: 'student'
