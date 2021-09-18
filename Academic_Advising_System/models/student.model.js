@@ -19,6 +19,10 @@ const studentSchema = new Schema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        required: true, 
+    },
     advisor_id : {
         type: String,
     } ,

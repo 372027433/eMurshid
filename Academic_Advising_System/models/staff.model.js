@@ -24,7 +24,10 @@ const staffSchema = new Schema({
         type: Number,
         max: [9999999999, 'phone numbers do not have more than 10 digits'],
     },
-
+    role: {
+        type: String,
+        required: true, 
+    }
 })
 
 const Staff = mongoose.model('staff', staffSchema);

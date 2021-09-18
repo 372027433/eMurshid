@@ -5,6 +5,10 @@ const jwt = require('jsonwebtoken');
 // will need the models of Users 
 const Students = require('../models/student.model')
 
+// roles
+const roles = require('../utils/roles')
+console.log(roles)
+
 exports.login = async (req, res) => {
     //
 
