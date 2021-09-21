@@ -4,12 +4,20 @@
           <h2>صفحة الدخول إلى الإرشاد الأكاديمي</h2>
         </div>
         {{!-- demo route --}}
-        <form action="/student" method="POST" id="register">
+        <form action="/login" method="POST" id="register">
+            {{#if err}}
+              {{!-- if we have en error --}}
+              <span id="errorMsg" class="error">{{errMsg}}</span>
+            {{else}}
+              {{!-- if we do not have an error --}}
+              
+            {{/if}}
           <div>
             <input
               type="text"
               id="universityID"
               name="universityID"
+              onkeypress="return /[0-9]/i.test(event.key)"
               placeholder="الرقم الجامعي "
               autofocus
               required
@@ -39,3 +47,4 @@
         </form>
       </div>
     </div>
+    <script src="/assets/scripts/loginPage.js"></script>

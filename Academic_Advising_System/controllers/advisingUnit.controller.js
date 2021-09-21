@@ -11,6 +11,9 @@ const path = require("path")
 /// DATABASE MODELS
 const Students = require('../models/student.model')
 
+// functions and libraries
+const roles = require('../utils/roles')
+
 // SENDER EMAIL CONFIGURED IN SEND_GRID
 const SENDER_EMAIL = 'emurshid.iu@gmail.com'
 
@@ -27,18 +30,46 @@ let transporter = nodemailer.createTransport(
  * ===================== CONTROLLERS ==================
  */
 
+//****************  get req controllers ***************************//
 exports.renderMainPage = (req, res) => {
   res.render("advisingUnitPages/advisingUnitMain", {
     layout: "advisingUnit",
   });
 };
 
+exports.renderCollageStudents = (req, res) => {
+  res.render("advisingUnitPages/aauCollageStudents", {
+    layout: "advisingUnit",
+  });
+};
+
+exports.renderResolveExcuses = (req, res) => {
+  res.render("advisingUnitPages/aauResolveExcuses", {
+    layout: "advisingUnit",
+  });
+};
 
 exports.renderStudentRegisterPage = (req, res) => {
   res.render("advisingUnitPages/registerStudents", {
     layout: "advisingUnit",
   });
 };
+
+exports.renderRegisterAdvisors = (req, res) => {
+  res.render("advisingUnitPages/aauRegisterAdvisors", {
+    layout: "advisingUnit",
+  });
+};
+
+exports.renderAssignStudentsToAdvisors = (req, res) => {
+  res.render("advisingUnitPages/aauAssign", {
+    layout: "advisingUnit",
+  });
+};
+
+//*********************************************************************//
+
+
 
 /**
  * some work need to be done
@@ -72,6 +103,7 @@ exports.registerStudents = (req, res) => {
       studentRecords.push({
         name: rows[i][0],
         id: rows[i][1],
+        role: roles.student,
         password: hashedPassword,
         toBeSentThenDeletedPassword: generatedPassword,
       });
@@ -157,4 +189,6 @@ exports.registerStudents = (req, res) => {
     res.status(400).json({err:"file not formatted correctly"})
   })
 };
+
+
 

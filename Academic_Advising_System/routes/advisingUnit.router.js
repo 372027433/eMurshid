@@ -8,8 +8,6 @@ const path = require('path')
 
 const controller = require('../controllers/advisingUnit.controller');
 
-
-
 // configure the storage place
 const storage = multer.diskStorage({
   destination: path.join(__dirname, '..', "uploads"),
@@ -52,11 +50,21 @@ const checkFileType = (file, cb) => {
     }
 };
 
+
+//
 advisingUnitRouter.get('/', controller.renderMainPage)
 
 advisingUnitRouter.get('/registerStudents', controller.renderStudentRegisterPage)
 
 // here we need to create the form to fill students then we can add new students to the system
 advisingUnitRouter.post('/registerStudents', upload, controller.registerStudents)
+
+advisingUnitRouter.get('/collageStudents',controller.renderCollageStudents);
+
+advisingUnitRouter.get('/resolveExcuses', controller.renderResolveExcuses );
+
+advisingUnitRouter.get('/registerAdvisors',controller.renderRegisterAdvisors);
+
+advisingUnitRouter.get('/assign',controller.renderAssignStudentsToAdvisors);
 
 module.exports = advisingUnitRouter ;
