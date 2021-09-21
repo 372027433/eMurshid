@@ -26,48 +26,48 @@ let navTrans = {
         ar: "تقديم عذر غياب أو عذر عدم حضور اختبار",
     },
     /* Advisor Nav */
-    "edit personal file": {
-        ar: "تعديل ملفي الشخصي",
+    "personal profile": {
+        ar: "الملف الشخصي",
     },
     "my students": {
-        ar: "الطلاب لدي",
+        ar: "الطلاب المسجلين",
     },
-    "request persentage absence report": {
-        ar: "اطلب تقرير نسبة الغياب",
+    "request reports from students": {
+        ar: "طلب تقارير من الطلاب",
     },
     "request marks and results report": {
         ar: "اطلب الدرجات والنتائج",
     },
-    "update reservation schedules": {
-        ar: "تحديث حجز المواعيد",
+    "update Office Hours": {
+        ar: "تحديث الساعات المكتبية",
     },
-    "confirm sent reservations": {
-        ar: "تأكيد المواعيد المرسلة",
+    "mange appointments": {
+        ar: "إدارة المواعيد",
     },
-    "talk to student": {
-        ar: "المحادثة مع الطالب",
+    "message students": {
+        ar: "المراسلة",
     },
     "search for a message": {
         ar: "ابحث عن محادثة",
     },
-    "forward execuse to academic advising unit": {
-        ar: "إرسال العذر إلى وحدة الإرشاد الأكاديمي",
+    "resolve Excuses": {
+        ar: "معالجة الأعذار",
     },
     /* Advising Unit Nav */
-    "colleage students": {
+    "collage students": {
         ar: "طلاب الكلية",
     },
-    "process excuses": {
+    "resolve excuses": {
         ar: "معالجة الشكاوى",
     },
-    "add students": {
-        ar: "أضف طلاب",
+    "register students": {
+        ar: "إضافة طلاب",
     },
-    "add advisors": {
-        ar: "أضف مرشديين أكاديميين",
+    "register advisors": {
+        ar: "إضافة مرشديين أكاديميين",
     },
     "assign students to advisors": {
-        ar: "أضف الطلاب إلى المرشديين الأكاديميين",
+        ar: "تعيين الطلاب إلى المرشديين الأكاديميين",
     },
     "forward excuses to dean or vice-dean": {
         ar: "إرسال الأعذار إلى عميد الكلية أو نائبه",
@@ -79,19 +79,19 @@ let navTrans = {
         ar:"إضافة طلاب الى النظام"
     },
     /* Dean or Vice-dean Nav */
-    "show prevoise execuses": {
-        ar: "أظهر الأعذار القديمة",
+    "resolved excuses": {
+        ar: "استعراض الأعذار المعالجة",
     },
-    "acceptencse of students excuses": {
-        ar: "قبول أعذار الطلاب",
+    "pending students excuses": {
+        ar: "استعراض الأعذار المنتظرة",
     },
-    "show complaints": {
-        ar: "أظهر الشكاوى",
+    "complaints": {
+        ar: "استعراض الشكاوى",
     },
     "resolve problems between students and advisors": {
         ar: "معالجة الشكاوى بين الطلاب والمرشديين الأكاديميين",
     },
-    "registered colleage students": {
+    "registered collage students": {
         ar: "طلاب الكلية المسجلون في الإرشاد الأكاديمي",
     },
     "": {
@@ -149,19 +149,44 @@ let mainContentTrans = {
     "Advisor Page": {
         ar: "صفحة المرشد الأكاديمي",
     }, // 
-    "": {
-        ar: "",
+    "Personal Profile<": {
+        ar: "الملف الشخصي",
     },
-    "": {
-        ar: "",
+    "My Students": {
+        ar: "الطلاب المسجلين",
+    },
+    "Request Reports from students": {
+        ar: "طلب تقارير من الطلاب",
+    },
+    "Update Office Hours": {
+        ar: "تحديث الساعات المكتبية",
+    },
+    "Mange Appointments": {
+        ar: "إدارة المواعيد",
+    },
+    "Message Students": {
+        ar: "مراسلة الطلاب",
+    },
+    "Find Messages": {
+        ar: "البحث عن محادثة",
+    },
+    "Issue a new Complaint": {
+        ar: "رفع شكوى جديدة لوحدة الإرشاد الأكاديمي",
+    },
+    "Resolve Excuses": {
+        ar: "معالجة الأعذار",
     },
     "": {
         ar: "",
     },
 
+
     // adivisng unit pages
     "Advising Unit Page": {
         ar: "صفحة وحدة الإرشاد الأكاديمي",
+    },
+    "Collage Students": {
+        ar: "طلاب الكلية المسجلين",
     },
     "Add students to system": {
         ar: "تسجيل الطلاب في النظام",
@@ -172,25 +197,35 @@ let mainContentTrans = {
     "Add Students": {
         ar: "أضف الطلاب",
     },
-    "": {
-        ar: "",
+    "Assign Students To Advisors": {
+        ar: "تعيين الطلاب للمرشديين",
     },
+    "Register New Advisors": {
+        ar: "تسجيل مرشد أكاديمي جديد",
+    },
+
+    "Resolve Excuses": {
+        ar: "معالجة الأعذار",
+    },
+
+
+
 
     // dean and vice dean pages
     "Dean and Vice-Dean Page": {
         ar: "صفحة عميد الكلية ونائبه",
     },
-    "": {
-        ar: "",
+    "Complaints": {
+        ar: "الشكاوى",
     },
-    "": {
-        ar: "",
+    "Pending Excuses": {
+        ar: "الأعذار المقدمة",
     },
-    "": {
-        ar: "",
+    "Resolved Excuses": {
+        ar: "الأعذار التي تمت معالجتها",
     },
-    "": {
-        ar: "",
+    "Registered Students": {
+        ar: "طلاب الكلية المسجلون في الإرشاد الأكاديمي",
     },
 }
 /**
