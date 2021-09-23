@@ -37,6 +37,8 @@ exports.login = async (req, res) => {
 
             /// we should have expiration data, but we don't have a way to refresh token
             /// so keep token valid forever 
+
+            /// ENHANCE ADD FACULITY ID HERE
             let tokenBody = {
                 userId: student._id , // _id student in DB [not his uni id]
                 role: roles.student,
@@ -76,7 +78,8 @@ exports.login = async (req, res) => {
                 err: true, 
                 errMsg: "Invalide id or password"
             })
-            // add user role
+            
+            /// ENHANCE ADD FACULITY ID HERE
             let tokenBody = {
                 userId: staff._id , // _id staff in DB [not his uni id]
                 role: staff.role ,

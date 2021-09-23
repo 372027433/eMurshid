@@ -1,5 +1,6 @@
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const {advisor, advisingUnit, dean} = require('../utils/roles');
 const { Schema } = mongoose ;
 
 const staffSchema = new Schema({
@@ -26,6 +27,7 @@ const staffSchema = new Schema({
     },
     role: {
         type: String,
+        enum: [advisor, advisingUnit, dean],
         required: true, 
     }
 })

@@ -10,12 +10,17 @@ const path = require("path")
 
 /// DATABASE MODELS
 const Students = require('../models/student.model')
+const Staff = require('../models/staff.model')
 
 // functions and libraries
 const roles = require('../utils/roles')
 
+// util Functions
+const {passwordGenerator} = require('../utils/generatePassword');
+const {emailAndPasswordTemplateEmail} = require('../utils/emailAndPasswordTemplateEmail');
+
 // SENDER EMAIL CONFIGURED IN SEND_GRID
-const SENDER_EMAIL = 'emurshid.iu@gmail.com'
+const SENDGRID_SENDER_EMAIL = 'emurshid.iu@gmail.com'
 
 
 let transporter = nodemailer.createTransport(
@@ -61,6 +66,100 @@ exports.renderRegisterAdvisors = (req, res) => {
   });
 };
 
+// ======================================================================
+// ======================================================================
+// ======================================================================
+
+/**
+ * validate name
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.registerAdvisors = async (req, res) => {
+
+  // passwordGenerator();
+  const {name, id} = req.body ;
+  // check from user Id
+  if(/^[0-9]{1,8}$/.test(id)){
+    
+    const userObj = {};
+    userObj.name = name ;
+    userObj.passwordToSend = passwordGenerator();
+    
+    let salt = bcrypt.genSaltSync(10); 
+    let hashedPassword = bcrypt.hashSync(userObj.passwordToSend, salt)
+    userObj.password = hashedPassword ; 
+
+    userObj.id = id;
+    userObj.faculty_id = '';
+    
+    userObj.email = `${id}@iu.edu.sa`;
+    userObj.role = roles.advisor;
+    
+  
+    console.log(userObj)
+
+    // check if user exists in DB
+    let userRegistered; 
+    try{
+      userRegistered = await Staff.findOne({id: userObj.id});
+    } catch(e){
+      res.render("advisingUnitPages/aauRegisterAdvisors", {
+        layout: "advisingUnit",
+        errorMsg: "There is a user with this ID"
+      });
+    }
+    if(!userRegistered) {
+
+      try {
+        // now submit to Staff DB
+        let valDB = await Staff.create(userObj)
+        valDB.validate();
+        console.log(valDB);
+      } catch(e) {
+        // res.status(500).render() // should render an error page
+        res.status(500).json({error:e})
+      }
+  
+      const output = emailAndPasswordTemplateEmail(userObj.email,userObj.passwordToSend );
+      /// transporter
+      let mailOptions = {
+        from: `"Academic Advising Unit at Islamic University" <${SENDGRID_SENDER_EMAIL}>`, // sender address 
+        to: "372027433@stu.iu.edu.sa", // list of receivers
+        subject: "Advisor Registeration in Academic Advising",
+        html: output,
+      };
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          // if an is not sent
+          console.log(info) 
+        } 
+      });
+
+      res.render("advisingUnitPages/aauRegisterAdvisors", {
+        layout: "advisingUnit",
+        successMsg: "User Registered Successfuly"
+      });
+
+    } else {
+      // we have a user with this id
+      // render the page again
+     console.log('didnot create user')
+      res.render("advisingUnitPages/aauRegisterAdvisors", {
+        layout: "advisingUnit",
+        errorMsg: "There is a user with this ID"
+      });
+
+    }
+
+  } else {
+    res.render("advisingUnitPages/aauRegisterAdvisors", {
+      layout: "advisingUnit",
+      errorMsg: "Id should be less then 9 characters"
+    });
+  }
+};
+
 exports.renderAssignStudentsToAdvisors = (req, res) => {
   res.render("advisingUnitPages/aauAssign", {
     layout: "advisingUnit",
@@ -76,7 +175,7 @@ exports.renderAssignStudentsToAdvisors = (req, res) => {
  * add 
  * -FACULITY_ROLE to object
  * -Handle errors
- * -inform advisingUnit member that we have finished sending emials and they are successful
+ * -inform advisingUnit member that we have finished sending emails and they are successful
  * -
  */
 exports.registerStudents = (req, res) => {
@@ -133,18 +232,10 @@ exports.registerStudents = (req, res) => {
 
     studentRecords.forEach((student) => {
       let {email,toBeSentThenDeletedPassword} = student ;
-
-      const output = `
-          <h1>Welcome to Academic Advising In Islamic University</h1>
-          <div> <h2>you have been registered at Academic Advising Unit</h2></div>
-          <div><h4>email: <b>${email}</b></h4></div>
-          <div><h4>Password: <b>${toBeSentThenDeletedPassword}</b></h4></div>
-
-          <p> Ignore this message if you don't know what it mean </p>
-      `;
+      const output = emailAndPasswordTemplateEmail(email,toBeSentThenDeletedPassword );
       /// transporter
       let mailOptions = {
-        from: `"Academic Advising Unit at Islamic University" <${SENDER_EMAIL}>`, // sender address 
+        from: `"Academic Advising Unit at Islamic University" <${SENDGRID_SENDER_EMAIL}>`, // sender address 
         to: email, // list of receivers
         subject: "Student Registeration in Academic Advising",
         html: output,
@@ -162,8 +253,6 @@ exports.registerStudents = (req, res) => {
       // delete the plainText password from object
       delete student.toBeSentThenDeletedPassword
     });
-    // console.log("Not sent emails: ")
-    // console.log(notSentEmails)
     return studentRecords
   })
   .then(result => {
