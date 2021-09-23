@@ -66,5 +66,8 @@ app.listen( PORT, ()=> {
 
   // mongoose connection check
   mongoose.connection.once('open',() => console.log('\tConnection to DB established'))
-  mongoose.connection.on('error',() => console.log('\tHey, bad boy we have some errors'))
+  mongoose.connection.on('error',() => {
+    console.log('\tHey, bad boy we have some serious errors, we\'re out')
+    process.exit(1);
+  })
 })
