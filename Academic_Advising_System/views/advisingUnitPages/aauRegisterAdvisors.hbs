@@ -11,12 +11,12 @@
             <form action="/advisingUnit/registerAdvisors" method="POST">
                 {{#if errorMsg}}
                     <div>
-                        <span class="trn">{{errorMsg}}</span>
+                        <span class="trn" style="color:crimson">{{errorMsg}}</span>
                     </div>
                 {{else}}
                     {{#if successMsg}}
                         <div>
-                            <span class="trn">{{successMsg}}</span>
+                            <span class="trn" style="color:green">{{successMsg}}</span>
                         </div>
                     {{/if}}
                 {{/if}}

@@ -72,6 +72,8 @@ exports.renderRegisterAdvisors = (req, res) => {
 
 /**
  * validate name
+ * change reciever email to advisorEmail, after confirm its structure
+ * some view ideas it to remove the msg after 5 sec for exmaple
  * @param {*} req 
  * @param {*} res 
  */
@@ -81,7 +83,7 @@ exports.registerAdvisors = async (req, res) => {
   const {name, id} = req.body ;
   // check from user Id
   if(/^[0-9]{1,8}$/.test(id)){
-    
+
     const userObj = {};
     userObj.name = name ;
     userObj.passwordToSend = passwordGenerator();
@@ -95,32 +97,36 @@ exports.registerAdvisors = async (req, res) => {
     
     userObj.email = `${id}@iu.edu.sa`;
     userObj.role = roles.advisor;
-    
-  
-    console.log(userObj)
 
     // check if user exists in DB
-    let userRegistered; 
+    let userRegistered;
     try{
       userRegistered = await Staff.findOne({id: userObj.id});
     } catch(e){
-      res.render("advisingUnitPages/aauRegisterAdvisors", {
+      return res.render("advisingUnitPages/aauRegisterAdvisors", {
         layout: "advisingUnit",
         errorMsg: "There is a user with this ID"
       });
     }
     if(!userRegistered) {
 
+      /// CREATE USER IN DB
       try {
         // now submit to Staff DB
         let valDB = await Staff.create(userObj)
+
+        // here you validate the schema
         valDB.validate();
-        console.log(valDB);
       } catch(e) {
         // res.status(500).render() // should render an error page
-        res.status(500).json({error:e})
+        return res.render("advisingUnitPages/aauRegisterAdvisors", {
+          layout: "advisingUnit",
+          errorMsg: e
+        });
+        // res.status(500).json({error:e})
       }
-  
+
+      /// SEND EMAIL TO USER EMAIL
       const output = emailAndPasswordTemplateEmail(userObj.email,userObj.passwordToSend );
       /// transporter
       let mailOptions = {
@@ -136,26 +142,23 @@ exports.registerAdvisors = async (req, res) => {
         } 
       });
 
-      res.render("advisingUnitPages/aauRegisterAdvisors", {
+      return res.render("advisingUnitPages/aauRegisterAdvisors", {
         layout: "advisingUnit",
         successMsg: "User Registered Successfuly"
       });
 
     } else {
-      // we have a user with this id
-      // render the page again
-     console.log('didnot create user')
-      res.render("advisingUnitPages/aauRegisterAdvisors", {
+      // we have a user with this id     
+      return res.render("advisingUnitPages/aauRegisterAdvisors", {
         layout: "advisingUnit",
         errorMsg: "There is a user with this ID"
       });
-
     }
 
   } else {
-    res.render("advisingUnitPages/aauRegisterAdvisors", {
+    return res.render("advisingUnitPages/aauRegisterAdvisors", {
       layout: "advisingUnit",
-      errorMsg: "Id should be less then 9 characters"
+      errorMsg: "ID should be less then 9 characters"
     });
   }
 };
@@ -189,7 +192,7 @@ exports.registerStudents = (req, res) => {
 
     if(rows[0][0].toLocaleLowerCase() !== 'students' || rows[0][1].toLocaleLowerCase() !== 'id' ){
       // checking file structure
-      console.log('error')
+      // console.log('error')
       throw new Error('file not formatted correctly')
     }
     for (let i = 1; i < rows.length; i++) {
@@ -273,8 +276,7 @@ exports.registerStudents = (req, res) => {
 
   info.catch(err => {
     // Catch errors 
-    console.log("============== err ====================")
-    console.log(err)
+
     res.status(400).json({err:"file not formatted correctly"})
   })
 };
