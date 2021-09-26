@@ -5,6 +5,7 @@
 const studentRouter = require('express').Router();
 const controller = require('../controllers/student.controller');
 
+
 //student navBar navigation and route handling
 //main page get + post router
 studentRouter.get('/', controller.renderMainPage)
@@ -35,6 +36,9 @@ studentRouter.get('/updateMarks',controller.renderUpdateMarks);
 
 //update Absence Router
 studentRouter.get('/updateAbsence',controller.renderUpdateAbsence);
+studentRouter.get('/updateAbsence',(req, res) => {
+
+});
 
 
 //issue a new complaint router
@@ -45,6 +49,6 @@ studentRouter.get('/newExcuse',controller.renderNewExcuse);
 
 
 
-
+studentRouter.post("/hm" , controller.messagesend);
 
 module.exports = studentRouter ;

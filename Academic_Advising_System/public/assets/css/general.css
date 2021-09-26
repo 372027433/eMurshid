@@ -241,7 +241,9 @@ ul {
         
     }
 }
-/*this add in add student in acdimic advising unit*/
+/*************************************************
+this add in add student in acdimic advising unit
+**************************************************/
 label {
   font-weight: bold;
   font-family: Arial;
@@ -276,5 +278,39 @@ margin: 43px auto 3px;
 cursor: pointer;
 border-radius: 28px;
 width: inherit;
+}
+ /*
+***********************************
+contact student to advisor 
+***********************************
+*/
+#massegContent {
+  width: 100%;
+  accent-color: #be9d5e;
+  height: 120px;
+  resize: initial;
+  autofill: false;
+}
+
+#Titelmsg {
+  width: 84%;
+  autofill :false ;
+  accent-color: #c6a569;
+  
+}
+
+.submetbtn {
+  background-color: #c6a569;
+  border: none;
+  color: white;
+  padding: 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 31px auto 3px;
+  cursor: pointer;
+  border-radius: 28px;
+  width: -moz-available;
 }
 

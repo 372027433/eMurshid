@@ -1,4 +1,9 @@
+const studentRouter = require("../routes/student.router");
 const {renderMyMessages} = require("./student.controller");
+
+//Message MOdel
+const message = require('../models/messages.model')
+
 exports.renderMainPage = (req, res) => {
     res.render('studentPages/studentMain',{
         layout: 'student'
@@ -22,6 +27,7 @@ exports.renderMyMessages = (req, res) => {
         layout: 'student'
     });
 };
+
 
 exports.renderBookAppointment = (req, res) => {
     res.render('studentPages/bookAppointment', {
@@ -55,3 +61,25 @@ exports.renderNewExcuse = (req, res) => {
         layout: 'student'
     });
 };
+
+exports.messagesend = (req, res) => {
+    console.log("hi my func")
+
+    let thedatenow = new Date();
+
+    let messagerecord = new message({
+        id : "1",
+        msgfrom : "372029223",
+        msgto : "44555",
+        msgtitel : req.body.Titelmsg,
+        msgcontent : req.body.massegContent,
+        thetime : `${thedatenow.getHours()}:${thedatenow.getMinutes()}`,
+        thedate : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
+    }); 
+    messagerecord.save();
+
+    res.render("studentPages/contactStudentToAdvisor",{
+        layout: 'student' 
+    })
+    
+}
