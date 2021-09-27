@@ -72,7 +72,6 @@ exports.renderRegisterAdvisors = (req, res) => {
 
 /**
  * validate name
- * change reciever email to advisorEmail, after confirm its structure
  * some view ideas it to remove the msg after 5 sec for exmaple
  * @param {*} req 
  * @param {*} res 
@@ -131,7 +130,7 @@ exports.registerAdvisors = async (req, res) => {
       /// transporter
       let mailOptions = {
         from: `"Academic Advising Unit at Islamic University" <${SENDGRID_SENDER_EMAIL}>`, // sender address 
-        to: "372027433@stu.iu.edu.sa", // list of receivers
+        to: `${userObj.id}@iu.edu.sa`, // list of receivers
         subject: "Advisor Registeration in Academic Advising",
         html: output,
       };
