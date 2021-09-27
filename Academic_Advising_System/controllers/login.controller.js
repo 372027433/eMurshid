@@ -120,7 +120,7 @@ exports.login = async (req, res) => {
             console.log(err)
         }
     } else {
-        return res.status(400).redirect('/') // fraud user
+        return res.status(401).redirect('/') // fraud user
     }
 }
 
