@@ -63,7 +63,10 @@ advisingUnitRouter.get('/collageStudents',controller.renderCollageStudents);
 
 advisingUnitRouter.get('/resolveExcuses', controller.renderResolveExcuses );
 
-advisingUnitRouter.get('/registerAdvisors',controller.renderRegisterAdvisors);
+advisingUnitRouter.get('/registerAdvisors',controller.renderRegisterAdvisors); 
+
+// add advisor
+advisingUnitRouter.post('/registerAdvisors', controller.registerAdvisors); // 
 
 advisingUnitRouter.get('/assign',controller.renderAssignStudentsToAdvisors);
 
