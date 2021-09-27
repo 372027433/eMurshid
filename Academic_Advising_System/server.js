@@ -6,6 +6,9 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 const hbs = require('express-handlebars')
+// use to add either dean or advisingUnitMember
+const roles = require('./utils/roles');
+let {addAdmins} = require('./utils/addAdminsToSystem')
 
 const app = express();
 
@@ -65,9 +68,12 @@ app.listen( PORT, ()=> {
   mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology:true })
 
   // mongoose connection check
-  mongoose.connection.once('open',() => console.log('\tConnection to DB established'))
+  mongoose.connection.once('open',() => {
+    console.log('\tConnection to DB established')
+    addAdmins(roles.dean, 444444,'Abdullah Salim', '')
+  })
   mongoose.connection.on('error',() => {
-    console.log('\tHey, bad boy we have some serious errors, we\'re out')
+    console.log('\tHey, bad boy we have some serious DB errors, we\'re out')
     process.exit(1);
   })
 })

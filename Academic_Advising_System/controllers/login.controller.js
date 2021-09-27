@@ -66,7 +66,7 @@ exports.login = async (req, res) => {
             const staff = await Staff.findOne({id: id}).select('password role').exec()
             // once you get the id,
             // check if user exists
-            
+
             if(!staff) return res.status(400).render('signIn',{ 
                 err: true,
                 errMsg: "Invalide id or password"
@@ -92,32 +92,32 @@ exports.login = async (req, res) => {
             // go into switch statement to route to right page
 
             // if we found the id then hash password and send it
+            // might add user name in the screen
+            switch(staff.role){
+    
+                case roles.advisor: 
+                    return res.status(200).redirect('/advisor')
+                break;
+    
+                case roles.advisingUnit: 
+                    return res.status(200).redirect('/advisingUnit')
+                break ;
+    
+                case roles.dean : 
+                    return res.status(200).redirect('/dean')
+                break ;
+    
+                default: 
+                    // not a user
+                    // return to login page
+                    res.setHeader('Set-Cookie', `authorization= ; HttpOnly`)
+                    return res.status(200).redirect('/')
+    
+                break ;
+            }
         } catch(err){
 
             console.log(err)
-        }
-        // might add user name in the screen
-        switch(staff.role){
-
-            case roles.advisor: 
-                return res.status(200).redirect('/advisor')
-            break;
-
-            case roles.advisingUnit: 
-                return res.status(200).redirect('/advisingUnit')
-            break ;
-
-            case roles.dean : 
-                return res.status(200).redirect('/dean')
-            break ;
-
-            default: 
-                // not a user
-                // return to login page
-                res.setHeader('Set-Cookie', `authorization= ; HttpOnly`)
-                return res.status(200).redirect('/')
-
-            break ;
         }
     } else {
         return res.status(400).redirect('/') // fraud user
