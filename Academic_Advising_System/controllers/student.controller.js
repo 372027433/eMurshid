@@ -62,14 +62,14 @@ exports.renderNewExcuse = (req, res) => {
     });
 };
 
+
 exports.messagesend = (req, res) => {
-    console.log("hi my func")
-
+   // for tist::::> console.log("hi my func")
+console.log(res.user.userId)
     let thedatenow = new Date();
-
     let messagerecord = new message({
         id : "1",
-        msgfrom : "372029223",
+        msgfrom : res.user.userId ,
         msgto : "44555",
         msgtitel : req.body.Titelmsg,
         msgcontent : req.body.massegContent,
@@ -83,3 +83,19 @@ exports.messagesend = (req, res) => {
     })
     
 }
+
+exports.ShowMsg = (req,res)=> {
+    let posts = message.find({}, function(err, posts){
+        if(err){
+            res.render('studentPages/studentMessages' , $('.alert').alert(err));
+            console.log(err);
+        }
+        else {
+         res.render('studentPages/studentMessages' , {
+             messagesList : posts,
+             layout : 'student'
+         })      
+        }
+    });
+
+};

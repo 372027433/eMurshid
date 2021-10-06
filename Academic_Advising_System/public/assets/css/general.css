@@ -311,6 +311,49 @@ contact student to advisor
   margin: 31px auto 3px;
   cursor: pointer;
   border-radius: 28px;
-  width: -moz-available;
+  width: -webkit-fill-available
 }
 
+/*
+***********************************
+Reseve Masseges
+***********************************
+*/
+.SearchArea{
+  width: 80%;
+  accent-color: #c6a569;
+}
+#SearchMsgBtn {
+  width: 10%;
+  height: 18px;
+  accent-color: #c6a569;
+  background-image: url(/assets/img/searchIcon.png);
+  padding: 2px;
+}
+#ResevedMSG {
+  overflow: scroll;
+  accent-color: #c6a569;
+  height: 300px;
+  background: lightgray;
+  padding: 10px;
+  margin: 18px;
+}
+button.ShowAllMsg {
+  background-color: #c6a569;
+  border: none;
+  color: white;
+  padding: 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 31px auto 3px;
+  cursor: pointer;
+  border-radius: 28px;
+  width: -webkit-fill-available;
+}
+
+  
+ 
+
+  
