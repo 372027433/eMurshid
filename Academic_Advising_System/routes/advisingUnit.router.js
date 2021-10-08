@@ -70,4 +70,6 @@ advisingUnitRouter.post('/registerAdvisors', controller.registerAdvisors); //
 
 advisingUnitRouter.get('/assign',controller.renderAssignStudentsToAdvisors);
 
+advisingUnitRouter.put('/assign',controller.assignStudentsToAdvisors);
+
 module.exports = advisingUnitRouter ;

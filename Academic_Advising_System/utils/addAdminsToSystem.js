@@ -29,6 +29,7 @@ exports.addAdmins = async (role, id, name, faculty_id = "") => {
     name,
     email: `${id}@iu.edu.sa`,
     role,
+    faculty_id,
   };
 
   let createUser = await Staff.create(user);

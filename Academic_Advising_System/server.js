@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser')
 const hbs = require('express-handlebars')
 // use to add either dean or advisingUnitMember
 const roles = require('./utils/roles');
+const faculty = require('./utils/facultyType')
 let {addAdmins} = require('./utils/addAdminsToSystem')
 
 const app = express();
@@ -70,7 +71,8 @@ app.listen( PORT, ()=> {
   // mongoose connection check
   mongoose.connection.once('open',() => {
     console.log('\tConnection to DB established')
-    // addAdmins(roles.dean, 444444,'Abdullah Salim', '')
+
+    // addAdmins(roles.advisingUnit, 222222,'Abdullah Salim', faculty.computer_colege)
   })
   mongoose.connection.on('error',() => {
     console.log('\tHey, bad boy we have some serious DB errors, we\'re out')

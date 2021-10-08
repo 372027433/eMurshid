@@ -7,9 +7,156 @@
             <hr>
         </div>
         <div class="body-content">
-            <ul>
 
-            </ul>
+            <div>
+                <label>Select an advisor</label>
+                <select name="" id="">
+                    {{!-- === the advisors rendered here === --}}
+                    <option value=""></option> 
+                </select>
+            </div>
+            
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Age</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                        <th>Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tiger Nixon</td>
+                        <td>System Architect</td>
+                        <td>Edinburgh</td>
+                        <td>61</td>
+                        <td>2011/04/25</td>
+                        <td>$320,800</td>
+                        <td><input data-ref="id-1" type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td>Garrett Winters</td>
+                        <td>Accountant</td>
+                        <td>Tokyo</td>
+                        <td>63</td>
+                        <td>2011/07/25</td>
+                        <td>$170,750</td>
+                        <td><input data-ref="id-2" type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td>Ashton Cox</td>
+                        <td>Junior Technical Author</td>
+                        <td>San Francisco</td>
+                        <td>66</td>
+                        <td>2009/01/12</td>
+                        <td>$86,000</td>
+                        <td><input data-ref="id-3" type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td>Cedric Kelly</td>
+                        <td>Senior Javascript Developer</td>
+                        <td>Edinburgh</td>
+                        <td>22</td>
+                        <td>2012/03/29</td>
+                        <td>$433,060</td>
+                        <td><input data-ref="id-4" type="checkbox"></td>
+                    </tr>
+                    <tr>
+                        <td>Airi Satou</td>
+                        <td>Accountant</td>
+                        <td>Tokyo</td>
+                        <td>33</td>
+                        <td>2008/11/28</td>
+                        <td>$162,700</td>
+                        <td><input data-ref="id-5" type="checkbox"></td>
+                    </tr>
+                    
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Age</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                        <ht>Select</ht>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div>
+                <button type="button" id="assignStudentsBtn" >Assign Students</button>
+            </div>
         </div>
     </div>
 </main>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+
+        $('#assignStudentsBtn').on('click', (event) => {
+            console.log('make fetch call to server')
+            console.log(event)
+            let checkBoxes = $('input[type="checkbox"]')
+            let selectedStudents = [] // students refs
+            for(let i = 0; i < checkBoxes.length; i++){
+                if(checkBoxes[i].checked){
+                    // element is chcecked 
+                    //get the data element on it
+                    let mongooseId = checkBoxes[i].dataset.ref
+                    selectedStudents.push(mongooseId)
+                }
+            }
+            console.log(selectedStudents)
+            // $.ajax('https://www.google.com')
+            $.ajax('/advisingUnit/assign', {
+                type: 'PUT',  // http method
+                data: { myData: selectedStudents },  // data to submit
+                success: function (data, status, xhr) {
+                    console.log('status success')
+                    console.log(data)
+                    console.log('status')
+                    console.log(status)
+                    console.log('xhr')
+                    console.log(xhr)
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                        $('p').append('Error' + errorMessage);
+                }
+            });
+            /**
+            fetch('/advisingUnit/assign',{
+                method: 'put',
+                headers: {
+                    "Content-Type":"application/json",
+                }
+                body: JSON.stringify({data:selectedStudents})
+            }).then((res) => {
+                console.log("res from server")
+                console.log(res)
+            })
+            */
+            // now make the call to server
+            /**
+             fetch('/advisingUnit/assign',{
+                 method: 'PUT',
+                 headers: {
+                    'Content-Type': 'application/json'
+                 }
+                body: JSON.stringify(selectedStudents) 
+
+             })
+            .then(res => {
+                console.log('responce from the server')
+                console.log(res)
+            })
+            */
+            // in the then body redirect web page
+        })
+    } );
+</script>

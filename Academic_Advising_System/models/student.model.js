@@ -47,6 +47,10 @@ const studentSchema = new Schema({
     present_address: String,
     reference_person: String,
     reference_person_phone: Number,
+},
+{
+    collection:'students',
+    timestamps: true
 })
 
 const Students = mongoose.model('students', studentSchema);
