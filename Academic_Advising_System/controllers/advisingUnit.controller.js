@@ -177,10 +177,19 @@ exports.renderAssignStudentsToAdvisors = (req, res) => {
  * add 
  * -FACULITY_ROLE to object
  * -Handle errors
- * -inform advisingUnit member that we have finished sending emails and they are successful
  * -
  */
-exports.registerStudents = (req, res) => {
+/**
+ * delete the email sending (done)
+ * delete password generating (done)
+ * if student already regis then ignore him and inform (done)
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.registerStudents = async (req, res) => {
+  // we should have the faculity of the faculity member;
+  console.log(res.user.role)
 
   let { filename } = req.file;
   let filepath = path.join(__dirname, "..", "uploads", filename);
@@ -195,31 +204,34 @@ exports.registerStudents = (req, res) => {
       throw new Error('file not formatted correctly')
     }
     for (let i = 1; i < rows.length; i++) {
-      let generatedPassword = generator.generate({
-        length: 10,
-        numbers: true,
-      });
-      let hashedPassword = await bcrypt.hash(generatedPassword, 10)
+      let studentID = rows[i][1].toString();
+
+      // let generatedPassword = generator.generate({
+      //   length: 10,
+      //   numbers: true,
+      // });
+      let hashedPassword = await bcrypt.hash(studentID, 10)
 
       studentRecords.push({
         name: rows[i][0],
-        id: rows[i][1],
+        id: studentID,
         role: roles.student,
         password: hashedPassword,
-        toBeSentThenDeletedPassword: generatedPassword,
+        // toBeSentThenDeletedPassword: generatedPassword,
       });
     }
     return studentRecords;
     
   });
+
   info.then((records) => {
     // Adding additional info to student object .Phase-2
-    if (records.length <= 0) return res.status(400).send("not enouph students");
+    if (records.length <= 0) return res.status(400).send("not enouph students"); // <- this method is wrong . should use .render
 
     // create user
     let bulkStudentWrite = [];
     for (record of records) {
-      let obj = JSON.parse(JSON.stringify(record));
+      let obj = JSON.parse(JSON.stringify(record)); // a turn around to copy an object (deep copy)
       obj.faculty_id = '', // should be taken from advisingUnit
       obj.email = `${record.id}@stu.iu.edu.sa`;
       obj.status = "undergraduate";
@@ -228,57 +240,57 @@ exports.registerStudents = (req, res) => {
 
     return bulkStudentWrite;
   })
-  .then((studentRecords) => {
-    // sending email .Phase-3
-    let notSentEmails = [] // used to handle errors with emails that are not sent
 
-    studentRecords.forEach((student) => {
-      let {email,toBeSentThenDeletedPassword} = student ;
-      const output = emailAndPasswordTemplateEmail(email,toBeSentThenDeletedPassword );
-      /// transporter
-      let mailOptions = {
-        from: `"Academic Advising Unit at Islamic University" <${SENDGRID_SENDER_EMAIL}>`, // sender address 
-        to: email, // list of receivers
-        subject: "Student Registeration in Academic Advising",
-        html: output,
-      };
-      transporter.sendMail(mailOptions, (err, info) => {
-        if (err) { 
-          // if an is not sent
-          notSentEmails.push(email)
-          console.log(err) 
-        } 
-        // if(info.message == 'success'){
-        //   console.log('\tSuccessful sending..!')
-        // }
-      });
-      // delete the plainText password from object
-      delete student.toBeSentThenDeletedPassword
-    });
-    return studentRecords
+
+  .then( async (studentRecords) => {
+
+    /**
+     * check on studdents
+     * when finished pass the array to view as param
+     */
+    // what does .map do 
+
+    let registeredStudents = [];
+    for(let student of studentRecords){
+
+      let studentFound = await Students.findOne({id: student.id}).exec();
+      if(Boolean(studentFound)){
+        // console.log('we have studentest', student.id)
+        registeredStudents.push(studentFound);
+        continue 
+      } else {
+        // here create the student 
+
+        let userInsert = await Students.create(student)
+ 
+        console.log('inserted user', userInsert)
+      }
+
+    }
+    return registeredStudents
+
   })
-  .then(result => {
-    // creating students in DB .Phase-4
-    return new Promise((resolve, reject) => {
-      Students.create(result, (err, data) => {
-        if(err) reject( new Error('We could not enter the database') )
-        resolve(data)
-      })
-    })
-  })
-  .then(() => {
-    // redirect to same page .Phase-5
+  .then((registeredStudents) => {
+    // redirect to same page with info .Phase-5
+    
+    let displayInfo = registeredStudents.length > 0 ;
+    
     res.render("advisingUnitPages/registerStudents", {
       layout: "advisingUnit",
+      successMsg: 'Students are added',
+      displayRegistered: displayInfo,
+      registeredStudents: registeredStudents, 
     });
   })
 
   info.catch(err => {
     // Catch errors 
-
+    // SHOULD RENDER TO AN ERROR PAGE
     res.status(400).json({err:"file not formatted correctly"})
   })
 };
 
+async function doSomething(){
 
+}
 
