@@ -110,14 +110,15 @@ exports.registerAdvisors = async (req, res) => {
       });
     }
     if(!userRegistered) {
-
       /// CREATE USER IN DB
       try {
         // now submit to Staff DB
-        let valDB = await Staff.create(userObj)
+        let createdAdvisor = await Staff.create(userObj)
 
-        // here you validate the schema
-        valDB.validate();
+        // create a advisor in assignation list
+        await AdvivsorStudents.create({advisor: createdAdvisor._id })
+        
+        createdAdvisor.validate();
       } catch(e) {
         // res.status(500).render() // should render an error page
         return res.render("advisingUnitPages/aauRegisterAdvisors", {
@@ -167,32 +168,56 @@ exports.renderAssignStudentsToAdvisors = async (req, res) => {
 
   // get all list of advisors
   let advisors = await Staff.find({faculty_id:res.user.faculty, role: roles.advisor})
-  let students = await Students.find({faculty_id:res.user.faculty}, 'id name advisor_id')
-  console.log(advisors); 
-  console.log(students)
-  console.log(students.length)
+  let students = await Students.find({faculty_id:res.user.faculty}, 'id name status advisor_id')
+
   let unassignedStudents = [];
   for(let i = 0; i< students.length; i++){
     if(students[i].advisor_id == undefined){
-      unassignedStudents.push(students[i])
+      unassignedStudents.push({...students[i]})
     }
   }
-
-  console.log(unassignedStudents.length)
+  let noStudents = false ;
+  if(unassignedStudents.length <= 0) noStudents = true ;
 
   // now present the student
 
   res.render("advisingUnitPages/aauAssign", {
     layout: "advisingUnit",
+    advisorList: advisors,
+    isThereStudents: noStudents , 
+    studentsList: unassignedStudents,
   });
 };
 
 exports.assignStudentsToAdvisors =  async (req, res) => {
-  console.log(req.body);
-  return res.render("advisingUnitPages/aauRegisterAdvisors", {
-    layout: "advisingUnit",
-    successMsg: "User Registered Successfuly"
-  });
+
+  const advisorID = req.body.data.advisor
+  
+  const { studentsMongoId,
+    studentId} = req.body.data
+
+    console.log('mogo',studentsMongoId)
+    console.log("studentId: ",studentId)
+  try {
+    let a = await AdvivsorStudents.findOne({advisor: advisorID})
+    console.log(a.students)
+    a.students = [...a.students, ...studentsMongoId]
+    a.save();
+
+  } catch(e){
+    return res.status(400).json({error: e})
+  }
+
+  studentId.forEach( async (id) => {
+    
+    await Students.update( {id:id}, {
+      $set: {advisor_id: advisorID}
+    })
+
+  })
+ 
+  return res.status(200).json({data:studentId})
+
 }
 
 //*********************************************************************//
@@ -290,7 +315,7 @@ exports.registerStudents = async (req, res) => {
 
         let userInsert = await Students.create(student)
  
-        console.log('inserted user', userInsert)
+        // console.log('inserted user', userInsert)
       }
 
     }

@@ -6,157 +6,139 @@
             </header>
             <hr>
         </div>
-        <div class="body-content">
-
+        <div class="body-content">            
+            
             <div>
-                <label>Select an advisor</label>
-                <select name="" id="">
-                    {{!-- === the advisors rendered here === --}}
-                    <option value=""></option> 
-                </select>
+                <p id="informUserMsg"></p>
             </div>
             
-            <table id="example" class="display" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
-                        <th>Select</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Tiger Nixon</td>
-                        <td>System Architect</td>
-                        <td>Edinburgh</td>
-                        <td>61</td>
-                        <td>2011/04/25</td>
-                        <td>$320,800</td>
-                        <td><input data-ref="id-1" type="checkbox"></td>
-                    </tr>
-                    <tr>
-                        <td>Garrett Winters</td>
-                        <td>Accountant</td>
-                        <td>Tokyo</td>
-                        <td>63</td>
-                        <td>2011/07/25</td>
-                        <td>$170,750</td>
-                        <td><input data-ref="id-2" type="checkbox"></td>
-                    </tr>
-                    <tr>
-                        <td>Ashton Cox</td>
-                        <td>Junior Technical Author</td>
-                        <td>San Francisco</td>
-                        <td>66</td>
-                        <td>2009/01/12</td>
-                        <td>$86,000</td>
-                        <td><input data-ref="id-3" type="checkbox"></td>
-                    </tr>
-                    <tr>
-                        <td>Cedric Kelly</td>
-                        <td>Senior Javascript Developer</td>
-                        <td>Edinburgh</td>
-                        <td>22</td>
-                        <td>2012/03/29</td>
-                        <td>$433,060</td>
-                        <td><input data-ref="id-4" type="checkbox"></td>
-                    </tr>
-                    <tr>
-                        <td>Airi Satou</td>
-                        <td>Accountant</td>
-                        <td>Tokyo</td>
-                        <td>33</td>
-                        <td>2008/11/28</td>
-                        <td>$162,700</td>
-                        <td><input data-ref="id-5" type="checkbox"></td>
-                    </tr>
-                    
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
-                        <ht>Select</ht>
-                    </tr>
-                </tfoot>
-            </table>
+            {{#if isThereStudents}}
+                <div>
+                    <h3>All students Are assigned to advisors.. great advising team.!</h3>
+                </div>
+            {{else}}
 
-            <div>
-                <button type="button" id="assignStudentsBtn" >Assign Students</button>
-            </div>
+
+                <div>
+                    <label>Select an advisor</label>
+                    <select name="advisorId" id="advisorSelection">
+                        <option value="" selected disabled>select advisor please</option>
+                        {{#each advisorList as |advObj|}}
+
+                            {{#each advObj}}
+                                {{#if this.name}}
+                                    
+                                    
+                                    <option value="{{this._id}}">{{this.name}}</option>
+                                {{/if}}
+                             {{/each}}
+
+                        {{/each}}
+                    </select>
+                </div>
+
+                <table id="studentsAssignTable" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                             <th>Name</th>
+                            <th>ID</th>
+                            <th>Status</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each studentsList as |stuObj stuKey|}}                                
+                            {{#each stuObj}}
+                                {{#if this.status}}
+                                     <tr id="{{this.id}}">
+                                         <td>{{this.name}}</td>
+                                        <td>{{this.id}}</td>
+                                        <td>{{this.status}}</td>
+                                        <td><input value="{{this._id}}" data-id="{{this.id}}" type="checkbox"></td>
+                                    </tr>
+                                {{/if}}
+                            {{/each}}
+                        {{/each}}
+                    </tbody>
+                </table>
+
+                <div>
+                    <button type="button" id="assignStudentsBtn" >Assign Students</button>
+                </div>
+            {{/if}}
         </div>
     </div>
 </main>
 <script>
     $(document).ready(function() {
-        $('#example').DataTable();
+        $('#studentsAssignTable').DataTable();
 
         $('#assignStudentsBtn').on('click', (event) => {
-            console.log('make fetch call to server')
-            console.log(event)
+            const advisorId = $('#advisorSelection').val()
+            if(!advisorId){
+                alert('choose advisor first')
+                return
+            }
+            
             let checkBoxes = $('input[type="checkbox"]')
-            let selectedStudents = [] // students refs
+            let studentsMongoId = [] // students mongoose ids
+            let studentId = [] // students ids
             for(let i = 0; i < checkBoxes.length; i++){
                 if(checkBoxes[i].checked){
-                    // element is chcecked 
-                    //get the data element on it
-                    let mongooseId = checkBoxes[i].dataset.ref
-                    selectedStudents.push(mongooseId)
+
+                    let mongooseId = checkBoxes[i].value
+                    let id = checkBoxes[i].dataset.id
+                    studentsMongoId.push( mongooseId )
+                    studentId.push(id)
                 }
             }
-            console.log(selectedStudents)
-            // $.ajax('https://www.google.com')
+            if(studentsMongoId.length <= 0) {
+                alert('select some students')
+                return
+            }
+            const data  = {
+                advisor: advisorId,
+                studentsMongoId,
+                studentId,
+            }
+
             $.ajax('/advisingUnit/assign', {
-                type: 'PUT',  // http method
-                data: { myData: selectedStudents },  // data to submit
+                type: 'PUT',
+                data: { data: data },
                 success: function (data, status, xhr) {
-                    console.log('status success')
-                    console.log(data)
-                    console.log('status')
-                    console.log(status)
-                    console.log('xhr')
-                    console.log(xhr)
+                    
+                    if(status === 'success'){
+                        // delete the object from the table
+
+                        // add succes msg
+                        document.getElementById('informUserMsg').innerText = "Students assigned advisors successfully"
+                        document.getElementById('informUserMsg').style.color = "green"
+
+                        let studentsArray = data.data;
+
+                        studentsArray.forEach((id) => {
+                            let elemToDel = document.getElementById(`${id}`)
+                            elemToDel.remove();
+                        })
+                        
+                        setTimeout(() => {
+                            // remmove success msg
+                            document.getElementById('informUserMsg').innerText = ""
+                        },3000)
+
+                        // if there are no checkboxes then reload
+                        if($('input[type="checkbox"]').length <= 0){
+                            window.location.reload();
+                        }
+                    }
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
-                        $('p').append('Error' + errorMessage);
+
+                    document.getElementById('informUserMsg').innerText = 'Error' + errorMessage
+                    document.getElementById('informUserMsg').style.color = "red"
+
                 }
             });
-            /**
-            fetch('/advisingUnit/assign',{
-                method: 'put',
-                headers: {
-                    "Content-Type":"application/json",
-                }
-                body: JSON.stringify({data:selectedStudents})
-            }).then((res) => {
-                console.log("res from server")
-                console.log(res)
-            })
-            */
-            // now make the call to server
-            /**
-             fetch('/advisingUnit/assign',{
-                 method: 'PUT',
-                 headers: {
-                    'Content-Type': 'application/json'
-                 }
-                body: JSON.stringify(selectedStudents) 
-
-             })
-            .then(res => {
-                console.log('responce from the server')
-                console.log(res)
-            })
-            */
-            // in the then body redirect web page
         })
     } );
 </script>

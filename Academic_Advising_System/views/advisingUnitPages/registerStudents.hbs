@@ -35,12 +35,12 @@
                         </tr>
                         {{#each registeredStudents as |studentObj studentKey| }}
                             {{#each studentObj}}
-                            
-                                <tr>
-                                    <td>{{ this.name}}</td>
-                                    <td>{{ this.id}}</td>
-                                </tr>
-
+                                {{#if studentObj.name}}
+                                    <tr>
+                                        <td>{{ this.name}}</td>
+                                        <td>{{ this.id}}</td>
+                                    </tr>
+                                {{/if}}
                             {{/each}}
                         {{/each}}
                     </table>

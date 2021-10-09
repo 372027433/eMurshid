@@ -24,7 +24,8 @@ const studentSchema = new Schema({
         required: true, 
     },
     advisor_id : {
-        type: String,
+        type: mongoose.Types.ObjectId,
+        ref: 'staff',
     },
     faculty_id: String, // should be Faculity IDs which taken from advisingUnit since each advisingUnit will add their students
     // so once added we will be adding advisingUnitMemberFaculityID and add to student
