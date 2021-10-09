@@ -31,7 +31,8 @@ router.get('/logout',loginController.logout)
  * like prevent student from going to dean page may be implement 
  * a function that says isDean(), isAdvisingUnit(), isStudent(), isAdvisor() as a middleware which will redirect user to his page
  */
-router.use('/advisingUnit', isAuthorized, checkUser(roles.advisingUnit), advisingUnitRouter )
+
+router.use('/advisingUnit',isAuthorized, checkUser(roles.advisingUnit), advisingUnitRouter )
 
 router.use('/student', isAuthorized, checkUser(roles.student), studentRouter )
 

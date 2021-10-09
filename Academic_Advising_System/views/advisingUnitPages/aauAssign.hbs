@@ -6,10 +6,139 @@
             </header>
             <hr>
         </div>
-        <div class="body-content">
-            <ul>
+        <div class="body-content">            
+            
+            <div>
+                <p id="informUserMsg"></p>
+            </div>
+            
+            {{#if isThereStudents}}
+                <div>
+                    <h3>All students Are assigned to advisors.. great advising team.!</h3>
+                </div>
+            {{else}}
 
-            </ul>
+
+                <div>
+                    <label>Select an advisor</label>
+                    <select name="advisorId" id="advisorSelection">
+                        <option value="" selected disabled>select advisor please</option>
+                        {{#each advisorList as |advObj|}}
+
+                            {{#each advObj}}
+                                {{#if this.name}}
+                                    
+                                    
+                                    <option value="{{this._id}}">{{this.name}}</option>
+                                {{/if}}
+                             {{/each}}
+
+                        {{/each}}
+                    </select>
+                </div>
+
+                <table id="studentsAssignTable" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                             <th>Name</th>
+                            <th>ID</th>
+                            <th>Status</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each studentsList as |stuObj stuKey|}}                                
+                            {{#each stuObj}}
+                                {{#if this.status}}
+                                     <tr id="{{this.id}}">
+                                         <td>{{this.name}}</td>
+                                        <td>{{this.id}}</td>
+                                        <td>{{this.status}}</td>
+                                        <td><input value="{{this._id}}" data-id="{{this.id}}" type="checkbox"></td>
+                                    </tr>
+                                {{/if}}
+                            {{/each}}
+                        {{/each}}
+                    </tbody>
+                </table>
+
+                <div>
+                    <button type="button" id="assignStudentsBtn" >Assign Students</button>
+                </div>
+            {{/if}}
         </div>
     </div>
 </main>
+<script>
+    $(document).ready(function() {
+        $('#studentsAssignTable').DataTable();
+
+        $('#assignStudentsBtn').on('click', (event) => {
+            const advisorId = $('#advisorSelection').val()
+            if(!advisorId){
+                alert('choose advisor first')
+                return
+            }
+            
+            let checkBoxes = $('input[type="checkbox"]')
+            let studentsMongoId = [] // students mongoose ids
+            let studentId = [] // students ids
+            for(let i = 0; i < checkBoxes.length; i++){
+                if(checkBoxes[i].checked){
+
+                    let mongooseId = checkBoxes[i].value
+                    let id = checkBoxes[i].dataset.id
+                    studentsMongoId.push( mongooseId )
+                    studentId.push(id)
+                }
+            }
+            if(studentsMongoId.length <= 0) {
+                alert('select some students')
+                return
+            }
+            const data  = {
+                advisor: advisorId,
+                studentsMongoId,
+                studentId,
+            }
+
+            $.ajax('/advisingUnit/assign', {
+                type: 'PUT',
+                data: { data: data },
+                success: function (data, status, xhr) {
+                    
+                    if(status === 'success'){
+                        // delete the object from the table
+
+                        // add succes msg
+                        document.getElementById('informUserMsg').innerText = "Students assigned advisors successfully"
+                        document.getElementById('informUserMsg').style.color = "green"
+
+                        let studentsArray = data.data;
+
+                        studentsArray.forEach((id) => {
+                            let elemToDel = document.getElementById(`${id}`)
+                            elemToDel.remove();
+                        })
+                        
+                        setTimeout(() => {
+                            // remmove success msg
+                            document.getElementById('informUserMsg').innerText = ""
+                        },3000)
+
+                        // if there are no checkboxes then reload
+                        if($('input[type="checkbox"]').length <= 0){
+                            window.location.reload();
+                        }
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+
+                    document.getElementById('informUserMsg').innerText = 'Error' + errorMessage
+                    document.getElementById('informUserMsg').style.color = "red"
+
+                }
+            });
+        })
+    } );
+</script>

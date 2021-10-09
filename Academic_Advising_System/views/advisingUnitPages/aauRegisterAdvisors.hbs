@@ -7,9 +7,31 @@
             <hr>
         </div>
         <div class="body-content">
-            <ul>
-
-            </ul>
+            
+            <form action="/advisingUnit/registerAdvisors" method="POST">
+                {{#if errorMsg}}
+                    <div>
+                        <span class="trn" style="color:crimson">{{errorMsg}}</span>
+                    </div>
+                {{else}}
+                    {{#if successMsg}}
+                        <div>
+                            <span class="trn" style="color:green">{{successMsg}}</span>
+                        </div>
+                    {{/if}}
+                {{/if}}
+                <div>
+                    <label for="advisor_name"><span class="trn">Advisor Name</span></label>
+                    <input type="text" name="name" id="advisor_name" required> 
+                </div>
+                <div>
+                    <label for="advisor_id"><span class="trn">Advisor ID</span></label>
+                    {{!-- /^[0-9]{1,8}$/.test(event.key) --}} 
+                    <input type="text" name="id" id="advisor_id" onkeypress="return /^[0-9]$/.test(event.key)" required> 
+                </div>
+                <button type="submit"><span class="trn">Create User</span></button>
+            </form>
+            
         </div>
     </div>
 </main>

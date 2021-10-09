@@ -37,8 +37,10 @@ exports.login = async (req, res) => {
 
             /// we should have expiration data, but we don't have a way to refresh token
             /// so keep token valid forever 
+
+            /// ENHANCE ADD FACULITY ID HERE
             let tokenBody = {
-                userId: student._id , // _id student in DB [not his uni id]
+                userId: student._id, // _id student in DB [not his uni id]
                 role: roles.student,
             }
 
@@ -61,10 +63,10 @@ exports.login = async (req, res) => {
 
         try {
             // query DB for the id
-            const staff = await Staff.findOne({id: id}).select('password role').exec()
+            const staff = await Staff.findOne({id: id}).select('password role faculty_id').exec()
             // once you get the id,
             // check if user exists
-            
+
             if(!staff) return res.status(400).render('signIn',{ 
                 err: true,
                 errMsg: "Invalide id or password"
@@ -76,10 +78,12 @@ exports.login = async (req, res) => {
                 err: true, 
                 errMsg: "Invalide id or password"
             })
-            // add user role
+            
+            /// ENHANCE ADD FACULITY ID HERE
             let tokenBody = {
                 userId: staff._id , // _id staff in DB [not his uni id]
                 role: staff.role ,
+                faculty: staff.faculty_id,
             }
 
             let token = await jwt.sign(tokenBody, process.env.JWT_ACCESS_KEY);
@@ -89,36 +93,38 @@ exports.login = async (req, res) => {
             // go into switch statement to route to right page
 
             // if we found the id then hash password and send it
+            // might add user name in the screen
+            switch(staff.role){
+    
+                case roles.advisor: 
+                    return res.status(200).redirect('/advisor')
+                break;
+    
+                case roles.advisingUnit: 
+                    return res.status(200).redirect('/advisingUnit')
+                break ;
+    
+                case roles.dean : 
+                    return res.status(200).redirect('/dean')
+                break ;
+    
+                default: 
+                    // not a user
+                    // return to login page
+                    res.setHeader('Set-Cookie', `authorization= ; HttpOnly`)
+                    return res.status(200).redirect('/')
+    
+                break ;
+            }
         } catch(err){
 
             console.log(err)
         }
-        // might add user name in the screen
-        switch(staff.role){
-
-            case roles.advisor: 
-                return res.status(200).redirect('/advisor')
-            break;
-
-            case roles.advisingUnit: 
-                return res.status(200).redirect('/advisingUnit')
-            break ;
-
-            case roles.dean : 
-                return res.status(200).redirect('/dean')
-            break ;
-
-            default: 
-                // not a user
-                // return to login page
-                res.setHeader('Set-Cookie', `authorization= ; HttpOnly`)
-                return res.status(200).redirect('/')
-
-            break ;
-        }
     } else {
-        return res.status(400).redirect('/') // fraud user
+        return res.status(401).redirect('/') // fraud user
     }
+    return res.status(401).redirect('/') // fraud user
+
 }
 
 exports.logout = (req, res) => {
