@@ -20,7 +20,7 @@ const staffSchema = new Schema({
         type: String,
         required: true,
     },
-    faculty_id: String, 
+    faculty_id: {type: String },
     phone: {
         type: Number,
         max: [9999999999, 'phone numbers do not have more than 10 digits'],
@@ -30,6 +30,9 @@ const staffSchema = new Schema({
         enum: [advisor, advisingUnit, dean],
         required: true, 
     }
+},{
+    collection:'staff',
+    timestamps: true,
 })
 
 const Staff = mongoose.model('staff', staffSchema);

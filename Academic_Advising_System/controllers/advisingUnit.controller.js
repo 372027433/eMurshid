@@ -11,9 +11,11 @@ const path = require("path")
 /// DATABASE MODELS
 const Students = require('../models/student.model')
 const Staff = require('../models/staff.model')
+const AdvivsorStudents = require('../models/studentsAdvisor')
 
 // functions and libraries
 const roles = require('../utils/roles')
+const college = require('../utils/facultyType')
 
 // util Functions
 const {passwordGenerator} = require('../utils/generatePassword');
@@ -80,19 +82,19 @@ exports.registerAdvisors = async (req, res) => {
 
   // passwordGenerator();
   const {name, id} = req.body ;
+  // console.log()
   // check from user Id
   if(/^[0-9]{1,8}$/.test(id)){
 
     const userObj = {};
     userObj.name = name ;
-    userObj.passwordToSend = passwordGenerator();
     
     let salt = bcrypt.genSaltSync(10); 
-    let hashedPassword = bcrypt.hashSync(userObj.passwordToSend, salt)
-    userObj.password = hashedPassword ; 
+    let hashedPassword = bcrypt.hashSync(id, salt)
+    userObj.password = hashedPassword ;
 
     userObj.id = id;
-    userObj.faculty_id = '';
+    userObj.faculty_id = res.user.faculty;
     
     userObj.email = `${id}@iu.edu.sa`;
     userObj.role = roles.advisor;
@@ -108,38 +110,38 @@ exports.registerAdvisors = async (req, res) => {
       });
     }
     if(!userRegistered) {
-
       /// CREATE USER IN DB
       try {
         // now submit to Staff DB
-        let valDB = await Staff.create(userObj)
+        let createdAdvisor = await Staff.create(userObj)
 
-        // here you validate the schema
-        valDB.validate();
+        // create a advisor in assignation list
+        await AdvivsorStudents.create({advisor: createdAdvisor._id })
+        
+        createdAdvisor.validate();
       } catch(e) {
         // res.status(500).render() // should render an error page
         return res.render("advisingUnitPages/aauRegisterAdvisors", {
           layout: "advisingUnit",
           errorMsg: e
         });
-        // res.status(500).json({error:e})
       }
 
-      /// SEND EMAIL TO USER EMAIL
-      const output = emailAndPasswordTemplateEmail(userObj.email,userObj.passwordToSend );
-      /// transporter
-      let mailOptions = {
-        from: `"Academic Advising Unit at Islamic University" <${SENDGRID_SENDER_EMAIL}>`, // sender address 
-        to: `${userObj.id}@iu.edu.sa`, // list of receivers
-        subject: "Advisor Registeration in Academic Advising",
-        html: output,
-      };
-      transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-          // if an is not sent
-          console.log(info) 
-        } 
-      });
+      // /// SEND EMAIL TO USER EMAIL
+      // const output = emailAndPasswordTemplateEmail(userObj.email,userObj.passwordToSend );
+      // /// transporter
+      // let mailOptions = {
+      //   from: `"Academic Advising Unit at Islamic University" <${SENDGRID_SENDER_EMAIL}>`, // sender address 
+      //   to: `${userObj.id}@iu.edu.sa`, // list of receivers
+      //   subject: "Advisor Registeration in Academic Advising",
+      //   html: output,
+      // };
+      // transporter.sendMail(mailOptions, (err, info) => {
+      //   if (err) {
+      //     // if an is not sent
+      //     console.log(info) 
+      //   } 
+      // });
 
       return res.render("advisingUnitPages/aauRegisterAdvisors", {
         layout: "advisingUnit",
@@ -162,11 +164,61 @@ exports.registerAdvisors = async (req, res) => {
   }
 };
 
-exports.renderAssignStudentsToAdvisors = (req, res) => {
+exports.renderAssignStudentsToAdvisors = async (req, res) => {
+
+  // get all list of advisors
+  let advisors = await Staff.find({faculty_id:res.user.faculty, role: roles.advisor})
+  let students = await Students.find({faculty_id:res.user.faculty}, 'id name status advisor_id')
+
+  let unassignedStudents = [];
+  for(let i = 0; i< students.length; i++){
+    if(students[i].advisor_id == undefined){
+      unassignedStudents.push({...students[i]})
+    }
+  }
+  let noStudents = false ;
+  if(unassignedStudents.length <= 0) noStudents = true ;
+
+  // now present the student
+
   res.render("advisingUnitPages/aauAssign", {
     layout: "advisingUnit",
+    advisorList: advisors,
+    isThereStudents: noStudents , 
+    studentsList: unassignedStudents,
   });
 };
+
+exports.assignStudentsToAdvisors =  async (req, res) => {
+
+  const advisorID = req.body.data.advisor
+  
+  const { studentsMongoId,
+    studentId} = req.body.data
+
+    console.log('mogo',studentsMongoId)
+    console.log("studentId: ",studentId)
+  try {
+    let a = await AdvivsorStudents.findOne({advisor: advisorID})
+    console.log(a.students)
+    a.students = [...a.students, ...studentsMongoId]
+    a.save();
+
+  } catch(e){
+    return res.status(400).json({error: e})
+  }
+
+  studentId.forEach( async (id) => {
+    
+    await Students.update( {id:id}, {
+      $set: {advisor_id: advisorID}
+    })
+
+  })
+ 
+  return res.status(200).json({data:studentId})
+
+}
 
 //*********************************************************************//
 
@@ -175,7 +227,7 @@ exports.renderAssignStudentsToAdvisors = (req, res) => {
 /**
  * some work need to be done
  * add 
- * -FACULITY_ROLE to object
+ * -FACULITY_ROLE to object ==>> added 
  * -Handle errors
  * -
  */
@@ -231,8 +283,8 @@ exports.registerStudents = async (req, res) => {
     // create user
     let bulkStudentWrite = [];
     for (record of records) {
-      let obj = JSON.parse(JSON.stringify(record)); // a turn around to copy an object (deep copy)
-      obj.faculty_id = '', // should be taken from advisingUnit
+      let obj = JSON.parse(JSON.stringify(record));
+      obj.faculty_id = res.user.faculty,
       obj.email = `${record.id}@stu.iu.edu.sa`;
       obj.status = "undergraduate";
       bulkStudentWrite.push(obj);
@@ -263,7 +315,7 @@ exports.registerStudents = async (req, res) => {
 
         let userInsert = await Students.create(student)
  
-        console.log('inserted user', userInsert)
+        // console.log('inserted user', userInsert)
       }
 
     }

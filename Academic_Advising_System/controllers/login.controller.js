@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
 
             /// ENHANCE ADD FACULITY ID HERE
             let tokenBody = {
-                userId: student._id , // _id student in DB [not his uni id]
+                userId: student._id, // _id student in DB [not his uni id]
                 role: roles.student,
             }
 
@@ -63,7 +63,7 @@ exports.login = async (req, res) => {
 
         try {
             // query DB for the id
-            const staff = await Staff.findOne({id: id}).select('password role').exec()
+            const staff = await Staff.findOne({id: id}).select('password role faculty_id').exec()
             // once you get the id,
             // check if user exists
 
@@ -83,6 +83,7 @@ exports.login = async (req, res) => {
             let tokenBody = {
                 userId: staff._id , // _id staff in DB [not his uni id]
                 role: staff.role ,
+                faculty: staff.faculty_id,
             }
 
             let token = await jwt.sign(tokenBody, process.env.JWT_ACCESS_KEY);
@@ -122,6 +123,8 @@ exports.login = async (req, res) => {
     } else {
         return res.status(401).redirect('/') // fraud user
     }
+    return res.status(401).redirect('/') // fraud user
+
 }
 
 exports.logout = (req, res) => {
