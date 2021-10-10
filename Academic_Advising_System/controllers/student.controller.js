@@ -41,8 +41,9 @@ exports.renderStudentProfileEdit = async (req, res) =>{
     // on Edit button click activate Edit mode and render
     else if(req.body.hasOwnProperty("StuEditBtn")){
         // For keeping User inputs
+        let majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
         for (let element in majorsSelection){
-            if (req.body.major === element){
+            if (student.major === element){
                 majorsSelection[element] = true;
                 break;
             }
@@ -50,7 +51,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
 
         let maritalSelection = {'single':false, 'married':false}
         for (let element in maritalSelection){
-            if (req.body.martialStatus === element){
+            if (student.marital_status === element){
                 maritalSelection[element] = true;
                 break;
             }
