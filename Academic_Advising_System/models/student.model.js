@@ -42,8 +42,10 @@ const studentSchema = new Schema({
     },
     
     // student Personal Information
-    famliy_members_count: Number,
-    permenet_addres: String,
+    marital_status: String,
+    family_members_count: Number,
+    order_in_family: String,
+    permanent_address: String,
     present_address: String,
     reference_person: String,
     reference_person_phone: Number,

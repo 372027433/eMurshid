@@ -1,26 +1,234 @@
+<<style>
 
-<div class="main-content">
-    <div class="content">
-        <div class="body-header">
-            <header>
-                <h1><span class="trn">Personal Profile</span></h1>
-            </header>
-            <hr>
-        </div>
-        <div class="body-content">
-<!--            <form >-->
-<!--                <img src="" >-->
+</style>
 
-<!--                <input class="form-control" type="text"  placeholder="enter full name" readonly>-->
+{{#if editMode}}
+    <div class="main-content">
+        <div class="content">
+            <div class="body-header">
+                <header>
+                    <h1><span class="trn">Personal Profile</span></h1>
+                </header>
+                <hr>
+            </div>
+            <!--        <div class="body-content">-->
+            <!-- Student Profile -->
+            <div class="student-profile py-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-transparent text-center">
+                                    <img class="profile_img" src="https://placeimg.com/640/480/arch/any" alt="">
+                                    <h3>{{stuName}}</h3>
 
-<!--                <input type="radio" id="html" name="fav_language" value="HTML">-->
-<!--                <label for="html">HTML</label><br>-->
-<!--                <input type="radio" id="css" name="fav_language" value="CSS">-->
-<!--                <label for="css">CSS</label><br>-->
-<!--                <input type="radio" id="javascript" name="fav_language" value="JavaScript">-->
-<!--                <label for="javascript">JavaScript</label><br><br>-->
-<!--                <input type="submit" value="Submit">-->
-<!--            </form>-->
+                                </div>
+
+                                <div class="card-body">
+                                    <p class="mb-0"><strong class="pr-1">Student ID: </strong>{{stuId}}</p>
+                                    <!--                                <p class="mb-0"><strong class="pr-1">Class:</strong>4</p>-->
+                                    <!--                                <p class="mb-0"><strong class="pr-1">Section:</strong>A</p>-->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-transparent border-0">
+                                    <h3 class="mb-0"><i class="far fa-clone pr-1"></i>General Information</h3>
+                                </div>
+                                <div class="card-body pt-0">
+                                    <form method="post" name="stuProfile" novalidate>
+                                        <table class="table table-bordered">
+                                            {{#if valErrors}}
+                                            <h3 class="Errors">   {{valErrors}} </h3>
+                                            {{/if}}
+                                            <tr>
+                                                <th >Major</th>
+                                                <!--                                        <td width="2%">:</td>-->
+                                                <td>
+
+                                                    <select name="major" class="form-select"  aria-label="Select Major"  required>
+                                                        <option value="" selected>Select Major</option>
+                                                        <option value="computer science" {{#if CS}} selected {{/if}}>Computer Science</option>
+                                                        <option value="information technology" {{#if IT}} selected {{/if}}>Information Technology</option>
+                                                        <option value="information system" {{#if IS}} selected {{/if}}>Information System</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th >Marital Status:</th>
+                                                <!--                                        <td width="2%">:</td>-->
+                                                <td>
+                                                    <select name="martialStatus" class="form-select"  aria-label="Select Marital Status" required >
+                                                        <option value="" selected>Select Marital Status</option>
+                                                        <option value="single" {{#if single}} selected {{/if}} >Single</option>
+                                                        <option value="married" {{#if married}} selected {{/if}}>Married</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th >Family Members Count</th>
+                                                <!--                                        <td width="2%">:</td>-->
+                                                <td><input
+                                                        {{#if invalid.familyMembersCount}}
+                                                        class = "invalid"
+                                                        {{/if}}
+                                                        name="familyMembersCount" type="number" value="{{family_members_count}}" required></td>
+                                            </tr>
+                                            <tr>
+                                                <th >Order In Family</th>
+                                                <!--                                        <td width="2%">:</td>-->
+                                                <td><input
+                                                    {{#if invalid.orderInFamily}}
+                                                    class = "invalid"
+                                                    {{/if}}
+                                                        name="orderInFamily" type="number" value="{{order_in_family}}" required></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Permanent Address</th>
+                                                <!--                                        <td width="2%">:</td>-->
+                                                <td><input
+                                                    {{#if invalid.permanentAddress}}
+                                                    class = "invalid"
+                                                    {{/if}}
+                                                        name="permanentAddress" type="text" value="{{permanent_address}}" required></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Present Address</th>
+                                                <!--                                        <td width="2%">:</td>-->
+                                                <td><input
+                                                    {{#if invalid.presentAddress}}
+                                                    class = "invalid"
+                                                    {{/if}}
+                                                        name="presentAddress" type="text" value="{{present_address}}" required></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Reference Person</th>
+                                                <!--                                        <td width="2%">:</td>-->
+                                                <td><input
+                                                    {{#if invalid.referencePerson}}
+                                                    class = "invalid"
+                                                    {{/if}}
+                                                        name="referencePerson" type="text" value="{{reference_person}}" required></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Reference Person Phone</th>
+                                                <!--                                        <td width="2%">:</td>-->
+                                                <td><input
+                                                    {{#if invalid.referencePersonPhone}}
+                                                    class = "invalid"
+                                                    {{/if}}
+                                                        name="referencePersonPhone" type="tel" value="{{reference_person_phone}}" required></td>
+                                            </tr>
+
+                                        </table>
+                                        <button type="submit" name="stuUpdateBtn" >update</button>
+                                        <button type="button" name="cancel" onclick="location.href='/student/studentProfile'" >cancel</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+{{else}}
+    <div class="main-content">
+        <div class="content">
+            <div class="body-header">
+                <header>
+                    <h1><span class="trn">Personal Profile</span></h1>
+                </header>
+                <hr>
+            </div>
+            <!--        <div class="body-content">-->
+            <!-- Student Profile -->
+
+            <div class="student-profile py-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-transparent text-center">
+                                    <img class="profile_img" src="https://placeimg.com/640/480/arch/any" alt="">
+                                    <h3>{{stuName}}</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-0"><strong class="pr-1">Student ID: </strong>{{stuId}}</p>
+                                    <!--                                <p class="mb-0"><strong class="pr-1">Class:</strong>4</p>-->
+                                    <!--                                <p class="mb-0"><strong class="pr-1">Section:</strong>A</p>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-transparent border-0">
+                                    <h3 class="mb-0"><i class="far fa-clone pr-1"></i>General Information</h3>
+                                </div>
+                                <div class="card-body pt-0">
+                                    <table class="table table-bordered">
+                                        <div>
+
+                                            {{#if errorMessage}}
+                                                <h2 class="Errors">{{errorMessage}} </h2>>
+                                            {{else}}
+                                                <h2 class="Errors"> {{successMessage}}</h2>
+                                            {{/if}}
+                                        </div>
+                                        <tr>
+                                            <th >Major</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td> {{major}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th >Marital Status:</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td>{{marital_status}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th >Family Members Count</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td>{{family_members_count}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th >Order In Family</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td>{{order_in_family}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Permanent Address</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td>{{permanent_address}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Present Address</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td>{{present_address}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Reference Person</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td>{{reference_person}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Reference Person Phone</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td>{{reference_person_phone}}</td>
+                                        </tr>
+
+                                    </table>
+                                    <form method="post">
+                                    <button type="submit" name="StuEditBtn"  >Edit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/if}}
+
