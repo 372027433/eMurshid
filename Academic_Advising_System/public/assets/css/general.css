@@ -317,4 +317,8 @@ width: inherit;
   border-color: red;
 }
 
+.student-profile .Success{
+  color: green;
+}
+
 /*-----------------------*/
