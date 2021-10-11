@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server",
-    "dev": "set NODE_ENV=development& nodemon server"
+    "dev": "set NODE_ENV=development&& nodemon -e js,hbs,css server.js"
   },
   "keywords": [],
   "author": "Abdullah Salim, Abdullqader Albai, Abdullah Abu Alsoud",
