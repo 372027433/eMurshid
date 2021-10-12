@@ -352,6 +352,19 @@ button.ShowAllMsg {
   border-radius: 28px;
   width: -webkit-fill-available;
 }
+input[type="file"] {
+  background-color: #c6a569;
+  border: none;
+  color: white;
+  padding: 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 31px auto 3px;
+  cursor: pointer;
+  border-radius: 28px;
+  }
 
   
  

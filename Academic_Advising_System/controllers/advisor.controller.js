@@ -57,3 +57,23 @@ exports.renderResolveExcuses = (req, res) => {
         layout: 'advisor'
     })
 }
+
+
+
+exports.messagesend = (req, res) => {
+    let thedatenow = new Date();
+    let messagerecord = new message({
+        msgfrom : res.user.userId ,
+        msgto : "61606be7cf646e13ed87a747",
+        msgtitel : req.body.Titelmsg,
+        msgcontent : req.body.massegContent,
+        thetime : `${thedatenow.getHours()}:${thedatenow.getMinutes()}`,
+        thedate : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
+    }); 
+    messagerecord.save();
+
+    res.render("studentPages/contactStudentToAdvisor",{
+        layout: 'student' 
+    })
+    
+}

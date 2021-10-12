@@ -3,6 +3,10 @@ const {renderMyMessages} = require("./student.controller");
 
 //Message MOdel
 const message = require('../models/messages.model')
+// student MODELS
+const Students = require('../models/student.model')
+// Staf MODELS
+const staff = require('../models/staff.model')
 
 exports.renderMainPage = (req, res) => {
     res.render('studentPages/studentMain',{
@@ -22,10 +26,21 @@ exports.renderContactAdvisor = (req, res) => {
     });
 };
 
-exports.renderMyMessages = (req, res) => {
-    res.render('studentPages/studentMessages', {
-        layout: 'student'
-    });
+exports.renderMyMessages = async (req, res) => {
+  let x = await message.find({"msgto" : `${res.user.userId}`}).populate('msgfrom','name -_id').exec(function(err,posts){
+    if(err){
+            res.render('studentPages/studentMessages' , {
+                err: err ,
+            }); 
+            console.log(err);
+        }
+        else {
+         res.render('studentPages/studentMessages' , {
+             messagesList : posts.reverse(),
+             layout : 'student'
+         })      
+        } 
+  });
 };
 
 
@@ -61,16 +76,13 @@ exports.renderNewExcuse = (req, res) => {
         layout: 'student'
     });
 };
-
+//msgto : res.user.advisor_id
 
 exports.messagesend = (req, res) => {
-   // for tist::::> console.log("hi my func")
-console.log(res.user.userId)
     let thedatenow = new Date();
     let messagerecord = new message({
-        id : "1",
         msgfrom : res.user.userId ,
-        msgto : "44555",
+        msgto : "61606be7cf646e13ed87a747",
         msgtitel : req.body.Titelmsg,
         msgcontent : req.body.massegContent,
         thetime : `${thedatenow.getHours()}:${thedatenow.getMinutes()}`,
@@ -83,19 +95,3 @@ console.log(res.user.userId)
     })
     
 }
-
-exports.ShowMsg = (req,res)=> {
-    let posts = message.find({}, function(err, posts){
-        if(err){
-            res.render('studentPages/studentMessages' , $('.alert').alert(err));
-            console.log(err);
-        }
-        else {
-         res.render('studentPages/studentMessages' , {
-             messagesList : posts,
-             layout : 'student'
-         })      
-        }
-    });
-
-};

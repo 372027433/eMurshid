@@ -9,12 +9,15 @@
             <hr>
         </div>
         <div class="body-content">
-                <div class="alert alert-danger" role="alert"> {{err}}</div>
+                {{#if err}}
+                    <div class="alert alert-danger" role="alert"> {{err}}</div>
+                {{/if }}
                 <form class="MessagesfromDb" action="/student/MsgFromDb" method="POST">
-                    <button class="ShowAllMsg" >Show All Msg</button>
+                    {{!-- <button class="ShowAllMsg" >Show All Msg</button> --}}
                     <div id="ResevedMSG">
+                        
                         {{#each messagesList  }} 
-                            {{#each this}}            
+                            {{#each this}}     
                                 {{#if this.msgtitel}}
                                     <div class="container" style="background:lightblue;">
                                     <img align src="/assets/img/user-circle-solid.svg" alt="avatar" style="width: 50px; float: left; padding: 4px; margin: 3px;">
@@ -28,6 +31,7 @@
                             {{/each}}   
                             <br>
                         {{/each}}
+                    
                     </div>
             </form>
         </div>
