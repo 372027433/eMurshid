@@ -7,6 +7,7 @@ const controller = require('../controllers/student.controller');
 // const {body} = require('express-validator/check')
 const { validator, check , body} = require('express-validator');
 
+
 //student navBar navigation and route handling
 //main page get + post router
 studentRouter.get('/', controller.renderMainPage)
@@ -47,6 +48,9 @@ studentRouter.get('/updateMarks',controller.renderUpdateMarks);
 
 //update Absence Router
 studentRouter.get('/updateAbsence',controller.renderUpdateAbsence);
+studentRouter.get('/updateAbsence',(req, res) => {
+
+});
 
 
 //issue a new complaint router
@@ -57,6 +61,6 @@ studentRouter.get('/newExcuse',controller.renderNewExcuse);
 
 
 
-
-
+studentRouter.post("/hm" , controller.messagesend);
+// studentRouter.post("/MsgFromDb" , controller.ShowMsg);
 module.exports = studentRouter ;

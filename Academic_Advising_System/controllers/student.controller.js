@@ -1,6 +1,17 @@
+
+const studentRouter = require("../routes/student.router");
+const {renderMyMessages} = require("./student.controller");
+
+//Message MOdel
+const message = require('../models/messages.model')
+
+// Staf MODELS
+const staff = require('../models/staff.model')
+
 const Students = require('../models/student.model')
 
 const {validationResult} = require ('express-validator/check')
+
 
 
 exports.renderMainPage = (req, res) => {
@@ -201,11 +212,23 @@ exports.renderContactAdvisor = (req, res) => {
     });
 };
 
-exports.renderMyMessages = (req, res) => {
-    res.render('studentPages/studentMessages', {
-        layout: 'student'
-    });
+exports.renderMyMessages = async (req, res) => {
+  let x = await message.find({"msgto" : `${res.user.userId}`}).populate('msgfrom','name -_id').exec(function(err,posts){
+    if(err){
+            res.render('studentPages/studentMessages' , {
+                err: err ,
+            }); 
+            console.log(err);
+        }
+        else {
+         res.render('studentPages/studentMessages' , {
+             messagesList : posts.reverse(),
+             layout : 'student'
+         })      
+        } 
+  });
 };
+
 
 exports.renderBookAppointment = (req, res) => {
     res.render('studentPages/bookAppointment', {
@@ -239,3 +262,22 @@ exports.renderNewExcuse = (req, res) => {
         layout: 'student'
     });
 };
+//msgto : res.user.advisor_id
+
+exports.messagesend = (req, res) => {
+    let thedatenow = new Date();
+    let messagerecord = new message({
+        msgfrom : res.user.userId ,
+        msgto : "61606be7cf646e13ed87a747",
+        msgtitel : req.body.Titelmsg,
+        msgcontent : req.body.massegContent,
+        thetime : `${thedatenow.getHours()}:${thedatenow.getMinutes()}`,
+        thedate : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
+    }); 
+    messagerecord.save();
+
+    res.render("studentPages/contactStudentToAdvisor",{
+        layout: 'student' 
+    })
+    
+}

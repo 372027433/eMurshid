@@ -249,7 +249,9 @@ ul {
         
     }
 }
-/*this add in add student in acdimic advising unit*/
+/*************************************************
+this add in add student in acdimic advising unit
+**************************************************/
 label {
   font-weight: bold;
   font-family: Arial;
@@ -284,6 +286,145 @@ margin: 43px auto 3px;
 cursor: pointer;
 border-radius: 28px;
 width: inherit;
+}
+ /*
+***********************************
+contact student to advisor 
+***********************************
+*/
+#massegContent {
+  width: 100%;
+  accent-color: #be9d5e;
+  height: 120px;
+  resize: initial;
+  autofill: false;
+}
+
+#Titelmsg {
+  width: 84%;
+  autofill :false ;
+  accent-color: #c6a569;
+  
+}
+
+.submetbtn {
+  background-color: #c6a569;
+  border: none;
+  color: white;
+  padding: 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 31px auto 3px;
+  cursor: pointer;
+  border-radius: 28px;
+  width: -webkit-fill-available
+}
+
+/*
+***********************************
+Reseve Masseges
+***********************************
+*/
+.SearchArea{
+  width: 80%;
+  accent-color: #c6a569;
+}
+#SearchMsgBtn {
+  width: 10%;
+  height: 18px;
+  accent-color: #c6a569;
+  background-image: url(/assets/img/searchIcon.png);
+  padding: 2px;
+}
+#ResevedMSG {
+  overflow: scroll;
+  accent-color: #c6a569;
+  height: 300px;
+  background: lightgray;
+  padding: 10px;
+  margin: 18px;
+}
+button.ShowAllMsg {
+  background-color: #c6a569;
+  border: none;
+  color: white;
+  padding: 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 31px auto 3px;
+  cursor: pointer;
+  border-radius: 28px;
+  width: -webkit-fill-available;
+}
+input[type="file"] {
+  background-color: #c6a569;
+  border: none;
+  color: white;
+  padding: 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 31px auto 3px;
+  cursor: pointer;
+  border-radius: 28px;
+  }
+
+
+ /***********************************
+  Absence eecuse form
+  ***********************************
+  */ 
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th, td {
+    text-align: center;
+    padding: 8px;
+  }
+  input.code {
+    width: 100%;
+}
+tr {
+  font-size: 14px;
+}
+  tr:nth-child(even) {background-color: #f2f2f2;}
+  textarea.takedata {
+    accent-color: #c6a569;
+    width: 90%;
+    background: rgba(255, 0, 0, 0.363);
+    padding: 10px;
+    margin: 8px;
+    resize: initial;
+    height: 100px;
+}
+textarea.takedatafromstu {
+  width: 90%;
+  background: rgb(228 202 154);
+  padding: 10px;
+  margin: 8px;
+  resize: initial;
+  height: 100px;
+}
+input#submit {
+  background-color: #c6a569;
+  border: none;
+  color: white;
+  padding: 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 31px auto 3px;
+  cursor: pointer;
+  border-radius: 28px;
+  width: -webkit-fill-available;
 }
 
 /*student profile*/
@@ -330,3 +471,4 @@ width: inherit;
 }
 
 /*-----------------------*/
+

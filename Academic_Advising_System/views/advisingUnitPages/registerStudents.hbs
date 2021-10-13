@@ -19,11 +19,16 @@
                     {{!-- remove after --}}
                     <br>
 
-                    <input type="file" name="students_register_file">
-                    {{!-- remove after --}}
-                    <br>
-                    <button type="submit"><span class="trn">Add Students</span></button>
-                </div>
+
+                <label for="reg_file_students"><span class="trn">Attach student register file (EXCEL):</span></label>
+                {{!-- remove after --}}
+                <br>
+
+                <input type="file" name="students_register_file">
+                {{!-- remove after --}}
+                <br>
+                <button id="submitbtn" type="submit"><span class="trn">Add Students</span></button>
+
             </form>
 
                 {{#if displayRegistered }}

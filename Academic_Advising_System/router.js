@@ -32,13 +32,17 @@ router.get('/logout',loginController.logout)
  * a function that says isDean(), isAdvisingUnit(), isStudent(), isAdvisor() as a middleware which will redirect user to his page
  */
 
+
 router.use('/advisingUnit',isAuthorized, checkUser(roles.advisingUnit), advisingUnitRouter )
+
 
 router.use('/student', isAuthorized, checkUser(roles.student), studentRouter )
 
-router.use('/dean', isAuthorized, checkUser(roles.dean), deanRouter)
+router.use('/dean',  deanRouter)
+//isAuthorized, checkUser(roles.dean),
 
-router.use('/advisor', isAuthorized, checkUser(roles.advisor), advisorRouter)
+router.use('/advisor',  advisorRouter)
+//isAuthorized, checkUser(roles.advisor),
 
 
 module.exports = router ;

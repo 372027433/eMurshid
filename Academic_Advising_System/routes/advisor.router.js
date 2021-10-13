@@ -26,7 +26,7 @@ advisorRouter.get('/issueComplaint',controller.renderIssueComplaint);
 advisorRouter.get('/resolveExcuses',controller.renderResolveExcuses);
 
 
-
+advisorRouter.post("/am" , controller.messagesend);
 
 
 
