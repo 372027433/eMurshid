@@ -24,7 +24,8 @@ const studentSchema = new Schema({
         required: true, 
     },
     advisor_id : {
-        type: String,
+        type: mongoose.Types.ObjectId,
+        ref: 'staff',
     },
     faculty_id: String, // should be Faculity IDs which taken from advisingUnit since each advisingUnit will add their students
     // so once added we will be adding advisingUnitMemberFaculityID and add to student
@@ -42,11 +43,17 @@ const studentSchema = new Schema({
     },
     
     // student Personal Information
-    famliy_members_count: Number,
-    permenet_addres: String,
+    marital_status: String,
+    family_members_count: Number,
+    order_in_family: String,
+    permanent_address: String,
     present_address: String,
     reference_person: String,
     reference_person_phone: Number,
+},
+{
+    collection:'students',
+    timestamps: true
 })
 
 const Students = mongoose.model('students', studentSchema);

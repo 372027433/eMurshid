@@ -64,6 +64,14 @@ ul {
   display: none;
 }
 
+.error {
+  color: red ,
+}
+
+.success {
+  color: green ;
+}
+
 /**
 =========================
      Header Style       
@@ -366,6 +374,7 @@ input[type="file"] {
   border-radius: 28px;
   }
 
+
  /***********************************
   Absence eecuse form
   ***********************************
@@ -417,3 +426,49 @@ input#submit {
   border-radius: 28px;
   width: -webkit-fill-available;
 }
+
+/*student profile*/
+.student-profile .card {
+  border-radius: 10px;
+}
+
+.student-profile .card .card-header .profile_img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin: 10px auto;
+  border: 10px solid #ccc;
+  border-radius: 50%;
+}
+
+.student-profile .card h3 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.student-profile .card p {
+  font-size: 16px;
+  color: #000;
+}
+
+.student-profile .table th {
+  width: 40%;
+}
+.student-profile .table td {
+  font-size: 14px;
+  padding: 5px 10px;
+  color: #000;
+}
+.student-profile .Errors{
+  color: red;
+}
+.student-profile .invalid{
+  border-color: red;
+}
+
+.student-profile .Success{
+  color: green;
+}
+
+/*-----------------------*/
+

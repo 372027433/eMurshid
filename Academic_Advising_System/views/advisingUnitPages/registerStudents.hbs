@@ -8,8 +8,17 @@
             <hr>
         </div>
         <div class="body-content">
+
+            {{#if successMsg}}
+                <h4 class="success"><span class="trn">{{successMsg}}</span></h4>
+            {{/if}}
             
             <form action="/advisingUnit/registerStudents" method="post" enctype="multipart/form-data">
+                <div style="border: 1px solid black;padding:10px 0 ; margin:10px 0">
+                    <label for="reg_file_students"><span class="trn">Attach student register file (EXCEL):</span></label>
+                    {{!-- remove after --}}
+                    <br>
+
 
                 <label for="reg_file_students"><span class="trn">Attach student register file (EXCEL):</span></label>
                 {{!-- remove after --}}
@@ -21,6 +30,26 @@
                 <button id="submitbtn" type="submit"><span class="trn">Add Students</span></button>
 
             </form>
+
+                {{#if displayRegistered }}
+                    <h2>Students who are already registered at the system: </h2>
+                    <table class="table table-strip">
+                        <tr>
+                            <th>Name</th>
+                            <th>id</th>
+                        </tr>
+                        {{#each registeredStudents as |studentObj studentKey| }}
+                            {{#each studentObj}}
+                                {{#if studentObj.name}}
+                                    <tr>
+                                        <td>{{ this.name}}</td>
+                                        <td>{{ this.id}}</td>
+                                    </tr>
+                                {{/if}}
+                            {{/each}}
+                        {{/each}}
+                    </table>
+                {{/if}}
 
             
         </div>

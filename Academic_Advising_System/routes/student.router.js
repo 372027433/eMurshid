@@ -4,6 +4,8 @@
 
 const studentRouter = require('express').Router();
 const controller = require('../controllers/student.controller');
+// const {body} = require('express-validator/check')
+const { validator, check , body} = require('express-validator');
 
 
 //student navBar navigation and route handling
@@ -14,7 +16,17 @@ studentRouter.get('/', controller.renderMainPage)
 
 // student Profile router
 studentRouter.get('/studentProfile',controller.renderStudentProfile);
-// studentRouter.post('/studentProfile',controller.) ...
+studentRouter.post('/studentProfile',
+    [
+        body (['major','martialStatus'],'Please select Major And Martial Status').not().isEmpty(),
+        body(['permanentAddress','presentAddress','referencePerson'] , ' only text values are valid in permanentAddress & presentAddress & referencePerson')
+            .not().isEmpty().trim().escape()
+            .matches('^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_ ]*$'),
+        body(['familyMembersCount','orderInFamily' , 'referencePersonPhone'],'only numbers are valid in family Members Count & order In Family & reference Person Phone')
+            .not().isEmpty().trim().escape()
+            .isNumeric()
+    ]
+    ,controller.renderStudentProfileEdit);
 
 
 // Contact Advisor as a student
