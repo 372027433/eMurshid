@@ -72,8 +72,8 @@ exports.messagesend = (req, res) => {
     }); 
     messagerecord.save();
 
-    res.render("studentPages/contactStudentToAdvisor",{
-        layout: 'student' 
+    res.render("studentPages/advisorMessageStudents",{
+        layout: 'advisor' 
     })
     
 }
