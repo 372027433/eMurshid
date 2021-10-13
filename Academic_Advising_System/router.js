@@ -35,14 +35,11 @@ router.get('/logout',loginController.logout)
 
 router.use('/advisingUnit',isAuthorized, checkUser(roles.advisingUnit), advisingUnitRouter )
 
+router.use('/student', isAuthorized, checkUser(roles.student), studentRouter)
 
-router.use('/student', isAuthorized, checkUser(roles.student), studentRouter )
+router.use('/dean',isAuthorized, checkUser(roles.dean), deanRouter)
 
-router.use('/dean',  deanRouter)
-//isAuthorized, checkUser(roles.dean),
-
-router.use('/advisor',  advisorRouter)
-//isAuthorized, checkUser(roles.advisor),
+router.use('/advisor', isAuthorized, checkUser(roles.advisor), advisorRouter)
 
 
 module.exports = router ;
