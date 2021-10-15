@@ -1,3 +1,19 @@
+<style>
+    th{
+        margin: 10px;
+        padding: 10px;
+    }
+    td{
+        text-align: center;
+        vertical-align: middle;
+        width: 30%;
+        height: 20%;
+        margin: 10px;
+        padding: 10px;
+
+    }
+</style>
+
 <div class="main-content">
     <div class="content">
         <div class="body-header">
@@ -6,8 +22,176 @@
             </header>
             <hr>
         </div>
-        <div class="body-content">
+        <!--        <div class="body-content">-->
+        <!-- Student Profile -->
+        <div class="student-profile py-4">
+            <div class="container">
+<!--                <div class="row">-->
+<!--                    <div class="col-lg-4">-->
+<!--                        <div class="card shadow-sm">-->
+<!--                            <div class="card-header bg-transparent text-center">-->
+<!--                                <img class="profile_img" src="https://placeimg.com/640/480/arch/any" alt="">-->
+<!--                                <h3>{{stuName}}</h3>-->
 
+<!--                            </div>-->
+
+<!--                            <div class="card-body">-->
+<!--                                <p class="mb-0"><strong class="pr-1">Student ID: </strong>{{stuId}}</p>-->
+<!--                                &lt;!&ndash;                                <p class="mb-0"><strong class="pr-1">Class:</strong>4</p>&ndash;&gt;-->
+<!--                                &lt;!&ndash;                                <p class="mb-0"><strong class="pr-1">Section:</strong>A</p>&ndash;&gt;-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+                    <div class="col-lg-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+
+                            </div>
+                            <div class="card-body pt-0">
+                                <form method="post" name="stuProfile" >
+                                    <table class="table table-bordered">
+<!--                                        {{#if valErrors}}-->
+<!--                                            <h3 class="Errors">   {{valErrors}} </h3>-->
+<!--                                        {{/if}}-->
+<!--                                        <tr>-->
+<!--                                            <th >Major</th>-->
+<!--                                            &lt;!&ndash;                                        <td width="2%">:</td>&ndash;&gt;-->
+<!--                                            <td>-->
+
+<!--                                                <select name="major" class="form-select"  aria-label="Select Major"  required>-->
+<!--                                                    <option value="" selected>Select Major</option>-->
+<!--                                                    <option value="computer science" {{#if CS}} selected {{/if}}>Computer Science</option>-->
+<!--                                                    <option value="information technology" {{#if IT}} selected {{/if}}>Information Technology</option>-->
+<!--                                                    <option value="information system" {{#if IS}} selected {{/if}}>Information System</option>-->
+<!--                                                </select>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <th >Marital Status:</th>-->
+<!--                                            &lt;!&ndash;                                        <td width="2%">:</td>&ndash;&gt;-->
+<!--                                            <td>-->
+<!--                                                <select name="martialStatus" class="form-select"  aria-label="Select Marital Status" required >-->
+<!--                                                    <option value="" selected>Select Marital Status</option>-->
+<!--                                                    <option value="single" {{#if single}} selected {{/if}} >Single</option>-->
+<!--                                                    <option value="married" {{#if married}} selected {{/if}}>Married</option>-->
+<!--                                                </select>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+                                        <tr>
+                                            <table class="table-bordered">
+                                                <label >Available Appointments</label>
+                                                <tr>
+                                                    <th>sunday</th>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option1">2:00 - 2:30</label> </td>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option2">3:00 - 4:00</label> </td>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option2">5:00 - 6:00</label> </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Monday</th>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option1">8:00 - 8:30</label> </td>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option2">10:00 - 11:00</label> </td>
+                                                    <td>  </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Tuesday</th>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option1">1:00 - 1:30</label> </td>
+                                                    <td>  </td>
+                                                    <td>  </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Wednesday</th>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option1">10:00 - 11:00</label> </td>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option2">3:00 - 4:00</label> </td>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option2">5:00 - 6:00</label> </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Thursday</th>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option1">2:00 - 2:30</label> </td>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option2">3:00 - 4:00</label> </td>
+                                                    <td> <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
+                                                        <label class="btn btn-secondary" for="option2">5:00 - 6:00</label> </td>
+                                                </tr>
+                                            </table>
+
+<!--                                            <th ></th>-->
+<!--                                            <td><input-->
+<!--                                                {{#if invalid.familyMembersCount}}-->
+<!--                                                class = "invalid"-->
+<!--                                                {{/if}}-->
+<!--                                                class="form-control"  name="familyMembersCount" type="number" value="{{family_members_count}}" required></td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <th >Order In Family</th>-->
+<!--                                            &lt;!&ndash;                                        <td width="2%">:</td>&ndash;&gt;-->
+<!--                                            <td><input-->
+<!--                                                {{#if invalid.orderInFamily}}-->
+<!--                                                class = "invalid"-->
+<!--                                                {{/if}}-->
+<!--                                                class="form-control"  name="orderInFamily" type="number" value="{{order_in_family}}" required></td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <th>Permanent Address</th>-->
+<!--                                            &lt;!&ndash;                                        <td width="2%">:</td>&ndash;&gt;-->
+<!--                                            <td><input-->
+<!--                                                {{#if invalid.permanentAddress}}-->
+<!--                                                class = "invalid"-->
+<!--                                                {{/if}}-->
+<!--                                                class="form-control"   name="permanentAddress" type="text" value="{{permanent_address}}" required></td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <th>Present Address</th>-->
+<!--                                            &lt;!&ndash;                                        <td width="2%">:</td>&ndash;&gt;-->
+<!--                                            <td><input-->
+<!--                                                {{#if invalid.presentAddress}}-->
+<!--                                                class = "invalid"-->
+<!--                                                {{/if}}-->
+<!--                                                class="form-control"  name="presentAddress" type="text" value="{{present_address}}" required></td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <th>Reference Person</th>-->
+<!--                                            &lt;!&ndash;                                        <td width="2%">:</td>&ndash;&gt;-->
+<!--                                            <td><input-->
+<!--                                                {{#if invalid.referencePerson}}-->
+<!--                                                class = "invalid"-->
+<!--                                                {{/if}}-->
+<!--                                                class="form-control"  name="referencePerson" type="text" value="{{reference_person}}" required></td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <th>Reference Person Phone</th>-->
+<!--                                            &lt;!&ndash;                                        <td width="2%">:</td>&ndash;&gt;-->
+<!--                                            <td><input-->
+<!--                                                {{#if invalid.referencePersonPhone}}-->
+<!--                                                class = "invalid"-->
+<!--                                                {{/if}}-->
+<!--                                                class="form-control"  name="referencePersonPhone" type="tel" value="{{reference_person_phone}}" required></td>-->
+<!--                                        </tr>-->
+                                            <tr>
+    <th></th>
+    <td><div class="row-1"></div></td>
+
+</tr>
+                                    </table>
+
+                                    <button style="margin: 20px" class="btn btn-primary" type="submit" name="stuUpdateBtn" > Submit </button>
+                                    <button class="btn btn-secondary" type="button" name="cancel" onclick="location.href='/student/studentProfile'" >cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
