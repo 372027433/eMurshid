@@ -26,23 +26,28 @@ exports.renderPendingExcuses = (req, res) => {
 }
 
 exports.renderRegisteredStudents = async (req, res) => {
-    let collegeStudents = await Students.find({faculty_id: faculty.computer_colege}).select('-password').populate('advisor_id')
-    // console.log(collegeStudents.length)
-    const students = []
-    for(let student of collegeStudents){
-        let studentObj = {}
-        
-        studentObj['name'] = student.name
-        studentObj['id'] = student.id
-        studentObj['status'] = student.status
-        studentObj['advisor'] = student.advisor_id.name
+    try{
 
-        students.push(studentObj)
-        
+        let collegeStudents = await Students.find({faculty_id: res.user.faculty}).select('-password').populate('advisor_id')
+
+        const students = []
+        for(let student of collegeStudents){
+            let studentObj = {}
+
+            studentObj['name'] = student.name
+            studentObj['id'] = student.id
+            studentObj['status'] = student.status
+            studentObj['advisor'] =  (student.advisor_id?.name) ? student.advisor_id?.name : "-----"
+    
+            students.push(studentObj)
+            
+        }
+
+        res.render('deanPages/deanRegisteredStudents',{
+            layout: 'dean',
+            students: students, 
+        })
+    } catch(e){
+        res.status(400).json({msg: 'error happening' + e})
     }
-    // console.log(students)
-    res.render('deanPages/deanRegisteredStudents',{
-        layout: 'dean',
-        students: students, 
-    })
 }
