@@ -1,9 +1,11 @@
 const Staff = require("../models/staff.model");
+const roles = require('../utils/roles');
 
 const bcrypt = require("bcrypt");
 
 exports.addAdmins = async (role, id, name, faculty_id = "") => {
   // check type of id
+  if(role == roles.advisor) return console.log("go and sign the advisor from the advisingUnit page please..!")
   if (typeof id !== "number") {
     return console.log("id should be number");
   }
