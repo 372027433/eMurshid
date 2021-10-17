@@ -8,6 +8,25 @@
         </div>
         <div class="body-content">
             <ul>
+                    <div id="ResevedMSG">
+                        
+                        {{#each messagesList  }} 
+                            {{#each this}}     
+                                {{#if this.msgtitel}}
+                                    <div class="msgcontainer" style="background:lightblue;">
+                                    <img align src="/assets/img/user-circle-solid.svg" alt="avatar" style="width: 50px; float: left; padding: 4px; margin: 3px;">
+                                    <div id="datetext" style="float: right; font-size: 10px; padding: 5px;">{{this.thedate}} </div>
+                                    <div id="timetext" style="float: left; font-size: 10px; padding: 5px;">{{this.thetime}}</div>
+                                    <div><h3 id="TitelOfMsg" style="float: left; font-size: 16px; padding: 11px;">message Titel : {{this.msgtitel}}</h3></div><br>
+                                    {{!-- <div><h5 id="messagfrom" style="font-size: 10px; padding: 40px; ">message from :{{this.msgfrom}}</h5></div> --}}
+                                    <div><textarea readonly style="resize: initial; background: snow; margin: 8px; padding: 5px; height: 70px; width: 80%;">{{this.msgcontent}}</textarea></div>
+                                    </div>
+                                {{/if}} 
+                            {{/each}}   
+                            <br>
+                        {{/each}}
+                    
+                    </div>
 
             </ul>
         </div>

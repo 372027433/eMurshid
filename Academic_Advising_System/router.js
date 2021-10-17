@@ -41,7 +41,7 @@ router.use('/student', isAuthorized, checkUser(roles.student), studentRouter )
 router.use('/dean',  deanRouter)
 //isAuthorized, checkUser(roles.dean),
 
-router.use('/advisor',  advisorRouter)
+router.use('/advisor', isAuthorized, checkUser(roles.advisor), advisorRouter)
 //isAuthorized, checkUser(roles.advisor),
 
 
