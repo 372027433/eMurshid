@@ -252,8 +252,14 @@ exports.renderUpdateAbsence = (req, res) => {
     });
 };
 
-exports.renderNewComplaint = (req, res) => {
+exports.renderNewComplaint = async (req, res) => {
+    const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
+    const getinarr = getstuinfo[0];
     res.render('studentPages/studentNewComplaint', {
+        stuname :getinarr.name ,
+        stuid : getinarr.id,
+        stumajor : getinarr.major,
+        stuadvisor : getinarr.advisor_id.name,
         layout: 'student'
     });
 };
@@ -269,6 +275,26 @@ exports.renderNewExcuse = (req, res) => {
 //msgto : res.user.advisor_id
 
 exports.messagesend = async (req, res) => {
+    const findadvisor = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "_id");
+    const getinarr =findadvisor[0];
+    let thedatenow = new Date();
+    let messagerecord = new message({
+        msgfrom : res.user.userId ,
+        msgto : getinarr.advisor_id._id,
+        msgtitel : req.body.Titelmsg,
+        msgcontent : req.body.massegContent,
+        thetime : `${thedatenow.getHours()}:${thedatenow.getMinutes()}`,
+        thedate : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
+    }); 
+    messagerecord.save();
+
+    res.render("studentPages/contactStudentToAdvisor",{
+        layout: 'student' 
+    })
+    
+}
+
+exports.submitcom = async (req, res) => {
     const findadvisor = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "_id");
     const getinarr =findadvisor[0];
     let thedatenow = new Date();
