@@ -880,3 +880,15 @@ dean complain
 #conten {
   height: 300px;
 }
+
+.users-container {
+  position: relative;
+  padding: 1rem 0;
+  border-right: 1px solid #e6ecf3;
+  height: 100%;
+  width: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}

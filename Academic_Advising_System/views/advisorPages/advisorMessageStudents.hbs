@@ -26,7 +26,7 @@
                                             {{#each this}}
                                                 {{#if this.id}}
                                                     <li class="person" data-chat="person1">
-                                                         <button type="button" class="person" data-toggle="modal" data-target="#{{this.id}}" data-whatever="@getbootstrap">
+                                                         <button type="button" class="person" data-bs-toggle="modal" data-bs-target="#a{{this.id}}" >
                                                                        
                                                         <div class="user">
                                                             <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Retail Admin">
@@ -41,7 +41,7 @@
                                                     </li>
 
                                                                                                                    <!-- Modal -->
-                                                                 <div class="modal fade" id="{{this.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                 <div class="modal fade" id="a{{this.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                                 <div class="modal-dialog" role="document">
                                                                     <div class="modal-content">
                                                                     <div class="modal-header">
@@ -61,7 +61,7 @@
                                                                         </form>
                                                                     </div>
                                                                     <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                                        
                                                                     </div>
                                                                     </div>
