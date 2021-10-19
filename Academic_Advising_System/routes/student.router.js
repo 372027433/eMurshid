@@ -7,6 +7,9 @@ const controller = require('../controllers/student.controller');
 // const {body} = require('express-validator/check')
 const { validator, check , body} = require('express-validator');
 
+const {uploader} = require('../middleware/multer')
+const multer = require("multer");
+
 
 //student navBar navigation and route handling
 //main page get + post router
@@ -56,8 +59,24 @@ studentRouter.get('/updateAbsence',(req, res) => {
 //issue a new complaint router
 studentRouter.get('/newComplaint',controller.renderNewComplaint);
 
-//submit a new excuse router
-studentRouter.get('/newExcuse',controller.renderNewExcuse);
+
+//get newAbsenceExcuse router
+studentRouter.get('/newAbsenceExcuse',controller.renderGetNewAbsenceExcuse);
+//Post newAbsenceExcuse router
+studentRouter.post('/newAbsenceExcuse' ,(req, res,next)=>{
+    uploader(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            // A Multer error occurred when uploading.
+            req.uploadError = err
+            next()
+        } else if (err) {
+            // An unknown error occurred when uploading.
+        }
+        next()
+        // Everything went fine and save document in DB here.
+    })}, controller.renderPostNewAbsenceExcuse);
+
+
 
 
 

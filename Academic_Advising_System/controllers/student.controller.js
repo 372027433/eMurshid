@@ -1,6 +1,10 @@
+//express imports
+const fs = require('fs');
+const path = require('path');
 
 const studentRouter = require("../routes/student.router");
 const {renderMyMessages} = require("./student.controller");
+
 
 //Message MOdel
 const message = require('../models/messages.model')
@@ -10,8 +14,17 @@ const staff = require('../models/staff.model')
 
 const Students = require('../models/student.model')
 
+//Absence Model
+const Excuses = require('../models/AbsenceExcuse.model')
+
+// Validator Results
 const {validationResult} = require ('express-validator/check')
 
+//
+// const multer = require("multer");
+const {uploadFile} = require('../utils/s3')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
 
 
 exports.renderMainPage = (req, res) => {
@@ -73,7 +86,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
         stuName: student.name,
         major: student.major,
         marital_status: student.marital_status,
-
+        level: student.level,
         family_members_count: student.family_members_count,
         order_in_family: student.order_in_family,
         permanent_address: student.permanent_address,
@@ -257,11 +270,188 @@ exports.renderNewComplaint = (req, res) => {
 //exports.renderComplaintStatus ...
 
 
-exports.renderNewExcuse = (req, res) => {
-    res.render('studentPages/studentExcuses', {
+exports.renderGetNewAbsenceExcuse = async (req, res) => {
+    const student = await Students.findById(res.user.userId).select("-password").exec();
+    res.render('studentPages/studentNewAbsenceExcuse', {
+        stuName : student.name,
+        stuId : student.id,
+        major : student.major,
+        level : student.level,
         layout: 'student'
     });
 };
+
+exports.renderPostNewAbsenceExcuse = async (req, res) => {
+    if(!req.body){
+        return res.sendStatus(400);
+    }else
+    {
+        const student = await Students.findById(res.user.userId).select("-password").exec();
+
+
+       const stuName  = student.name;
+        const stuId = student.id;
+        const  major = student.major;
+        const level = student.level;
+        const dateFrom = req.body.dateFrom;
+        const dateTo = req.body.dateTo;
+        const info0 = {
+            code : req.body.code0,
+            courseName: req.body.courseName0,
+            section : req.body.section0,
+            lecturer: req.body.lecturer0
+        }
+        const info1 = {
+            code : req.body.code1,
+           courseName: req.body.courseName1,
+           section : req.body.section1,
+           lecturer: req.body.lecturer1
+        }
+        const info2 = {
+            code : req.body.code2,
+            courseName: req.body.courseName2,
+            section : req.body.section2,
+            lecturer: req.body.lecturer2
+        }
+        const info3 = {
+            code : req.body.code3,
+            courseName: req.body.courseName3,
+            section : req.body.section3,
+            lecturer: req.body.lecturer3
+        }
+        const info4 = {
+            code : req.body.code4,
+            courseName: req.body.courseName4,
+            section : req.body.section4,
+            lecturer: req.body.lecturer4,
+        }
+        const info5 = {
+            code : req.body.code5,
+            courseName: req.body.courseName5,
+            section : req.body.section5,
+            lecturer: req.body.lecturer5
+        }
+        const info6 = {
+            code : req.body.code6,
+            courseName: req.body.courseName6,
+            section : req.body.section6,
+            lecturer: req.body.lecturer6
+        }
+        const info7 = {
+            code : req.body.code7,
+            courseName: req.body.courseName7,
+            section : req.body.section7,
+            lecturer: req.body.lecturer7
+        }
+        const info8 = {
+            code : req.body.code8,
+            courseName: req.body.courseName8,
+            section : req.body.section8,
+            lecturer: req.body.lecturer8
+        }
+        const info9 = {
+            code : req.body.code9,
+            courseName: req.body.courseName9,
+            section : req.body.section9,
+            lecturer: req.body.lecturer9
+        }
+        const info = [info0,info1,info2,info3,info4,info5,info6,info7,info8,info9];
+
+        if(req.uploadError){
+            console.log(req.uploadError )
+            res.status(422).render('studentPages/studentNewAbsenceExcuse', {
+                hasError : true,
+                stuName : stuName,
+                stuId : stuId,
+                major:major,
+                level:level,
+                oldData : {
+                    dateFrom: dateFrom,
+                    dateTo : dateTo,
+                    info:info,
+                },
+                errorMsg : 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code ,
+                layout: 'student',
+            })
+
+        }
+        else{
+            console.log('here')
+            // get the file after it was filtered and was successfully uploaded to the server
+            const proof = req.file;
+            console.log(proof)
+            // upload file to AWS S3
+        const result = await uploadFile(proof);
+            //Delete the file from the server
+        await unlinkFile(proof.path)
+        console.log(result)
+            // get File Key from AWS S3 to save in DB
+           const  proofURI = result.Key;
+
+        //save the data in the DB
+            const classExcuse = new Excuses ({type:'classAbsence', dateFrom:dateFrom, dateTo: dateTo, status:'pending' , info:info , student:res.user.userId ,proof:proofURI})
+            console.log(classExcuse)
+            classExcuse.save(function (err, excuse){
+                if (err) {
+                    return console.error(err);
+                }
+                res.render('studentPages/studentNewAbsenceExcuse', {
+                    hasError : false,
+                    stuName : stuName,
+                    stuId : stuId,
+                    major:major,
+                    level:level,
+                    oldData : {
+                        dateFrom: dateFrom,
+                        dateTo : dateTo,
+                        info:info,
+                    },
+                    successMsg : 'Your excuse was sent successfully',
+                    layout: 'student',
+                })
+            });
+
+
+        }
+
+
+
+
+
+
+
+
+        // const fileContents = new Buffer(classExcuse.proof.data, 'base64')
+        //  fs.writeFileSync(path.join(__dirname + '../../' + '/uploads/' + 'ss.png'), fileContents, (err) => {
+        //     if (err) return console.error(err)
+        //     console.log('file saved to ')
+        // })
+        // const dir = path.join( __dirname + '../../'+ 'public'+ '/assets/' + 'img'+ '/'+ 'translation.png');
+
+        // Excuses.findOne({ "name": req.param.image },function(err,champ) {
+        //     res.set("Content-Type", champ.contentType);
+        //     res.send( champ.img );
+        // // });
+        // res.set("Content-Type", proof.contentType);
+        // res.send( classExcuse.proof.data );
+
+        // res.render('studentPages/studentNewAbsenceExcuse', {
+        //     img : classExcuse.proof.data,
+        //     proof : proof,
+        //     layout: 'student',
+        // });
+
+        // res.send('ok')
+    }
+
+    // res.render('studentPages/studentNewAbsenceExcuse', {
+    //
+    //     // imgSrc : dir,
+    //     layout: 'student',
+    // });
+};
+
+
 //msgto : res.user.advisor_id
 
 exports.messagesend = (req, res) => {
