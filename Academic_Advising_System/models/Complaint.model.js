@@ -20,19 +20,7 @@ const Complaints = new Schema({
         type:String,
         required: true, 
     },
-    advisorcomm: {
-        type:String,
-        required: true, 
-    },
-    advisingunitcomm: {
-        type:String,
-        required: true, 
-    },
-    deancomm: {
-        type:String,
-        required: true, 
-    },
-    diss: {
+      diss: {
         type:String,
         required: true, 
     },

@@ -300,17 +300,11 @@ exports.messagesend = async (req, res) => {
 }
 
 exports.submitcomp = async (req, res) => {
-    let { filename } = ""+Date.now()+"-"+req.avidFile;
-    let filepath = path.join(__dirname, "..", "uploads", filename);
-
     let thedatenow = new Date();
     let complrecord = new Complaint({
         compfrom : res.user.userId ,
         disc : req.body.DisComp,
         prove : "filepath",
-        advisorcomm : "null",
-        advisingunitcomm : "null",
-        deancomm : "null",
         diss : "null",
         dateofdiss : "null",
         dateofsubmit : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`

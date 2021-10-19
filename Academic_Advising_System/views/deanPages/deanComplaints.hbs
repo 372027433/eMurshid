@@ -8,9 +8,21 @@
             <hr>
         </div>
         <div class="body-content">
-            <ul>
-
-            </ul>
+             <div id="ResevedMSG">
+              {{#each complist}} 
+                            {{#each this}}     
+                                {{#if this.compfrom}}
+                                    <div class="complcontainer" style="background:lightblue;">
+                                    <img align src="/assets/img/user-circle-solid.svg" alt="avatar" style="width: 50px; float: left; padding: 4px; margin: 3px;">
+                                    <div id="datetext" style="float: right; font-size: 10px; padding: 5px;">{{this.dateofsubmit}} </div>
+                                    <div><h5 id="messagfrom" style="font-size: 10px; padding: 40px; ">complant from :{{this.compfrom}}</h5></div>
+                                    <div><textarea readonly style="resize: initial; background: snow; margin: 8px; padding: 5px; height: 70px; width: 80%;">{{this.disc}}</textarea></div>
+                                    </div>
+                                {{/if}} 
+                            {{/each}}   
+                            <br>
+                        {{/each}}
+        </div>
         </div>
     </div>
 </main>
