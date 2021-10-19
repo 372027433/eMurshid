@@ -6,10 +6,40 @@
             </header>
             <hr>
         </div>
-        <div class="body-content">
-            <ul>
-
-            </ul>
+         <div class="body-content">            
+            
+            <div>
+                <p id="informUserMsg"></p>
+            </div>
+            
+            <table id="studentsDisplayTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Status</th>
+                        <th>Adivsor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each students}}
+                        
+                        <tr>
+                            <td>{{this.name}}</td>
+                            <td>{{this.id}}</td>
+                            <td>{{this.status}}</td>
+                            <td>{{this.advisor}}</td>
+                        </tr>
+                        
+                    {{/each}}
+                    
+                </tbody>
+            </table>
         </div>
     </div>
 </main>
+<script>
+    $(document).ready(function() {
+        $('#studentsDisplayTable').DataTable();
+    });
+</script>
