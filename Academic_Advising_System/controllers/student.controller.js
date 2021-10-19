@@ -8,6 +8,7 @@ const message = require('../models/messages.model')
 // Staf MODELS
 const staff = require('../models/staff.model')
 
+// Students MODELS
 const Students = require('../models/student.model')
 
 const {validationResult} = require ('express-validator/check')
@@ -214,6 +215,8 @@ exports.renderContactAdvisor = (req, res) => {
 
 exports.renderMyMessages = async (req, res) => {
   let x = await message.find({"msgto" : `${res.user.userId}`}).populate('msgfrom','name -_id').exec(function(err,posts){
+    // ther is ero her that the msg from advisor return null
+    console.log(posts)
     if(err){
             res.render('studentPages/studentMessages' , {
                 err: err ,
@@ -227,6 +230,7 @@ exports.renderMyMessages = async (req, res) => {
          })      
         } 
   });
+  
 };
 
 
@@ -264,11 +268,13 @@ exports.renderNewExcuse = (req, res) => {
 };
 //msgto : res.user.advisor_id
 
-exports.messagesend = (req, res) => {
+exports.messagesend = async (req, res) => {
+    const findadvisor = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "_id");
+    const getinarr =findadvisor[0];
     let thedatenow = new Date();
     let messagerecord = new message({
         msgfrom : res.user.userId ,
-        msgto : "61606be7cf646e13ed87a747",
+        msgto : getinarr.advisor_id._id,
         msgtitel : req.body.Titelmsg,
         msgcontent : req.body.massegContent,
         thetime : `${thedatenow.getHours()}:${thedatenow.getMinutes()}`,

@@ -41,5 +41,4 @@ router.use('/dean',isAuthorized, checkUser(roles.dean), deanRouter)
 
 router.use('/advisor', isAuthorized, checkUser(roles.advisor), advisorRouter)
 
-
 module.exports = router ;
