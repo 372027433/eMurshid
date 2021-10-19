@@ -1,5 +1,10 @@
+
+// Complaint MODEL
+const Complaint = require('../models/Complaint.model')
+
 const Students = require('../models/student.model')
 const faculty = require('../utils/facultyType')
+
 
 exports.renderMainPage = (req, res) => {    
     res.render('deanPages/deanMain',{
@@ -13,8 +18,11 @@ exports.renderResolvedExcuses = (req, res) => {
     })
 }
 
-exports.renderComplaints = (req, res) => {
-    res.render('deanPages/deanComplaints',{
+exports.renderComplaints = async (req, res) => {
+    const Compl = await Complaint.find({}).populate('compfrom','name id');
+    console.log(Compl)
+        res.render('deanPages/deanComplaints',{
+        complist : Compl ,
         layout: 'dean'
     })
 }

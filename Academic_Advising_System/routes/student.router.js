@@ -62,5 +62,5 @@ studentRouter.get('/newExcuse',controller.renderNewExcuse);
 
 
 studentRouter.post("/hm" , controller.messagesend);
-// studentRouter.post("/MsgFromDb" , controller.ShowMsg);
+ studentRouter.post("/compl" , controller.submitcomp);
 module.exports = studentRouter ;
