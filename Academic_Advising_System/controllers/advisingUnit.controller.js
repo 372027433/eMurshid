@@ -44,10 +44,32 @@ exports.renderMainPage = (req, res) => {
   });
 };
 
-exports.renderCollageStudents = (req, res) => {
-  res.render("advisingUnitPages/aauCollageStudents", {
-    layout: "advisingUnit",
-  });
+exports.renderCollageStudents = async (req, res) => {
+  try{
+    console.log(res.user)
+    let collegeStudents = await Students.find({faculty_id: res.user.faculty}).select('-password').populate('advisor_id')
+
+    const students = []
+    for(let student of collegeStudents){
+        let studentObj = {}
+
+        studentObj['name'] = student.name
+        studentObj['id'] = student.id
+        studentObj['status'] = student.status
+        studentObj['advisor'] =  (student.advisor_id?.name) ? student.advisor_id?.name : "-----"
+
+        students.push(studentObj)
+        
+    }
+
+    res.render("advisingUnitPages/aauCollageStudents", {
+      layout: "advisingUnit",
+      students: students, 
+    });
+    
+  } catch(e){
+      res.status(400).json({msg: 'error happening' + e})
+  }
 };
 
 exports.renderResolveExcuses = (req, res) => {
