@@ -8,28 +8,29 @@
             <hr>
         </div>
         <div class="body-content">
-           {{studentinfo}}
-                    <fieldset>
-                        <legend> Student Info </legend>
-                        <div id="stuInfo" style="text-align: ;">
-                            <p>Name : {{stuname}}</p>
-                            <p>ID : {{stuid}}</p>
-                            <p>Major : {{stumajor}}</p>
-                            <p>Advisor : {{stuadvisor}}</p>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Discribe your Complaint and/or appeal case</legend>
-                        <textarea  class="takedatafromstu"></textarea>
-                    </fieldset>
-                    <fieldset>
-                        <legend>provid supporting documents</legend>
-                        <input type="file" id="avidFile">
-                    </fieldset>
-                    <br>
-               
-            <input type="submit" id="submit">
-
+            <form method="post"  id="compl" action="/student/compl">
+                        <fieldset>
+                            <legend> Student Info </legend>
+                            <div id="stuInfo" style="text-align: ;">
+                                <p>Name : {{stuname}}</p>
+                                <p>ID : {{stuid}}</p>
+                                <p>Major : {{stumajor}}</p>
+                                <p>Advisor : {{stuadvisor}}</p>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            {{!-- disComp = Discribe your Complaint  --}}
+                            <legend>Discribe your Complaint and/or appeal case</legend>
+                            <textarea name="DisComp" id="DisComp" class="takedatafromstu"></textarea>
+                        </fieldset>
+                        <fieldset>
+                            <legend>provid supporting documents</legend>
+                            <input type="file" id="avidFile" name="avidFile">
+                        </fieldset>
+                        <br>
+                
+                <input type="submit" id="submit">
+            </form>
 
         </div>
     </div>

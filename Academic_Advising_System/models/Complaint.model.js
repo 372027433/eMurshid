@@ -16,6 +16,10 @@ const Complaints = new Schema({
         type:String,
         required: true, 
     },
+    dateofsubmit: {
+        type:String,
+        required: true, 
+    },
     advisorcomm: {
         type:String,
         required: true, 
@@ -31,10 +35,14 @@ const Complaints = new Schema({
     diss: {
         type:String,
         required: true, 
+    },
+    dateofdiss: {
+        type:String,
+        required: true, 
     }
 
 })
 
-const Complaint= mongoose.model('message', Complaints);
+const Complaint= mongoose.model('Complaint', Complaints);
 
 module.exports = Complaint ;

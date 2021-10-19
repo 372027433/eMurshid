@@ -1,15 +1,20 @@
 
 const studentRouter = require("../routes/student.router");
 const {renderMyMessages} = require("./student.controller");
+// define multer lib
+const path    = require('path');
 
-//Message MOdel
+//Message MODEL
 const message = require('../models/messages.model')
 
-// Staf MODELS
+// Staf MODEL
 const staff = require('../models/staff.model')
 
-// Students MODELS
+// Students MODEL
 const Students = require('../models/student.model')
+
+// Complaint MODEL
+const Complaint = require('../models/Complaint.model')
 
 const {validationResult} = require ('express-validator/check')
 
@@ -294,22 +299,32 @@ exports.messagesend = async (req, res) => {
     
 }
 
-exports.submitcom = async (req, res) => {
-    const findadvisor = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "_id");
-    const getinarr =findadvisor[0];
-    let thedatenow = new Date();
-    let messagerecord = new message({
-        msgfrom : res.user.userId ,
-        msgto : getinarr.advisor_id._id,
-        msgtitel : req.body.Titelmsg,
-        msgcontent : req.body.massegContent,
-        thetime : `${thedatenow.getHours()}:${thedatenow.getMinutes()}`,
-        thedate : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
-    }); 
-    messagerecord.save();
+exports.submitcomp = async (req, res) => {
+    let { filename } = ""+Date.now()+"-"+req.avidFile;
+    let filepath = path.join(__dirname, "..", "uploads", filename);
 
-    res.render("studentPages/contactStudentToAdvisor",{
-        layout: 'student' 
-    })
+    let thedatenow = new Date();
+    let complrecord = new Complaint({
+        compfrom : res.user.userId ,
+        disc : req.body.DisComp,
+        prove : "filepath",
+        advisorcomm : "null",
+        advisingunitcomm : "null",
+        deancomm : "null",
+        diss : "null",
+        dateofdiss : "null",
+        dateofsubmit : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
+    });
+    complrecord.save();
+    console.log("uploaded sucssec")
+    const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
+    const getinarr = getstuinfo[0];
+    res.render('studentPages/studentNewComplaint', {
+        stuname :getinarr.name ,
+        stuid : getinarr.id,
+        stumajor : getinarr.major,
+        stuadvisor : getinarr.advisor_id.name,
+        layout: 'student'
+    });
     
 }
