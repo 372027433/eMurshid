@@ -7,9 +7,50 @@
             <hr>
         </div>
         <div class="body-content">
-            <ul>
-
-            </ul>
+{{!-- tryyyyyyyyyyyyyyyy --}}
+  <div class="usercontainer">
+<div class="row bootstrap snippets bootdeys"> 
+    <div style="overflow: scroll;" class="contentofuser"> 
+    
+    
+    <div class="contentofuser"> 
+        {{!-- <form method="get" role="form" class="search-form-full"> 
+            <div class="form-group"> 
+                <input type="text" class="form-control" name="s" id="search-input" placeholder="Search..."> 
+                <i class="entypo-search"></i> 
+            </div> 
+        </form>  --}}
+        {{#each studentsad}}
+             {{#each this}}
+                 {{#if this.id}}
+                    <div class="member-entry"> 
+                        <a href="#" class="member-img"> 
+                            <img src="https://bootdey.com/img/Content/avatar/avatar5.png" class="img-rounded"> 
+                            <i class="fa fa-forward"></i> 
+                        </a> 
+                        <div class="member-details"> 
+                            <h4> <a href="#">{{this.name}}</a> </h4> 
+                            <div class="row info-list"> 
+                              
+                                <div class="col-sm-4"> 
+                                    <i class="fa fa-twitter"></i> 
+                                    <h4>ID : {{this.id}}</h4>
+                                </div> 
+                             
+                            </div> 
+                        </div> 
+                    </div>
+                {{/if}}
+            {{/each}}
+         {{/each}}    
+         </div>    
+    </div> 
+</div>
+</div>
+          
+        
+{{!-- finsh tryyyyyyyyyyyyyyyyyy --}}
+	
         </div>
     </div>
 </main>

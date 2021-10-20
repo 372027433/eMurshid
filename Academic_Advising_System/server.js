@@ -79,7 +79,7 @@ app.listen( PORT, ()=> {
   mongoose.connection.once('open',() => {
     console.log('\tConnection to DB established')
 
-    // addAdmins(roles.advisingUnit, 222222,'Abdullah Salim', faculty.computer_colege)
+     //addAdmins(roles.dean, 373737,' abu el soud', faculty.computer_colege)
   })
   mongoose.connection.on('error',() => {
     console.log('\tHey, bad boy we have some serious DB errors, we\'re out')

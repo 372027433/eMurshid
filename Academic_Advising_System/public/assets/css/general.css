@@ -58,6 +58,7 @@ ul {
 .content-container {
   display: flex !important;
   flex-direction: row;
+  width: auto;
 }
 
 .dn {
@@ -472,3 +473,422 @@ input#submit {
 
 /*-----------------------*/
 
+/* **********************************
+    send messages from advisot to students
+    *********************************/
+
+/* ------------------ Color Pallet ------------------ */
+
+
+/*************** 2.Mixins ***************/
+
+
+/************************************************
+    ************************************************
+										Search Box
+	************************************************
+************************************************/
+
+
+.chat-search-box {
+    -webkit-border-radius: 3px 0 0 0;
+    -moz-border-radius: 3px 0 0 0;
+    border-radius: 3px 0 0 0;
+    padding: .75rem 1rem;
+}
+
+.chat-search-box .input-group .form-control {
+    -webkit-border-radius: 2px 0 0 2px;
+    -moz-border-radius: 2px 0 0 2px;
+    border-radius: 2px 0 0 2px;
+    border-right: 0;
+}
+
+.chat-search-box .input-group .form-control:focus {
+    border-right: 0;
+}
+
+.chat-search-box .input-group .input-group-btn .btn {
+    -webkit-border-radius: 0 2px 2px 0;
+    -moz-border-radius: 0 2px 2px 0;
+    border-radius: 0 2px 2px 0;
+    margin: 0;
+}
+
+.chat-search-box .input-group .input-group-btn .btn i {
+    font-size: 1.2rem;
+    line-height: 100%;
+    vertical-align: middle;
+}
+
+@media (max-width: 100%) {
+    .chat-search-box {
+        display: none;
+    }
+}
+
+
+/************************************************
+	************************************************
+									Users Container
+	************************************************
+************************************************/
+
+.users-container {
+    position: relative;
+    padding: 1rem 0;
+    border-right: 1px solid #e6ecf3;
+    height: 100%;
+    width: 50%;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+
+/************************************************
+	************************************************
+											Users
+	************************************************
+************************************************/
+
+.users {
+    padding: 0;
+}
+
+.users .person {
+    position: relative;
+    width: 100%;
+    padding: 10px 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f4f8;
+}
+
+.users .person:hover {
+    background-color: #ffffff;
+    /* Fallback Color */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#e9eff5), to(#ffffff));
+    /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(right, #e9eff5, #ffffff);
+    /* Chrome 10+, Saf5.1+, iOS 5+ */
+    background-image: -moz-linear-gradient(right, #e9eff5, #ffffff);
+    /* FF3.6 */
+    background-image: -ms-linear-gradient(right, #e9eff5, #ffffff);
+    /* IE10 */
+    background-image: -o-linear-gradient(right, #e9eff5, #ffffff);
+    /* Opera 11.10+ */
+    background-image: linear-gradient(right, #e9eff5, #ffffff);
+}
+
+.users .person.active-user {
+    background-color: #ffffff;
+    /* Fallback Color */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f9fb), to(#ffffff));
+    /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(right, #f7f9fb, #ffffff);
+    /* Chrome 10+, Saf5.1+, iOS 5+ */
+    background-image: -moz-linear-gradient(right, #f7f9fb, #ffffff);
+    /* FF3.6 */
+    background-image: -ms-linear-gradient(right, #f7f9fb, #ffffff);
+    /* IE10 */
+    background-image: -o-linear-gradient(right, #f7f9fb, #ffffff);
+    /* Opera 11.10+ */
+    background-image: linear-gradient(right, #f7f9fb, #ffffff);
+}
+
+.users .person:last-child {
+    border-bottom: 0;
+}
+
+.users .person .user {
+    display: inline-block;
+    position: relative;
+    margin-right: 10px;
+}
+
+.users .person .user img {
+    width: 48px;
+    height: 48px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+}
+
+.users .person .user .status {
+    width: 10px;
+    height: 10px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+    background: #e6ecf3;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.users .person .user .status.online {
+    background: #9ec94a;
+}
+
+.users .person .user .status.offline {
+    background: #c4d2e2;
+}
+
+.users .person .user .status.away {
+    background: #f9be52;
+}
+
+.users .person .user .status.busy {
+    background: #fd7274;
+}
+
+.users .person p.name-time {
+    font-weight: 600;
+    font-size: 17px;;
+    display: inline-block;
+}
+
+.users .person p.name-time .time {
+    font-weight: 400;
+    font-size: 14px;
+    text-align: right;
+    color: #8796af;
+    }
+
+@media (max-width: 767px) {
+    .users .person .user img {
+        width: 30px;
+        height: 30px;
+    }
+    .users .person p.name-time {
+        display: none;
+    }
+    .users .person p.name-time .time {
+        display: none;
+    }
+}
+
+
+.col-md-4 {
+    flex: 0 0 auto;
+    width: 100%;
+}
+.name-time {
+  margin: 20px;
+}
+.time {
+  margin: inherit;
+}
+#msgto {
+  background: white;
+  border: white;
+  text-align: center;
+}
+.container {
+  width: 100%;
+}
+
+/*************************************
+advisor Student 
+*************************************/
+.member-entry {
+  border: 1px solid #ebebeb;
+  padding: 15px;
+  margin-top: 15px;
+  margin-bottom: 30px;
+  -moz-box-shadow:  0 1.5rem 4rem rgba(22, 28, 45, 0.1);
+  -webkit-box-shadow:  0 1.5rem 4rem rgba(22, 28, 45, 0.1);
+  box-shadow: 1 0 1.5rem 4rem rgba(22, 28, 45, 0.1);
+  -moz-transition: all 300ms ease-in-out;
+  -webkit-transition: all 300ms ease-in-out;
+  -o-transition: all 300ms ease-in-out;
+  transition: all 300ms ease-in-out;
+  -webkit-border-radius: 3px;
+  -webkit-background-clip: padding-box;
+  -moz-border-radius: 3px;
+  -moz-background-clip: padding;
+  border-radius: 3px;
+  background-clip: padding-box;
+  background:#fff;
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.2),0 6px 10px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.2),0 6px 10px 0 rgba(0,0,0,0.3);
+}
+.member-entry:before,
+.member-entry:after {
+  content: " ";
+  display: table;
+}
+.member-entry:after {
+  clear: both;
+}
+.member-entry:hover {
+  background: rgba(235, 235, 235, 0.3);
+  -moz-box-shadow: 1px 1px 1px rgba(0, 1, 1, 0.06);
+  -webkit-box-shadow: 1px 1px 1px rgba(0, 1, 1, 0.06);
+  box-shadow: 1px 1px 1px rgba(0, 1, 1, 0.06);
+}
+.member-entry .member-img,
+.member-entry .member-details {
+  float: left;
+}
+.member-entry .member-img {
+  position: relative;
+  display: block;
+  width: 10%;
+}
+.member-entry .member-img img {
+  width: 100%;
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.member-entry .member-img i {
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%;
+  margin-top: -12.5px;
+  margin-left: -12.5px;
+  color: #FFF;
+  font-size: 25px;
+  zoom: 1;
+  -webkit-opacity: 0;
+  -moz-opacity: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -moz-transform: scale(0.5);
+  -webkit-transform: scale(0.5);
+  -ms-transform: scale(0.5);
+  -o-transform: scale(0.5);
+  transform: scale(0.5);
+  -moz-transition: all 300ms ease-in-out;
+  -webkit-transition: all 300ms ease-in-out;
+  -o-transition: all 300ms ease-in-out;
+  transition: all 300ms ease-in-out;
+}
+.member-entry .member-img:hover i {
+  -moz-transform: scale(1);
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  -o-transform: scale(1);
+  transform: scale(1);
+  zoom: 1;
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.member-entry .member-details {
+  width: 89.9%;
+}
+.member-entry .member-details h4 {
+  font-size: 18px;
+  margin-left: 20px;
+}
+.member-entry .member-details h4 a {
+  -moz-transition: all 300ms ease-in-out;
+  -webkit-transition: all 300ms ease-in-out;
+  -o-transition: all 300ms ease-in-out;
+  transition: all 300ms ease-in-out;
+}
+.member-entry .member-details .info-list {
+  margin-left: 5px;
+}
+.member-entry .member-details .info-list > div {
+  margin-top: 5px;
+  font-size: 13px;
+}
+.member-entry .member-details .info-list > div a {
+  -moz-transition: all 300ms ease-in-out;
+  -webkit-transition: all 300ms ease-in-out;
+  -o-transition: all 300ms ease-in-out;
+  transition: all 300ms ease-in-out;
+}
+.member-entry .member-details .info-list > div i {
+  -moz-transition: all 300ms ease-in-out;
+  -webkit-transition: all 300ms ease-in-out;
+  -o-transition: all 300ms ease-in-out;
+  transition: all 300ms ease-in-out;
+}
+.member-entry .member-details .info-list > div:hover i {
+  color: #4f5259;
+}
+@media screen and (max-width: 768px) {
+  .member-entry .member-img {
+    width: 18%;
+  }
+  .member-entry .member-details {
+    width: 81.9%;
+  }
+  .member-entry .member-details h4 {
+    margin-top: 0;
+  }
+}
+@media screen and (max-width: 480px) {
+  .member-entry .member-img {
+    width: 100%;
+    float: none;
+    text-align: center;
+    position: relative;
+    background: #f8f8f8;
+    margin-bottom: 15px;
+    -webkit-border-radius: 3px;
+    -webkit-background-clip: padding-box;
+    -moz-border-radius: 3px;
+    -moz-background-clip: padding;
+    border-radius: 3px;
+    background-clip: padding-box;
+  }
+  .member-entry .member-img img {
+    width: auto;
+    display: inline-block;
+    -webkit-border-radius: 0;
+    -webkit-background-clip: padding-box;
+    -moz-border-radius: 0;
+    -moz-background-clip: padding;
+    border-radius: 0;
+    background-clip: padding-box;
+  }
+  .member-entry .member-details {
+    width: 100%;
+    float: none;
+  }
+  .member-entry .member-details h4,
+  .member-entry .member-details .info-list {
+    margin-left: 0;
+  }
+  .member-entry .member-details h4 > div,
+  .member-entry .member-details .info-list > div {
+    padding: 0;
+  }
+  .member-entry .member-details .info-list > div {
+    margin-top: 10px;
+  }
+}
+
+.contentofuser {
+  width: 99%;
+  border: brown;
+  padding: 15px;
+}
+
+/*********************************
+dean complain
+*********************************/
+
+#conten {
+  height: 300px;
+}
+
+.users-container {
+  position: relative;
+  padding: 1rem 0;
+  border-right: 1px solid #e6ecf3;
+  height: 100%;
+  width: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}

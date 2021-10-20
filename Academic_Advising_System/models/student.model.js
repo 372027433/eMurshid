@@ -1,7 +1,7 @@
 
 const mongoose = require('mongoose')
 const { Schema } = mongoose ;
-
+const { computer_colege, engineering_college,science_college} = require('../utils/facultyType')
 const studentSchema = new Schema({
     id: {
         type: Number,
@@ -27,7 +27,14 @@ const studentSchema = new Schema({
         type: mongoose.Types.ObjectId,
         ref: 'staff',
     },
-    faculty_id: String, // should be Faculity IDs which taken from advisingUnit since each advisingUnit will add their students
+    faculty_id: {
+        type: String,
+        enum: [
+            computer_colege,
+            engineering_college,
+            science_college
+        ]
+    }, // should be Faculity IDs which taken from advisingUnit since each advisingUnit will add their students
     // so once added we will be adding advisingUnitMemberFaculityID and add to student
     // and advisors
     

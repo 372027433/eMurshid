@@ -7,14 +7,75 @@
             <hr>
         </div>
         <div class="body-content">
-            <div style="background-color: chocolate; width: 30px;%">erererer</div <form method="post"  id="msgcontaint" action="/advisor/am">
-                 <h5  dir="ltr">The topic : <input class="titelMsg" name="Titelmsg" id="Titelmsg" type="text" required> </h5> 
-                  <h5 dir="ltr">The message :</h5> <textarea class="Msg" name="massegContent" id="massegContent" type="text" required></textarea> 
-                  <button type="submit" class="submetbtn" >send</button>
-                 </form>
-            <ul>
+          <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container">
 
-            </ul>
+                            <div id="conten" style="overflow: scroll;" class="users-container">
+                                {{!-- <div class="chat-search-box">
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="Search">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-info">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div> --}}
+                                
+                                <ul class="users">
+                                        {{#each studentsad}}
+                                            {{#each this}}
+                                                {{#if this.id}}
+                                                    <li class="person" data-chat="person1">
+                                                         <button type="button" class="person" data-bs-toggle="modal" data-bs-target="#a{{this.id}}" >
+                                                                       
+                                                        <div class="user">
+                                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Retail Admin">
+                                                            <span class="status offline"></span>
+                                                        </div>
+                                                        <p class="name-time">
+                                                            <span id="name" class="name" >{{this.name}}</span>
+                                                            <span id="id" class="time">{{this.id}}</span>
+                                                            
+                                                        </p>
+                                                       </button>
+                                                    </li>
+
+                                                                                                                   <!-- Modal -->
+                                                                 <div class="modal fade" id="a{{this.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog" role="document">
+                                                                    <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                                                                                                                                              
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                            <div class="user">
+                                                                                <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Retail Admin">
+                                                                                <span class="status offline"></span>
+                                                                            </div>
+                                                                        <form method="post"  id="msgcontaint" action="/advisor/advisorSendToStudent">
+                                                                        <h5  dir="ltr">Message To :<br>{{this.name}} <br> <input class="msgto" name="msgto" id="msgto" type="text" value="{{this.id}}" readonly required> </h5> 
+                                                                        <h5  dir="ltr">The Title : <br> <input class="titelMsg" name="Titelmsg" id="Titelmsg" type="text" required> </h5> 
+                                                                        <h5 dir="ltr">The message :</h5> <textarea class="Msg" name="massegContent" id="massegContent" type="text" required></textarea> 
+                                                                        <button type="submit" class="submetbtn" >send</button>
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                       
+                                                                    </div>
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                {{/if}}
+                                             {{/each}}
+                                        {{/each}}
+                                        </div>
+                                </ul>
+                            </div>
+                        </div>
+                    <!-- Row end -->
+</div>
         </div>
     </div>
 </main>

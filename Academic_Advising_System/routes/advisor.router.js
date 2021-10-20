@@ -28,7 +28,7 @@ advisorRouter.post('/resolveExcuses',controller.renderPostResolveExcuses);
 advisorRouter.get('/resolveExcuses/proof/:key',controller.renderGetProof);
 
 
-advisorRouter.post("/am" , controller.messagesend);
+advisorRouter.post("/advisorSendToStudent" , controller.messagesend);
 
 
 

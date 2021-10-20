@@ -86,5 +86,5 @@ studentRouter.post('/newAbsenceExcuse' ,[(req, res,next)=>{
 
 
 studentRouter.post("/hm" , controller.messagesend);
-// studentRouter.post("/MsgFromDb" , controller.ShowMsg);
+ studentRouter.post("/compl" , controller.submitcomp);
 module.exports = studentRouter ;
