@@ -48,6 +48,11 @@ const studentSchema = new Schema({
         type: Number,
         max: [5, 'highest percent'],
     },
+
+    level:{
+        type: Number,
+        max : [10, 'max level is 10']
+    },
     
     // student Personal Information
     marital_status: String,

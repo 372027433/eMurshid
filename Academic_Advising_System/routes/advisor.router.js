@@ -23,10 +23,13 @@ advisorRouter.get('/findMessage',controller.renderFindMessage);
 
 advisorRouter.get('/issueComplaint',controller.renderIssueComplaint);
 
-advisorRouter.get('/resolveExcuses',controller.renderResolveExcuses);
+advisorRouter.get('/resolveExcuses',controller.renderGetResolveExcuses);
+advisorRouter.post('/resolveExcuses',controller.renderPostResolveExcuses);
+advisorRouter.get('/resolveExcuses/proof/:key',controller.renderGetProof);
 
 
 advisorRouter.post("/advisorSendToStudent" , controller.messagesend);
+
 
 
 

@@ -11,6 +11,9 @@ const roles = require('./utils/roles');
 const faculty = require('./utils/facultyType')
 let {addAdmins} = require('./utils/addAdminsToSystem')
 
+
+
+
 const app = express();
 
 //> nodeJS native libraries
@@ -18,6 +21,8 @@ const path = require('path')
 
 //> local files
 const router = require('./router')
+
+
 
 /**
  * setting up variables
@@ -28,6 +33,8 @@ app.use(cookieParser())
 // encode request bodies
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+// app.use(multer({storage: fileStorage , fileFilter: fileFilter , limits: {fileSize: 3*1024*1024 } }).single('file'))
+
 
 const PORT = process.env.PORT || 5000 ;
 

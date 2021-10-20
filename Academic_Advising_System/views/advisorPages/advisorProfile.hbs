@@ -7,9 +7,70 @@
             <hr>
         </div>
         <div class="body-content">
-            <ul>
+            <div class="student-profile py-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-transparent text-center">
+                                    <img class="profile_img" src="https://placeimg.com/640/480/arch/any" alt="">
+                                    <h3>Dr.Jhon Doe</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-0"><strong class="pr-1">Advisor ID: </strong>333333</p>
+                                    <!--                                <p class="mb-0"><strong class="pr-1">Class:</strong>4</p>-->
+                                    <!--                                <p class="mb-0"><strong class="pr-1">Section:</strong>A</p>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-transparent border-0">
+                                    <h3 class="mb-0"><i class="far fa-clone pr-1"></i>General Information</h3>
+                                </div>
+                                <div class="card-body pt-0">
+                                    <table class="table table-bordered">
+                                        <div>
 
-            </ul>
+                                            {{#if errorMessage}}
+                                                <h2 class="Errors">{{errorMessage}} </h2>>
+                                            {{else}}
+                                                <h2 class="Success"> {{successMessage}}</h2>
+                                            {{/if}}
+                                        </div>
+                                        <tr>
+                                            <th >Faculty ID:</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td>computer_college</td>
+                                        </tr>
+                                        <tr>
+                                            <th >Role:</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td>Advising Unit</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Email: </th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td> 333333@iu.edu.sa </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Phone Number:</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td>550000000</td>
+                                        </tr>
+
+                                    </table>
+                                    <form method="post">
+                                        <button class="btn btn-primary" type="submit" name="StuEditBtn"  >Edit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
         </div>
     </div>
 </main>

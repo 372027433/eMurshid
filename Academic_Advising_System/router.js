@@ -37,8 +37,8 @@ router.use('/advisingUnit',isAuthorized, checkUser(roles.advisingUnit), advising
 
 router.use('/student', isAuthorized, checkUser(roles.student), studentRouter)
 
-router.use('/dean',isAuthorized, checkUser(roles.dean), deanRouter)
-
 router.use('/advisor', isAuthorized, checkUser(roles.advisor), advisorRouter)
+
+router.use('/dean',isAuthorized, checkUser(roles.dean), deanRouter)
 
 module.exports = router ;

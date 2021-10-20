@@ -20,6 +20,8 @@ const college = require('../utils/facultyType')
 // util Functions
 const {passwordGenerator} = require('../utils/generatePassword');
 const {emailAndPasswordTemplateEmail} = require('../utils/emailAndPasswordTemplateEmail');
+const AbsenceExcuse = require("../models/AbsenceExcuse.model");
+const {getFileStream} = require("../utils/s3");
 
 // SENDER EMAIL CONFIGURED IN SEND_GRID
 const SENDGRID_SENDER_EMAIL = 'emurshid.iu@gmail.com'
@@ -72,11 +74,84 @@ exports.renderCollageStudents = async (req, res) => {
   }
 };
 
-exports.renderResolveExcuses = (req, res) => {
-  res.render("advisingUnitPages/aauResolveExcuses", {
-    layout: "advisingUnit",
+exports.renderGetResolveExcuses = async (req, res) => {
+   await AbsenceExcuse.find({status:'AdvisorApproved'}).populate({path :'student'}).
+  exec(function (err, doc) {
+    if (err) {
+      res.render('advisingUnitPages/aauResolveExcuses',{
+        hasError: true ,
+        errorMsg: err.message ,
+        layout: 'advisingUnit',
+      })
+    }else{
+    res.render('advisingUnitPages/aauResolveExcuses',{
+      hasError:false,
+      docs:doc,
+      layout: 'advisingUnit',
+    })
+    }
   });
 };
+
+exports.renderPostResolveExcuses = async (req, res) => {
+  const excuseId = req.body.exId;
+  const aauComment = req.body.aauComment;
+  if (req.body.hasOwnProperty('recommend')) {
+     await AbsenceExcuse.findByIdAndUpdate(excuseId, {
+      $set: {
+        aauComment: aauComment,
+        status: 'aauApproved'
+      }
+    }, {new: true}, (err, doc) => {
+      if (err) {
+        // res.render('advisingUnitPages/aauResolveExcuses',{
+        //   hasError: true ,
+        //   errorMsg: err.message ,
+        //   layout: 'advisingUnit',
+        // })
+        res.status('400').redirect('/advisingUnit/resolveExcuses')
+      } else {
+        // res.render('advisingUnitPages/aauResolveExcuses',{
+        //   hasError: false,
+        //   successMsg : 'Excuse was resolved Successfully',
+        //   layout: 'advisingUnit',
+        // })
+        res.status('200').redirect('/advisingUnit/resolveExcuses')
+      }
+    })
+  } else if (req.body.hasOwnProperty('reject')) {
+     await AbsenceExcuse.findByIdAndUpdate(excuseId, {
+      $set: {
+        aauComment: aauComment,
+        status: 'aauRejected'
+      }
+    }, {new: true}, (err, doc) => {
+      if (err) {
+        // res.render('advisingUnitPages/aauResolveExcuses',{
+        //   hasError: true ,
+        //   errorMsg: err.message ,
+        //   layout: 'advisingUnit',
+        // })
+        res.status('400').redirect('/advisingUnit/resolveExcuses')
+
+      } else {
+        // res.render('advisingUnitPages/aauResolveExcuses',{
+        //     hasError: false,
+        //     successMsg : 'Excuse was resolved Successfully',
+        //     layout: 'advisingUnit',
+        // })
+        res.status('200').redirect('/advisingUnit/resolveExcuses')
+      }
+    })
+  }
+};
+
+exports.renderGetProof = async (req , res)=>{
+  let key = req.params.key
+  const readStream =  await getFileStream(key)
+  await readStream.pipe(res)
+}
+
 
 exports.renderStudentRegisterPage = (req, res) => {
   res.render("advisingUnitPages/registerStudents", {

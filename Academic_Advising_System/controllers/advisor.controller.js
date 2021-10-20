@@ -1,3 +1,7 @@
+
+const AbsenceExcuse = require('../models/AbsenceExcuse.model')
+const {uploadFile,getFileStream} = require ('../utils/s3')
+
 // StudentsAdvisor MODELS
 const AdvivsorStudents = require('../models/studentsAdvisor')
 
@@ -7,7 +11,9 @@ const message = require('../models/messages.model')
 // Students MODELS
 const Students = require('../models/student.model')
 
+
 exports.renderMainPage = (req, res) => {
+    console.log(res.user)
     res.render('advisorPages/advisorMain',{
         layout: 'advisor'
     })
@@ -85,12 +91,89 @@ exports.renderIssueComplaint = (req, res) => {
     })
 }
 
-exports.renderResolveExcuses = (req, res) => {
-    res.render('advisorPages/advisorResolveExcuses',{
-        layout: 'advisor'
-    })
+exports.renderPostResolveExcuses = async (req,res)=> {
+    const excuseId = req.body.exId;
+    const advisorComment = req.body.advisorComment;
+    if (req.body.hasOwnProperty('recommend')) {
+         await AbsenceExcuse.findByIdAndUpdate(excuseId, {
+            $set: {
+                advisorComment: advisorComment,
+                status: 'AdvisorApproved'
+            }
+        }, {new: true}, (err, doc) => {
+            if (err) {
+                const errorMsg = err.message
+                // res.render('advisorPages/advisorResolveExcuses',{
+                //     hasError: true ,
+                //     errorMsg: errorMsg ,
+                //     layout: 'advisor',
+                // })
+                res.status('400').redirect('/advisor/resolveExcuses')
+            } else {
+                // res.render('advisorPages/advisorResolveExcuses',{
+                //     hasError: false,
+                //     successMsg : 'Excuse was resolved Successfully',
+                //     layout: 'advisor',
+                // })
+                res.status('200').redirect('/advisor/resolveExcuses')
+            }
+        })
+    } else if (req.body.hasOwnProperty('reject')) {
+        await AbsenceExcuse.findByIdAndUpdate(excuseId, {
+            $set: {
+                advisorComment: advisorComment,
+                status: 'AdvisorRejected'
+            }
+        }, {new: true}, (err, doc) => {
+            if (err) {
+                const errorMsg = err.message;
+                // res.render('advisorPages/advisorResolveExcuses',{
+                //     hasError: true ,
+                //     errorMsg: errorMsg ,
+                //     layout: 'advisor',
+                // })
+                res.status('400').redirect('/advisor/resolveExcuses')
+            } else {
+                // res.render('advisorPages/advisorResolveExcuses',{
+                //     hasError: false,
+                //     successMsg : 'Excuse was resolved Successfully',
+                //     layout: 'advisor',
+                // })
+                res.status('200').redirect('/advisor/resolveExcuses')
+            }
+        })
+    }
 }
 
+exports.renderGetResolveExcuses = async (req, res) => {
+
+  await AbsenceExcuse.find({status:'pending'}).populate({path :'student' ,match: {advisor_id : res.user.userId }}).
+    exec(function (err, doc) {
+        if (err) {
+            const errorMsg = err.message
+            res.status('400').redirect('advisorPages/advisorResolveExcuses')
+            // res.render('advisorPages/advisorResolveExcuses',{
+            //     hasError: true ,
+            //     errorMsg: errorMsg ,
+            //     layout: 'advisor',
+            // })
+        }
+        else {
+            res.render('advisorPages/advisorResolveExcuses',{
+                hasError: false ,
+                docs:doc,
+                layout: 'advisor',
+            })
+        }
+    });
+
+}
+
+exports.renderGetProof = async (req , res)=>{
+    let key = req.params.key
+    const readStream =  await getFileStream(key)
+    await readStream.pipe(res)
+}
 
 
 exports.messagesend = async (req, res) => {
