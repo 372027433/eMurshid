@@ -27,7 +27,7 @@ exports.renderComplaints = async (req, res) => {
     const Compl = await Complaint.find({}).populate('compfrom','name id');
     console.log(Compl)
         res.render('deanPages/deanComplaints',{
-        complist : Compl ,
+        complist : Compl.reverse() ,
         layout: 'dean'
     })
 }
