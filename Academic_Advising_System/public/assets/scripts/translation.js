@@ -22,8 +22,17 @@ let navTrans = {
     "issue a complaint to academic advising unit": {
         ar: "تقديم شكوى إلى وحدة الإرشاد الأكاديمي",
     },
-    "submit absence excuse or exam absence": {
-        ar: "تقديم عذر غياب أو عذر عدم حضور اختبار",
+    "Submit Absence Excuse": {
+        ar: "تقديم عذر غياب",
+    },
+    "Submit Make-up Exam Excuse": {
+        ar: "تقديم عذر غياب عن اختبار",
+    },
+    "Show Submitted Excuses Status": {
+        ar: "إظهار حالة الأعذار المقدمة",
+    },
+    "Excuses": {
+        ar: "الأعذار",
     },
     /* Advisor Nav */
     "personal profile": {

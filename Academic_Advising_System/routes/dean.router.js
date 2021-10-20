@@ -10,7 +10,10 @@ deanRouter.get('/', controller.renderMainPage)
 
 deanRouter.get('/resolvedExcuses',controller.renderResolvedExcuses);
 
-deanRouter.get('/pendingExcuses',controller.renderPendingExcuses);
+deanRouter.get('/pendingExcuses',controller.renderGetPendingExcuses);
+deanRouter.post('/pendingExcuses',controller.renderPostPendingExcuses);
+deanRouter.get('/pendingExcuses/proof/:key',controller.renderGetProof);
+
 
 deanRouter.get('/complaints',controller.renderComplaints);
 

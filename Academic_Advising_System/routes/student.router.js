@@ -63,7 +63,7 @@ studentRouter.get('/newComplaint',controller.renderNewComplaint);
 //get newAbsenceExcuse router
 studentRouter.get('/newAbsenceExcuse',controller.renderGetNewAbsenceExcuse);
 //Post newAbsenceExcuse router
-studentRouter.post('/newAbsenceExcuse' ,(req, res,next)=>{
+studentRouter.post('/newAbsenceExcuse' ,[(req, res,next)=>{
     uploader(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             // A Multer error occurred when uploading.
@@ -74,7 +74,12 @@ studentRouter.post('/newAbsenceExcuse' ,(req, res,next)=>{
         }
         next()
         // Everything went fine and save document in DB here.
-    })}, controller.renderPostNewAbsenceExcuse);
+    })},
+        body(['code0','code1' , 'referencePersonPhone'],'only numbers are valid in family Members Count & order In Family & reference Person Phone')
+            .not().isEmpty().trim().escape()
+            .isNumeric()
+]
+    , controller.renderPostNewAbsenceExcuse);
 
 
 

@@ -13,6 +13,25 @@
     
     <!-- head end  -->
   </head>
+<style>
+    .cusDropDownItem{
+        color: inherit;
+        text-decoration: inherit;
+        width: 100%;
+
+    }
+    .arrow {
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 3px;
+    }
+    .down {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+    }
+</style>
+
 
   <body>
     {{!-- ====================================================== --}}
@@ -63,11 +82,17 @@
                    <span class="trn">issue a complaint to academic advising unit</span>
                     <!--                    must add follow up -->
                 </li>
-                <li onclick="location.href='/student/newExcuse'">
-                    <span class="trn">submit absence excuse or exam absence</span>
-
-                    <!--                    must add follow up -->
-                </li>
+                  <li  onclick="$('#excusesDropDownMenu').toggle()">
+                      <span  class="trn" >Excuses</span>
+                      <span>
+                          <i class="arrow down"></i>
+                      </span>
+                          <ul style="background: #1e506c" class="" id="excusesDropDownMenu" aria-labelledby="dropdownMenuLink" >
+                              <li class="cusDropDownItem" onclick="location.href='/student/newAbsenceExcuse'" ><span class="trn">Submit Absence Excuse</span></li>
+                              <li class="cusDropDownItem" onclick="location.href='/student/newExamExcuse'" ><span class="trn">Submit Make-up Exam Excuse</span></li>
+                              <li class="cusDropDownItem" onclick="location.href='/student/showExcuses'" > <span class="trn">Show Submitted Excuses Status</span></li>
+                          </ul>
+                  </li>
               </ul>
             </div>
           </div>
@@ -92,5 +117,11 @@
     {{> pageScripts}}
     {{!-- ====================================================== --}}
   </body>
+
+<script>
+    $(document).ready( ()=>{
+        $('#excusesDropDownMenu').hide();
+    })
+</script>
 
 </html>

@@ -61,7 +61,10 @@ advisingUnitRouter.post('/registerStudents', upload, controller.registerStudents
 
 advisingUnitRouter.get('/collageStudents',controller.renderCollageStudents);
 
-advisingUnitRouter.get('/resolveExcuses', controller.renderResolveExcuses );
+advisingUnitRouter.get('/resolveExcuses', controller.renderGetResolveExcuses );
+advisingUnitRouter.post('/resolveExcuses', controller.renderPostResolveExcuses);
+advisingUnitRouter.get('/resolveExcuses/proof/:key',controller.renderGetProof);
+
 
 advisingUnitRouter.get('/registerAdvisors',controller.renderRegisterAdvisors); 
 
