@@ -30,15 +30,16 @@ const excusesSchema = new Schema({
        lecturer:{
            type: String,
        } ,
+       DOE : {
+           type : Date,
+       }
     },
     ],
     dateFrom:{
         type : Date,
-        required:true
     },
     dateTo:{
         type: Date,
-        required: true
     },
     proof:
         {
@@ -53,6 +54,10 @@ const excusesSchema = new Schema({
     },
     deanComment:{
         type : String,
+    },
+    exam : {
+        type : Boolean,
+        required : true
     }
 },{
     collection:'excuses',
