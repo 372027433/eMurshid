@@ -134,7 +134,7 @@
                                             <hr>
                                         </div>
 
-                                    {{/unless}}
+                                  {{/if}}
                                 {{/each}}
                             {{/each}}
                             {{#if this.proof}}
@@ -181,8 +181,8 @@
                                         </button>
                                     </div>
                                 </form>
-                            {{/if}}
                         {{/if}}
+                        {{/unless}}
                     {{/each}}
                 </div>
                 </div>
@@ -196,8 +196,6 @@
 
                 {{#each docs}}
                     {{#each this}}
-                        {{#if exam}}
-
                             {{#each this.student}}
                                 {{#if this.name}}
                                     <tr>
@@ -339,7 +337,6 @@
                                         </button>
                                     </div>
                                 </form>
-                            {{/if}}
                         {{/if}}
                     {{/each}}
                 </div>
