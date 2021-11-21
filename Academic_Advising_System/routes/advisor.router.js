@@ -30,6 +30,8 @@ advisorRouter.get('/resolveExcuses/proof/:key',controller.renderGetProof);
 
 advisorRouter.post("/advisorSendToStudent" , controller.messagesend);
 
+advisorRouter.post("/scheduling" , controller.createTimeSchedules);
+
 
 
 

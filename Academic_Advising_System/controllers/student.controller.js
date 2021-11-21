@@ -5,8 +5,6 @@ const path = require('path');
 const studentRouter = require("../routes/student.router");
 const {renderMyMessages} = require("./student.controller");
 // define multer lib
-const path    = require('path');
-
 
 const message = require('../models/messages.model')
 
