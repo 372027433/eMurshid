@@ -9,6 +9,20 @@
             <hr>
         </div>
         <div class="body-content">
+
+            <button type="button" id="resvingmsg" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#resvingmsgmod"><img class="imgptn" id="restpic"  src="/assets/img/email.png" alt="reseved masseges"></button>
+            <button type="button" id="historymsg" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#historymsgmod"><img class="imgptn" id="histpic" src="/assets/img/history.png" alt="history masseges"></button>
+              
+              
+<!-- Modal for resiving masseges-->
+<div class="modal fade" id="resvingmsgmod" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">reseving masseges</h5>
+      </div>
+      <div class="modal-body">
+        {{!-- ?---------------------- --}}
                 {{#if err}}
                     <div class="alert alert-danger" role="alert"> {{err}}</div>
                 {{/if }}
@@ -34,6 +48,68 @@
                     
                     </div>
             </form>
+        {{!-- ----------------------- --}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- Modal for history masseges-->
+<div class="modal fade" id="historymsgmod" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">reseving masseges</h5>
+      </div>
+      <div class="modal-body">
+        {{!-- ----------------------- --}}
+                         {{#if err}}
+                    <div class="alert alert-danger" role="alert"> {{err}}</div>
+                {{/if }}
+                <form class="MessagesfromDb" action="/student/MsgFromDb" method="POST">
+                    {{!-- <button class="ShowAllMsg" >Show All Msg</button> --}}
+                    <div id="ResevedMSG">
+                        
+                        {{#each reseved  }} 
+                            {{#each this}}     
+                                {{#if this.msgtitel}}
+                                    <div class="msgcontainer" style="background:lightblue;">
+                                    <img align src="/assets/img/user-circle-solid.svg" alt="avatar" style="width: 50px; float: left; padding: 4px; margin: 3px;">
+                                    <div id="datetext" style="float: right; font-size: 10px; padding: 5px;">{{this.thedate}} </div>
+                                    <div id="timetext" style="float: left; font-size: 10px; padding: 5px;">{{this.thetime}}</div>
+                                    <div><h3 id="TitelOfMsg" style="float: left; font-size: 16px; padding: 11px;">message Titel : {{this.msgtitel}}</h3></div><br>
+                                    {{!-- <div><h5 id="messagfrom" style="font-size: 10px; padding: 40px; ">message from :{{this.msgfrom}}</h5></div> --}}
+                                    <div><textarea readonly style="resize: initial; background: snow; margin: 8px; padding: 5px; height: 70px; width: 80%;">{{this.msgcontent}}</textarea></div>
+                                    </div>
+                                {{/if}} 
+                            {{/each}}   
+                            <br>
+                        {{/each}}
+                    
+                    </div>
+            </form>
+            
+        {{!-- ----------------------- --}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+              
+              
+              
         </div>
     </div>
 </div>

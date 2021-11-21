@@ -232,9 +232,10 @@ exports.renderContactAdvisor = (req, res) => {
 };
 
 exports.renderMyMessages = async (req, res) => {
-  let x = await message.find({"msgto" : `${res.user.userId}`}).populate('msgfrom','name -_id').exec(function(err,posts){
+  let x = await message.find({"msgto" : `${res.user.userId}`}).populate('msgfrom','name -_id').exec(async function(err,posts){
+
+    let resevedmsg = await message.find({"msgfrom" : `${res.user.userId}`}).populate('msgto','name -_id');
     // ther is ero her that the msg from advisor return null
-    console.log(posts)
     if(err){
             res.render('studentPages/studentMessages' , {
                 err: err ,
@@ -244,6 +245,7 @@ exports.renderMyMessages = async (req, res) => {
         else {
          res.render('studentPages/studentMessages' , {
              messagesList : posts.reverse(),
+             reseved : resevedmsg.reverse(),
              layout : 'student'
          })      
         } 

@@ -892,3 +892,15 @@ dean complain
   -ms-flex-direction: column;
   flex-direction: column;
 }
+/*********************************
+Student complaint
+*********************************/
+#file {
+  margin: 20px;
+}
+
+.imgptn{
+  width: 200px;
+  margin: 20px;
+  padding: 10px;
+}
