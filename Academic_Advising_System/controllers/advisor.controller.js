@@ -11,8 +11,12 @@ const message = require('../models/messages.model')
 // Students MODELS
 const Students = require('../models/student.model')
 
+// Advisor Times Model 
+const AdvisorTimes = require('../models/advisorTimes.model')
+
 // constants
 const TIME_SLOTS = require('../utils/time-slots')
+const {TimesArray} = require('../utils/constants')
 
 exports.renderMainPage = (req, res) => {
     console.log(res.user)
@@ -44,10 +48,21 @@ exports.renderRequestReports = (req, res) => {
     })
 }
 
-exports.renderOfficeHours = (req, res) => {
-    res.render('advisorPages/advisorOfficeHours', {
-        layout: 'advisor'
-    })
+exports.renderOfficeHours = async (req, res) => {
+    try {
+        let advisorTimes = await AdvisorTimes.findOne({advisor: res.user.userId}).select('-advisor')
+        let sunTimes
+        console.log(advisorTimes)
+        // get the advisor times when-ever he loads the page 
+        res.render('advisorPages/advisorOfficeHours', {
+            layout: 'advisor',
+            times: TimesArray,
+        })
+        
+    } catch(err) {
+        console.log('errors')
+        res.render('errorPage')
+    }
 }
 
 exports.renderAppointments = (req, res) => {
@@ -204,42 +219,74 @@ exports.messagesend = async (req, res) => {
 }
 exports.createTimeSchedules = async (req, res) => {
     try {
-        console.log('times router is being hit')
+
+        // console.log('\n\n\n\n\ntimes router is being hit')
         const time = req.body.times;
         // times will start from 00:00 to 23:59
         // now we need to calculate the time slots
-        const timeSlotDuration = TIME_SLOTS.fifteen; 
+        const timeSlotDuration = TIME_SLOTS.fifteen;
+        let timesArray = {}; // purpose of this array is to store times
+        // to put them in the DB
+        // it will be constructed of objects 
+        /**
+         * [
+         *  
+         * ]
+         */
+        
         for (let key of Object.keys(time)) {
-            let dayReservedTimes = time[key] // => 
+            let dayReservedTimes = time[key] // => key here is the name of the day
+            // what should we add here
+            let durationTimesForDay = [] // contain duration times for this day
             /**
              * this is what inside the time[key]
-             * [ 
-             *   { from: '16:26', to: '17:26' },
-             *   { from: '18:26', to: '19:26' } 
+             * which is the times for the selected day
+             * [
+             *   { from: '16:26', to: '17:26' }, // this time represents one time duration of advisors schedule
+             *   { from: '18:26', to: '19:26' }
              * ]
-             */
+             */  
             // let slotTimes[key]= []
             for(let i = 0; i < dayReservedTimes.length; i++){
 
                 // to time should always be bigger then from time 
                 let fromTime = timeInMinutes(dayReservedTimes[i].from); // start 
-                let toTime = timeINMinutes(dayReservedTimes[i].to);  // end 
+                
+                let toTime = timeInMinutes(dayReservedTimes[i].to);  // end 15:38
+                // let toTime = timeINMinutes('15:38');  // end 15:38
 
                 let numberOfTimeSlots = Math.floor((toTime-fromTime) / timeSlotDuration)
-                // we could have some errors
+                // we could have some errors, why ??
+
                 let slotFromTime = dayReservedTimes[i].from ;
                 let slotHourTime = parseInt(dayReservedTimes[i].from.split(':')[0])
                 let slotMinutesTime = parseInt(dayReservedTimes[i].from.split(':')[1])
 
+
+                /**
+                 * @ this loop will calculate the time slot
+                 * for example if we have this time { from: '16:30', to: '17:30' }
+                 * the durations will be from 
+                 * [
+                 *  { from: '16:30', to: '16:45'},
+                 *  { from: '16:45', to: '17:00'},
+                 *  { from: '17:00', to: '17:15'},
+                 *  { from: '17:15', to: '17:30'},
+                 * ]
+                 */
+
                 for(let i = 0; i < numberOfTimeSlots; i++){
 
                     slotMinutesTime += timeSlotDuration
-                    if(slotMinutesTime > 60){
-                        startHourTime++;
+                    if(slotMinutesTime > 60){ // < check this cond
+                        slotHourTime++;
                         slotMinutesTime -= 60 ;
                     }
-                    let slotToTime = `${slotHourTime}:${slotMinutesTime}`
+                    let slotToTime = `${slotHourTime}:${slotMinutesTime == 60 ? slotMinutesTime-1 :slotMinutesTime}`
+                    let durationObj = {from: slotFromTime, to:slotToTime }
 
+                    durationTimesForDay.push(durationObj) // this durationTimesForDay
+                    slotFromTime = slotToTime
                     // here we need to increase the time slot by timeSlotDuration
                     /**
                      * I have the the time as a string and I want to increase it
@@ -250,10 +297,36 @@ exports.createTimeSchedules = async (req, res) => {
                 }
 
             }
+            // here add to DB
+            let selectedDay = TimesArray[key]
+            if(selectedDay){
+
+                timesArray[selectedDay] = {
+                    durations: durationTimesForDay,
+                    time_slots: dayReservedTimes,
+                }
+            }
 
         }
+        timesArray['advisor'] = res.user.userId; // I am not sure of this
+
+        // here we should update the things 
+        let foundSchedule = await AdvisorTimes.findOne({advisor: res.user.userId})
+        let createSchedule;
+        if(!foundSchedule){
+            // create 
+            createSchedule = await AdvisorTimes.create([timesArray])
+        } else {
+            // update
+            createSchedule = await AdvisorTimes.updateOne({advisor:res.user.userId},timesArray, {new:true})
+        }
+        console.log("found??", !(!foundSchedule) );
+        console.log(createSchedule);
+
         res.json({ curella: 'response from server' })
     } catch (err) {
+        console.log('Errorrssssssssss')
+        console.log(err)
         res.send(err)
     }
 }
@@ -262,10 +335,15 @@ exports.createTimeSchedules = async (req, res) => {
  * return total of mins
  * @param {string} time in form of 'mm:ss'
  */
-function timeInMinutes(time=''){ 
-    totalMin = 0
-    let hours2min = parseInt(time.split(':')[0]) * 60 ;
+function timeInMinutes(time){
+    // console.log(typeof time)
+    
+    let totalMin = 0
+    let hour = parseInt(time.split(':')[0])
+    
+    let hours2min = hour * 60 ;
+
     let min = parseInt(time.split(':')[1])
-    let totalMin  = hours2min + min
+    totalMin  = hours2min + min
     return totalMin
 }

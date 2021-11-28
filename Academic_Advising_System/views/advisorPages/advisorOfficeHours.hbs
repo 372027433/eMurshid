@@ -18,7 +18,7 @@
     <div class="content">
         <div class="body-header">
             <header>
-                <h1><span class="trn">Update Office Hours</span></h1>
+                <h1><span class="trn">Office Hours</span></h1>
             </header>
             <hr>
         </div>
@@ -26,295 +26,69 @@
 
         <div class="body-content">
             <div id="error-msg"></div>
+            <div id="success-msg"></div>
             <div class="py-4">
                 <div class="container">
                     <div class="mb-3 px-2 py-5 border border-1">
-                        <div class="row py-4 px-1 border border-1">
-                            <div class="col-md-2">
-                                <h6>Sunday: </h6>
-                            </div>
-                            <div> 
-                                <div id="sun-time">
-                                    {{!-- this will the template that all others fallow --}}
-                                    <div class="row" id="sun-time-0">
-                                        <div class="col-md-6 form-group d-inline">
-                                            <div class="input-group">
-                                                <span class="input-group-text">from</span>
-                                                <input class="form-control" type="time" name="SunfromTime"
-                                                    id="sun-time-0-from">
+
+                        {{#each times}}
+                            <div class="row m-1 py-4 px-1 border border-1">
+                                <div class="col-md-2">
+                                    <h5 style="text-transform: capitalize;">{{this}}: </h5>
+                                </div>
+                                <div> 
+                                    <div id="{{@key}}">
+                                        {{!-- this will be the template that all others fallow --}}
+                                        <div class="row" id="{{@key}}-0">
+                                            <div class="col-md-6 form-group d-inline">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">from</span>
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="{{@key}}-0-from">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 form-group d-inline">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">to</span>
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="{{@key}}-0-to">
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 form-group d-inline">
-                                            <div class="input-group">
-                                                <span class="input-group-text">to</span>
-                                                <input class="form-control" type="time" name="SunToTime" id="sun-time-0-to">
-                                            </div>
-                                        </div>
+                                    </div>
+
+                                    <div class="row d-flex justify-content-end">
+                                        <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-primary" onclick="addNewDate('{{@key}}')">+</button>
+                                        <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-danger" onclick="deleteDate('{{@key}}')">-</button>
                                     </div>
 
                                 </div>
-
-                                <div class="row d-flex justify-content-end">
-                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-primary" onclick="addNewDate('sun-time')">+</button>
-                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-danger" onclick="deleteDate('sun-time')">-</button>
-                                </div>
-
                             </div>
-                        </div>
-                        {{!-- 
-                        <div class="row mb-3">
-                            <div class="col-md-2">
-                                <h6>Monday: </h6>
-                            </div>
-
-                            <div class="col-md-4 form-group">
-                                <div class="input-group">
-                                    <span class="input-group-text">from</span>
-                                    <input class="form-control" type="time" name="SunfromTime" id="SunfromTime">
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 form-group">
-                                <div class="input-group">
-                                    <span class="input-group-text">to</span>
-                                    <input class="form-control" type="time" name="SunToTime" id="SunToTime">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-2">
-                                <h6>Tuesday: </h6>
-                            </div>
-
-                            <div class="col-md-4 form-group">
-                                <div class="input-group">
-                                    <span class="input-group-text">from</span>
-                                    <input class="form-control" type="time" name="SunfromTime" id="SunfromTime">
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 form-group">
-                                <div class="input-group">
-                                    <span class="input-group-text">to</span>
-                                    <input class="form-control" type="time" name="SunToTime" id="SunToTime">
-                                </div>
-                            </div>
-                        </div>
-                         --}}
+                        {{/each}}
+                         
                         <div class="mt-5">
                             <hr>
                             <button class="btn btn-success" onclick="submit()">Submit Dates</button>
                         </div>
                     </div>
                 </div>
-
-                <div class="container">
-
-                    {{!-- <div class="col-lg-12">
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-transparent border-0">
-                                <h1>hello table</h1>
-                            </div>
-                            <div class="card-body pt-0">
-                                <form method="post" name="stuProfile">
-                                    <table class="table table-bordered">
-
-
-
-                                        <table class="table-bordered">
-                                            <tr>
-                                                <th>Sunday</th>
-
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-
-                                            </tr>
-                                            <tr>
-                                                <th>Monday</th>
-
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Tuesday</th>
-
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Wednesday</th>
-
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Thursday</th>
-
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                                <td>
-                                                    <label for="from">from</label>
-                                                    <input id="from" type="time">
-
-                                                    <label for="to">to</label>
-                                                    <input id="to" type="time">
-                                                </td>
-                                            </tr>
-                                        </table>
-
-
-                                        <tr>
-                                            <th></th>
-                                            <td>
-                                                <div class="row-1"></div>
-                                            </td>
-
-                                        </tr>
-                                    </table>
-
-                                    <button style="margin: 20px" class="btn btn-primary" type="submit"
-                                        name="stuUpdateBtn"> Submit </button>
-                                    <button class="btn btn-secondary" type="button" name="cancel"
-                                        onclick="location.href='/student/studentProfile'">cancel</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>--}}
-                </div>
             </div>
-
-
         </div>
     </div>
     <script>
-        const dateAreas = ['sun-time', 'mon-time', 'tue-time', 'wed-time'];
-        // these represents different sections 
-        let sunArea = document.getElementById('sun-time')
+
+        const dateAreas = ['sun-time', 'mon-time', 'tue-time', 'wed-time','thu-time'];
+        
+        function removeErrorMsg(){
+            console.log('helloo people')
+            document.querySelectorAll('i').forEach((elem) => {
+                elem.remove()
+            })
+            let errorMsg = document.getElementById('error-msg') ;
+            errorMsg.classList.remove('alert','alert-danger')
+            errorMsg.innerText = ""
+        }
+        
         function deleteDate(area) {
 
             let timeArea = document.getElementById(area)
@@ -333,24 +107,26 @@
                 },2000)
             }
         }
+
         function addNewDate(area) {
+            
             let updateArray = document.getElementById(area)
             // we need to get this id and append to it
             let div = document.createElement('div')
-            let id = sunArea.childElementCount
+            let id = updateArray.childElementCount
             div.innerHTML = `
-                <div class="my-1 row">
+                <div class="my-1 row" id="${area}-${id}">
                     <div class="col-md-6 form-group d-inline">
                         <div class="input-group">
                             <span class="input-group-text">from</span> 
-                            <input class="form-control" type="time" name="SunfromTime" id="sun-time-${id}-from">
+                            <input class="form-control" type="time" oninput="removeErrorMsg()" id="${area}-${id}-from">
                         </div>
                     </div>
 
                     <div class="col-md-6 form-group d-inline">
                         <div class="input-group">
                             <span class="input-group-text">to</span>
-                            <input class="form-control" type="time" name="SunToTime" id="sun-time-${id}-to">
+                            <input class="form-control" type="time" oninput="removeErrorMsg()" id="${area}-${id}-to">
                         </div>
                     </div>
                 </div>`
@@ -358,6 +134,7 @@
         }
 
         function submit() {
+            let noErrors = true ;
             // here we want to take the times that are in the sun-area, mon-area and so on
             let submittedDays = {} // array of objects, on back send it as objects
             for (let dayArea of dateAreas) {
@@ -369,6 +146,18 @@
                         // get the values of each input
                         let fromTime = document.getElementById(`${dayArea}-${i}-from`).value
                         let toTime = document.getElementById(`${dayArea}-${i}-to`).value
+
+                        if( i > 0 && (!fromTime || !toTime) ){
+                            noErrors = false;
+                            let errorMsg = document.getElementById('error-msg') ;
+                            errorMsg.classList.add('alert','alert-danger')
+                            errorMsg.innerText = "There are some empty dates"
+                            let hint = document.createElement('i')
+                            hint.innerText = '*'
+                            hint.style.color = 'RED'
+                            document.getElementById(`${dayArea}-${i}`).prepend(hint);
+                            break ;
+                        }
                         // want to convert the times then compare between them
                         console.log(fromTime, toTime)
                         let numFromTime = (parseInt(fromTime.split(':')[0]) * 60) + parseInt(fromTime.split(':')[1])
@@ -376,6 +165,7 @@
 
                         if(numToTime < numFromTime){
                             // show error msg  class="alert alert-danger"
+                            noErrors = false;
                             let errorMsg = document.getElementById('error-msg') ;
                             errorMsg.classList.add('alert','alert-danger')
                             errorMsg.innerText = "There are some conflicts in dates"
@@ -396,18 +186,29 @@
                     }
                 }
             }
-            $.ajax({
-                method: 'post',
-                url: "/advisor/scheduling",
-                data: {times: submittedDays }
-            })
-            .done((value) => {
-                console.log('we have the value of the call back')
-                console.log(value)
-            })
+            if(noErrors){
+                $.ajax({
+                    method: 'post',
+                    url: "/advisor/scheduling",
+                    data: {times: submittedDays }
+                })
+                .done((value) => {
+                    console.log('we have the value of the call back')
+                    
+                    let successMsg = document.getElementById('success-msg') ;
+                    successMsg.classList.add('alert','alert-success')
+                    successMsg.innerText = "Office Hours been Updated Successfully"
+                    setTimeout(()=> {
+                        successMsg.classList.remove('alert','alert-success')
+                        successMsg.innerText = ""
+                    },3000)
+                    console.log(value)
+                })
+            }
             console.log(submittedDays)
             // once finished with the for loop then make the request to server
         }
+    
     </script>
 
 </main>
