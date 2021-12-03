@@ -1,0 +1,248 @@
+<div class="main-content">
+<div class="content">
+    <div class="body-header">
+        <header>
+            <h1><span class="trn">Submit a new Absence Excuse</span></h1>
+        </header>
+        <hr>
+    </div>
+
+{{#if hasError}}
+        <div class="student-profile py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-transparent border-0">
+                                <h3 class="mb-0"><i class="far fa-clone pr-1"></i> student Information</h3>
+                            </div>
+                            <div class="card-body pt-0">
+                                <span style="color: red"> {{errorMsg}} </span>
+
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>Name</th>
+                                        <td>   <input class="form-control" name="stuName" id="stuName" value="{{stuName}}" disabled></td>
+                                    </tr>
+                                    <tr>
+                                        <th>ID</th>
+                                        <td>   <input class="form-control" name="stuId" id="stuId" value="{{stuId}}" disabled></td>
+                                    </tr>
+                                    <tr>
+                                        <th><span> Level </span></th>
+                                        <td>   <input class="form-control" name="stuLevel" id="stuLevel" value="{{level}}" disabled></td>
+
+                                    </tr>
+                                    <tr>
+                                        <th><span> Major </span></th>
+                                        <td>   <input class="form-control" name="stuMajor" id="stuMajor" value="{{major}}" disabled></td>
+                                    </tr>
+                                </table>
+                                <!--                                <div class="card-body pt-0">-->
+
+                                <form method="post" name="stuProfile" enctype="multipart/form-data" >
+                                    <table id="infoTable" class="">
+                                        <tbody>
+                                        <tr style="text-align: center;">
+                                            <th >code</th>
+                                            <th>course Name</th>
+                                            <th>Section</th>
+                                            <th>Lecturer</th>
+                                        </tr>
+                                        {{#each oldData.info}}
+                                            {{#if this.code}}
+                                                <tr>
+                                                    <td><input name="code{{@index}}" class="form-control" type="text" value="{{this.code}}" required></td>
+                                                    <td><input name="courseName{{@index}}" class="form-control" type="text" value="{{this.courseName}}" required ></td>
+                                                    <td><input name="section{{@index}}" class="form-control" type="text" value="{{this.section}}" required ></td>
+                                                    <td><input name="lecturer{{@index}}" class="form-control" type="text" value="{{this.lecturer}}" required></td>
+                                                    <td><input name="lecturer{{@index}}" class="form-control" type="text" value="{{this.DOE}}" required></td>
+                                                </tr>
+                                            {{/if}}
+                                        {{/each}}
+
+                                        </tbody>
+
+                                    </table>
+                                    <div>
+                                        <button name="btn" id="btn" class="btn btn-primary" type="button" onclick="add()" >add</button>
+                                        <button name="btn" id="removeBtn" class="btn btn-primary" type="button" onclick="remove()"  >remove</button>
+                                    </div>
+                                    <div class="d-flex justify-content-between" >
+                                        <div class="form-group col-6">
+                                            <label for="dateFrom" style="text-align: center">Date From</label>
+                                            <input name="dateFrom"  class="form-control" type="date" >
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label for="dateTo" style="text-align: center" >Date To</label>
+                                            <input name="dateTo"  class="form-control" type="date" >
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12" >
+                                            <label for="proof" style="text-align: center" class="form-label">Proof</label>
+                                            <input class="form-control " type="file" name="file" id="file" style="alignment: center">
+
+                                            <div>
+                                                <label for="comment" style="text-align: center" class="form-label">comment</label>
+                                                <textarea class="form-control" name="comment" id="comment" ></textarea>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-3"></div>
+                                            <button class="btn btn-primary col-3" type="submit" name="stuUpdateBtn" >update</button>
+                                            <button class="btn btn-secondary col-3" type="button" name="cancel" onclick="location.href='/student/studentProfile'" >cancel</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
+
+{{else}}
+    <div class="student-profile py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-transparent border-0">
+                            <h3 class="mb-0"><i class="far fa-clone pr-1"></i> student Information</h3>
+                        </div>
+                        <div class="card-body pt-0">
+                            <span style="color: green"> {{successMsg}}</span>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Name</th>
+                                    <td>   <input class="form-control" name="stuName" id="stuName" value="{{stuName}}" disabled></td>
+
+                                </tr>
+                                <tr>
+                                    <th>ID</th>
+                                    <td>   <input class="form-control" name="stuId" id="stuId" value="{{stuId}}" disabled></td>
+                                </tr>
+                                <tr>
+                                    <th><span> Level </span></th>
+                                    <td>   <input class="form-control" name="stuLevel" id="stuLevel" value="{{level}}" disabled></td>
+
+                                </tr>
+                                <tr>
+                                    <th><span> Major </span></th>
+                                    <td>   <input class="form-control" name="stuMajor" id="stuMajor" value="{{major}}" disabled></td>
+                                </tr>
+                            </table>
+                            <!--                                <div class="card-body pt-0">-->
+                            {{!-- <select id="type" name="type" class="form-select"  aria-label="Select Excuse Type" required >
+                                <option value="" selected>Select Excuse Type</option>
+                                <option value="absence"  >ab</option>
+                                <option value="exam" >exam</option>
+                            </select> --}}
+
+                            <form method="post" name="stuProfile" enctype="multipart/form-data" >
+                                <table id="infoTable" class="">
+                                    <tbody>
+                                    <tr style="text-align: center;">
+                                        <th >code</th>
+                                        <th>course Name</th>
+                                        <th>Section</th>
+                                        <th>Lecturer</th>
+                                    </tr>
+                                    <tr>
+                                        <td><input name="code0" class="form-control" type="text" required></td>
+                                        <td><input name="courseName0" class="form-control" type="text" required ></td>
+                                        <td><input name="section0" class="form-control" type="text" required ></td>
+                                        <td><input name="lecturer0" class="form-control" type="text" required></td>
+                                        <td><input name="DOE0" class="form-control" type="datetime-local" required></td>
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+                                <div>
+                                    <button name="btn" id="btn" class="btn btn-primary" type="button" onclick="add()" >add</button>
+                                    <button name="btn" id="removeBtn" class="btn btn-primary" type="button" onclick="remove()"  >remove</button>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12" >
+                                        <label for="proof" style="text-align: center" class="form-label">Proof</label>
+                                        <input class="form-control " type="file" name="file" id="file" style="alignment: center">
+
+                                        <div>
+                                            <label for="comment" style="text-align: center" class="form-label">comment</label>
+                                            <textarea class="form-control" name="comment" id="comment" ></textarea>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-3"></div>
+                                        <button class="btn btn-primary col-3" type="submit" name="stuUpdateBtn" >update</button>
+                                        <button class="btn btn-secondary col-3" type="button" name="cancel" onclick="location.href='/student/studentProfile'" >cancel</button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+{{/if}}
+
+
+
+
+<script type="text/javascript">
+
+    let table = document.getElementById('infoTable');
+    let dynamicId = table.tBodies[0].rows.length -1;
+    console.log(dynamicId)
+    function add(){
+        $("#infoTable tr:last-child").after(''+
+                '<tr>' +
+                ' <td><input id="code" name="s"  class="form-control" type="text" required ></td>'+
+                ' <td><input id="courseName" name="courseName" class="form-control" type="text" required ></td>'+
+                '<td><input id="section"  name="section" class="form-control" type="text" required ></td>'+
+                '<td><input id="lecturer" name="lecturer" class="form-control" type="text" required ></td>'+
+                '<td><input id="DOE" name="DOE" class="form-control" type="datetime-local" required ></td>'+
+                ' </tr>')
+        $('#code').attr('name', 'code' + dynamicId).attr('id', 'code' + dynamicId)
+        $('#courseName').attr('name', 'courseName' + dynamicId).attr('id', 'courseName' + dynamicId)
+        $('#section').attr('name', 'section' + dynamicId).attr('id', 'section' + dynamicId)
+        $('#lecturer').attr('name', 'lecturer' + dynamicId).attr('id', 'lecturer' + dynamicId)
+        $('#DOE').attr('name', 'DOE' + dynamicId).attr('id', 'DOE' + dynamicId)
+        dynamicId++
+        if (dynamicId > 9){
+            $('#btn').prop('disabled', true);
+        }
+        if (dynamicId > 0)
+            $('#removeBtn').prop('disabled', false);
+    }
+    function remove(){
+        if (dynamicId < 2)
+            $('#removeBtn').prop('disabled', true);
+        else if (dynamicId > 9){
+            $('#btn').prop('disabled', false);
+        }
+        $('#infoTable tr:last-child').remove();
+        dynamicId--
+    }
+</script>
+

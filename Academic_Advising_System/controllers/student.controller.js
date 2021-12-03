@@ -6,6 +6,7 @@ const studentRouter = require("../routes/student.router");
 const {renderMyMessages} = require("./student.controller");
 // define multer lib
 
+
 const message = require('../models/messages.model')
 
 // Staf MODEL
@@ -231,9 +232,10 @@ exports.renderContactAdvisor = (req, res) => {
 };
 
 exports.renderMyMessages = async (req, res) => {
-  let x = await message.find({"msgto" : `${res.user.userId}`}).populate('msgfrom','name -_id').exec(function(err,posts){
+  let x = await message.find({"msgto" : `${res.user.userId}`}).populate('msgfrom','name -_id').exec(async function(err,posts){
+
+    let resevedmsg = await message.find({"msgfrom" : `${res.user.userId}`}).populate('msgto','name -_id');
     // ther is ero her that the msg from advisor return null
-    console.log(posts)
     if(err){
             res.render('studentPages/studentMessages' , {
                 err: err ,
@@ -243,6 +245,7 @@ exports.renderMyMessages = async (req, res) => {
         else {
          res.render('studentPages/studentMessages' , {
              messagesList : posts.reverse(),
+             reseved : resevedmsg.reverse(),
              layout : 'student'
          })      
         } 
@@ -403,7 +406,7 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
            const  proofURI = result.Key;
 
         //save the data in the DB
-            const classExcuse = new Excuses ({type:'classAbsence', dateFrom:dateFrom, dateTo: dateTo, status:'pending' , info:info , student:res.user.userId ,proof:proofURI})
+            const classExcuse = new Excuses ({type:'classAbsence',exam:false, dateFrom:dateFrom, dateTo: dateTo, status:'pending' , info:info , student:res.user.userId ,proof:proofURI})
             console.log(classExcuse)
             classExcuse.save(function (err, excuse){
                 if (err) {
@@ -464,6 +467,166 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
     //     layout: 'student',
     // });
 };
+
+exports.renderGetNewExamExcuse = async (req,res) =>{
+    const student = await Students.findById(res.user.userId).select("-password").exec();
+    res.render('studentPages/studentNewExamExcuse',{
+            stuName : student.name,
+            stuId : student.id,
+            major : student.major,
+            level : student.level,
+            layout: 'student'
+        });
+}
+
+
+
+exports.renderPostNewExamExcuse = async (req, res) => {
+    if (!req.body) {
+        return res.sendStatus(400);
+    } else {
+        const student = await Students.findById(res.user.userId).select("-password").exec();
+        const stuName = student.name;
+        const stuId = student.id;
+        const major = student.major;
+        const level = student.level;
+
+        const info0 = {
+            code: req.body.code0,
+            courseName: req.body.courseName0,
+            section: req.body.section0,
+            lecturer: req.body.lecturer0,
+            DOE: req.body.DOE0,
+        }
+        const info1 = {
+            code: req.body.code1,
+            courseName: req.body.courseName1,
+            section: req.body.section1,
+            lecturer: req.body.lecturer1,
+            DOE: req.body.DOE1,
+        }
+        const info2 = {
+            code: req.body.code2,
+            courseName: req.body.courseName2,
+            section: req.body.section2,
+            lecturer: req.body.lecturer2,
+            DOE: req.body.DOE2,
+        }
+        const info3 = {
+            code: req.body.code3,
+            courseName: req.body.courseName3,
+            section: req.body.section3,
+            lecturer: req.body.lecturer3,
+            DOE: req.body.DOE3,
+        }
+        const info4 = {
+            code: req.body.code4,
+            courseName: req.body.courseName4,
+            section: req.body.section4,
+            lecturer: req.body.lecturer4,
+            DOE: req.body.DOE4,
+        }
+        const info5 = {
+            code: req.body.code5,
+            courseName: req.body.courseName5,
+            section: req.body.section5,
+            lecturer: req.body.lecturer5,
+            DOE: req.body.DOE5,
+        }
+        const info6 = {
+            code: req.body.code6,
+            courseName: req.body.courseName6,
+            section: req.body.section6,
+            lecturer: req.body.lecturer6,
+            DOE: req.body.DOE6,
+        }
+        const info7 = {
+            code: req.body.code7,
+            courseName: req.body.courseName7,
+            section: req.body.section7,
+            lecturer: req.body.lecturer7,
+            DOE: req.body.DOE7,
+        }
+        const info8 = {
+            code: req.body.code8,
+            courseName: req.body.courseName8,
+            section: req.body.section8,
+            lecturer: req.body.lecturer8,
+            DOE: req.body.DOE8,
+        }
+        const info9 = {
+            code: req.body.code9,
+            courseName: req.body.courseName9,
+            section: req.body.section9,
+            lecturer: req.body.lecturer9,
+            DOE: req.body.DOE9,
+        }
+        const info = [info0, info1, info2, info3, info4, info5, info6, info7, info8, info9];
+
+        if (req.uploadError) {
+            console.log(req.uploadError)
+            res.status(422).render('studentPages/studentNewExamExcuse', {
+                hasError: true,
+                stuName: stuName,
+                stuId: stuId,
+                major: major,
+                level: level,
+                oldData: {
+                    info: info,
+                },
+                errorMsg: 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code,
+                layout: 'student',
+            })
+
+        } else {
+            // get the file after it was filtered and was successfully uploaded to the server
+            const proof = req.file;
+            console.log(proof)
+            // upload file to AWS S3
+            const result = await uploadFile(proof);
+            //Delete the file from the server
+            await unlinkFile(proof.path)
+            console.log(result)
+            // get File Key from AWS S3 to save in DB
+            const proofURI = result.Key;
+
+            //save the data in the DB
+            const classExcuse = new Excuses({
+                type: 'ExamAbsence',
+                exam: true,
+                status: 'pending',
+                info: info,
+                student: res.user.userId,
+                proof: proofURI
+            })
+            console.log(classExcuse)
+            classExcuse.save(function (err, excuse) {
+                if (err) {
+                    return console.error(err);
+                }
+                res.render('studentPages/studentNewExamExcuse', {
+                    hasError: false,
+                    stuName: stuName,
+                    stuId: stuId,
+                    major: major,
+                    level: level,
+                    oldData: {
+                        info: info,
+                    },
+                    successMsg: 'Your excuse was sent successfully',
+                    layout: 'student',
+                })
+            });
+        }
+    }
+    ;
+}
+
+
+
+
+
+
 
 
 //msgto : res.user.advisor_id

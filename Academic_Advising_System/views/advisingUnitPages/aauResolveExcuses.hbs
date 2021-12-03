@@ -16,6 +16,9 @@
                     <h5> {{successMsg}} </h5>
                 {{/if}}
             </div>
+
+
+
             <table class="table table-bordered">
                 <th>student's name</th>
                 <th>student's id</th>
@@ -27,154 +30,159 @@
 
                 {{#each docs}}
                     {{#each this}}
+                        {{#unless exam}}
 
-                        {{#each this.student}}
-                            {{#if this.name}}
-                                <tr>
-                                    <td> {{this.name}}</td>
-                                    <td>{{this.id}} </td>
-                                    <td> {{this.major}} </td>
-                                    <td>{{this.level}}</td>
-                                    <td>{{../this.type}}</td>
-                                    <td>{{../this.createdAt}}</td>
-                                    <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#s{{../this._id}}"> show </button></td>
-                                </tr>
-                            <div class="modal fade " id="s{{../this._id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable  modal-xl " >
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Excuse</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <b> name</b>
+                            {{#each this.student}}
+                                {{#if this.name}}
+                                    <tr>
+                                        <td> {{this.name}}</td>
+                                        <td>{{this.id}} </td>
+                                        <td> {{this.major}} </td>
+                                        <td>{{this.level}}</td>
+                                        <td>{{../this.type}}</td>
+                                        <td>{{../this.createdAt}}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#s{{../this._id}}"> show
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <div class="modal fade " id="s{{../this._id}}" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable  modal-xl ">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Excuse</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
                                     </div>
-                                    <div class="col-2">
-                                        <b> id</b>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <b> name</b>
+                                        </div>
+                                        <div class="col-2">
+                                            <b> id</b>
+                                        </div>
+                                        <div class="col-2">
+                                            <b> major</b>
+                                        </div>
+                                        <div class="col-2">
+                                            <b> level</b>
+                                        </div>
+                                        <div class="col-2">
+                                            <b> Type</b>
+                                        </div>
+                                        <div class="col-2">
+                                            <b> Submitted At</b>
+                                        </div>
                                     </div>
-                                    <div class="col-2">
-                                        <b> major</b>
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <span>{{this.name}}</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <span>{{this.id}} </span>
+                                        </div>
+                                        <div class="col-2">
+                                            <span> {{this.major}} </span>
+                                        </div>
+                                        <div class="col-2">
+                                            <span>{{this.level}}</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <span>{{../this.type}}</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <span>{{../this.createdAt}}</span>
+                                        </div>
                                     </div>
-                                    <div class="col-2">
-                                        <b> level</b>
-                                    </div>
-                                    <div class="col-2">
-                                        <b> Type</b>
-                                    </div>
-                                    <div class="col-2">
-                                        <b> Submitted At</b>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-2">
-                                        <span>{{this.name}}</span>
-                                    </div>
-                                    <div class="col-2">
-                                        <span>{{this.id}} </span>
-                                    </div>
-                                    <div class="col-2">
-                                        <span> {{this.major}} </span>
-                                    </div>
-                                    <div class="col-2">
-                                        <span>{{this.level}}</span>
-                                    </div>
-                                    <div class="col-2">
-                                        <span>{{../this.type}}</span>
-                                    </div>
-                                    <div class="col-2">
-                                        <span>{{../this.createdAt}}</span>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <b>Course Code</b>
-                                    </div>
-                                    <div class="col-3">
-                                        <b>Course Name</b>
-                                    </div>
-                                    <div class="col-3">
-                                        <b>Section</b>
-                                    </div>
-                                    <div class="col-3">
-                                        <b>Lecturer Name</b>
-                                    </div>
-                                </div>
-                                <hr>
-                            {{/if}}
-                        {{/each}}
-                        {{#each this.info}}
-                            {{#each this}}
-                                {{#if this.code}}
+                                    <hr>
                                     <div class="row">
                                         <div class="col-3">
-                                            <span>{{this.code}}</span>
+                                            <b>Course Code</b>
                                         </div>
                                         <div class="col-3">
-                                            <span>{{this.courseName}}</span>
+                                            <b>Course Name</b>
                                         </div>
                                         <div class="col-3">
-                                            <span>{{this.section}}</span>
+                                            <b>Section</b>
                                         </div>
                                         <div class="col-3">
-                                            <span>{{this.lecturer}}</span>
+                                            <b>Lecturer Name</b>
                                         </div>
-                                        <hr>
                                     </div>
-
+                                    <hr>
                                 {{/if}}
                             {{/each}}
-                        {{/each}}
-                        {{#if this.proof}}
-                            <hr>
-                            <div class="row">
-                                <div class="col-6">
-                                    <b>Date From</b>
-                                </div>
-                                <div class="col-6">
-                                    <b>Date To</b>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <span>{{this.dateFrom}}</span>
-                                    </div>
-                                    <div class="col-6">
-                                        <span>{{this.dateTo}}</span>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <a href="/advisingUnit/resolveExcuses/proof/{{this.proof}}" target="_blank" > <b> Proof </b> </a>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <label for="AdvisorComment"> Advisor's Comment </label>
-                                        <p id="AdvisorComment">{{this.AdvisorComment}} </p>
-                                    </div>
-                                </div>
+                            {{#each this.info}}
+                                {{#each this}}
+                                    {{#if this.code}}
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <span>{{this.code}}</span>
+                                            </div>
+                                            <div class="col-3">
+                                                <span>{{this.courseName}}</span>
+                                            </div>
+                                            <div class="col-3">
+                                                <span>{{this.section}}</span>
+                                            </div>
+                                            <div class="col-3">
+                                                <span>{{this.lecturer}}</span>
+                                            </div>
+                                            <hr>
+                                        </div>
 
+                                  {{/if}}
+                                {{/each}}
+                            {{/each}}
+                            {{#if this.proof}}
                                 <hr>
-                            </div>
-                            <form method="post" >
                                 <div class="row">
-                                    <div class="col-6"></div>
-                                    <label for="aauComment"> AAU Comment</label>
-                                    <textarea class="form-control" name="aauComment" id="aauComment" placeholder="Enter Your Comments Here" ></textarea>
-                                    <input name="exId" value="{{this._id}}" hidden readonly>
+                                    <div class="col-6">
+                                        <b>Date From</b>
+                                    </div>
+                                    <div class="col-6">
+                                        <b>Date To</b>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span>{{this.dateFrom}}</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <span>{{this.dateTo}}</span>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <a href="/advisingUnit/resolveExcuses/proof/{{this.proof}}" target="_blank">
+                                                <b>proof </b> </a>
+                                        </div>
+                                    </div>
+                                    <hr>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button name="reject" id="reject" type="submit" class="btn btn-danger" >Reject</button>
-                                    <button name="recommend" id="recommend" type="submit" class="btn btn-primary">Recommend</button>
-                                </div>
-                            </form>
+                                <form method="post">
+                                    <div class="row">
+                                        <div class="col-6"></div>
+                                        <label for="aauComment"> AAU Comment</label>
+                                        <textarea class="form-control" name="aauComment" id="aauComment"
+                                                  placeholder="Enter Your Comments Here"></textarea>
+                                        <input name="exId" value="{{this._id}}" hidden readonly>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                        </button>
+                                        <button name="reject" id="reject" type="submit" class="btn btn-danger">Reject
+                                        </button>
+                                        <button name="recommend" id="recommend" type="submit" class="btn btn-primary">
+                                            Approve
+                                        </button>
+                                    </div>
+                                </form>
                         {{/if}}
-
+                        {{/unless}}
                     {{/each}}
                 </div>
                 </div>
@@ -183,17 +191,9 @@
 
                 {{/each}}
 
-
-
             </table>
-
-
-
         </div>
     </div>
-
-
-
 
 
 

@@ -75,11 +75,25 @@ studentRouter.post('/newAbsenceExcuse' ,[(req, res,next)=>{
         next()
         // Everything went fine and save document in DB here.
     })},
-        body(['code0','code1' , 'referencePersonPhone'],'only numbers are valid in family Members Count & order In Family & reference Person Phone')
-            .not().isEmpty().trim().escape()
-            .isNumeric()
 ]
     , controller.renderPostNewAbsenceExcuse);
+
+//get makeupexam router
+studentRouter.get('/newExamExcuse',controller.renderGetNewExamExcuse);
+//Post makeupexam router
+studentRouter.post('/newExamExcuse' ,[(req, res,next)=>{
+        uploader(req, res, function (err) {
+            if (err instanceof multer.MulterError) {
+                // A Multer error occurred when uploading.
+                req.uploadError = err
+            } else if (err) {
+                req.uploadError = err
+            }
+            next()
+            // Everything went fine and save document in DB here.
+        })},
+    ]
+    , controller.renderPostNewExamExcuse);
 
 
 
