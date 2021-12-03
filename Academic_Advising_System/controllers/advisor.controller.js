@@ -51,12 +51,20 @@ exports.renderRequestReports = (req, res) => {
 exports.renderOfficeHours = async (req, res) => {
     try {
         let advisorTimes = await AdvisorTimes.findOne({advisor: res.user.userId}).select('-advisor')
-        let sunTimes
-        console.log(advisorTimes)
-        // get the advisor times when-ever he loads the page 
+        let sunday = [], monday = [], tuesday = [], wednesday = [],thursday = [];
+        advisorTimes.sunday.time_slots.forEach((time,index) => { let obj = {};  obj['from'] = time.from; obj['to'] = time.to;  obj['id'] = index;  sunday.push(obj); })
+        advisorTimes.monday.time_slots.forEach((time,index) => { let obj = {};  obj['from'] = time.from;  obj['to'] = time.to;  obj['id'] = index;  monday.push(obj); })
+        advisorTimes.tuesday.time_slots.forEach((time,index) => { let obj = {};  obj['from'] = time.from;  obj['to'] = time.to;  obj['id'] = index;  tuesday.push(obj); })
+        advisorTimes.wednesday.time_slots.forEach((time,index) => { let obj = {}; obj['from'] = time.from; obj['to'] = time.to; obj['id'] = index; wednesday.push(obj); })
+        advisorTimes.thursday.time_slots.forEach((time,index) => { let obj = {}; obj['from'] = time.from; obj['to'] = time.to; obj['id'] = index; thursday.push(obj); })
+   
         res.render('advisorPages/advisorOfficeHours', {
             layout: 'advisor',
-            times: TimesArray,
+            sunday,
+            monday,
+            tuesday,
+            wednesday,
+            thursday,
         })
         
     } catch(err) {
@@ -220,33 +228,15 @@ exports.messagesend = async (req, res) => {
 exports.createTimeSchedules = async (req, res) => {
     try {
 
-        // console.log('\n\n\n\n\ntimes router is being hit')
         const time = req.body.times;
-        // times will start from 00:00 to 23:59
-        // now we need to calculate the time slots
         const timeSlotDuration = TIME_SLOTS.fifteen;
         let timesArray = {}; // purpose of this array is to store times
-        // to put them in the DB
-        // it will be constructed of objects 
-        /**
-         * [
-         *  
-         * ]
-         */
         
         for (let key of Object.keys(time)) {
             let dayReservedTimes = time[key] // => key here is the name of the day
-            // what should we add here
+
             let durationTimesForDay = [] // contain duration times for this day
-            /**
-             * this is what inside the time[key]
-             * which is the times for the selected day
-             * [
-             *   { from: '16:26', to: '17:26' }, // this time represents one time duration of advisors schedule
-             *   { from: '18:26', to: '19:26' }
-             * ]
-             */  
-            // let slotTimes[key]= []
+
             for(let i = 0; i < dayReservedTimes.length; i++){
 
                 // to time should always be bigger then from time 
@@ -287,13 +277,6 @@ exports.createTimeSchedules = async (req, res) => {
 
                     durationTimesForDay.push(durationObj) // this durationTimesForDay
                     slotFromTime = slotToTime
-                    // here we need to increase the time slot by timeSlotDuration
-                    /**
-                     * I have the the time as a string and I want to increase it
-                     * by timeSlotDuration
-                     * 
-                     * timeslots should be [{from:'15:00', to:'15:15'}]
-                     */
                 }
 
             }
@@ -320,12 +303,11 @@ exports.createTimeSchedules = async (req, res) => {
             // update
             createSchedule = await AdvisorTimes.updateOne({advisor:res.user.userId},timesArray, {new:true})
         }
-        console.log("found??", !(!foundSchedule) );
-        console.log(createSchedule);
+        
 
-        res.json({ curella: 'response from server' })
+        res.json({ message: 'Every Thing is working' })
     } catch (err) {
-        console.log('Errorrssssssssss')
+        console.log('Errors')
         console.log(err)
         res.send(err)
     }

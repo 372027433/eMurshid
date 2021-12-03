@@ -31,41 +31,277 @@
                 <div class="container">
                     <div class="mb-3 px-2 py-5 border border-1">
 
-                        {{#each times}}
-                            <div class="row m-1 py-4 px-1 border border-1">
-                                <div class="col-md-2">
-                                    <h5 style="text-transform: capitalize;">{{this}}: </h5>
-                                </div>
-                                <div> 
-                                    <div id="{{@key}}">
-                                        {{!-- this will be the template that all others fallow --}}
-                                        <div class="row" id="{{@key}}-0">
+            
+                        {{!-- sunday --}}
+                        <div class="row m-1 py-4 px-1 border border-1">
+                            <div class="col-md-2">
+                                <h5 style="text-transform: capitalize;">Sunday: </h5>
+                            </div>
+                            <div> 
+                                <div id="sun-time">
+                                    {{#if sunday}}
+                                        {{#each sunday}}
+                                        
+                                            <div class="row" id="sun-time-{{id}}"> 
+                                                <div class="col-md-6 form-group d-inline">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">from</span>
+                                                        <input class="form-control" type="time" oninput="removeErrorMsg()" value="{{from}}" id="sun-time-{{id}}-from">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 form-group d-inline">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">to</span>
+                                                        <input class="form-control" type="time" oninput="removeErrorMsg()" value="{{to}}" id="sun-time-{{id}}-to">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{/each}}
+                                    {{else}}
+
+                                        <div class="row" id="sun-time-0"> 
                                             <div class="col-md-6 form-group d-inline">
                                                 <div class="input-group">
                                                     <span class="input-group-text">from</span>
-                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="{{@key}}-0-from">
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="sun-time-0-from">
                                                 </div>
                                             </div>
 
                                             <div class="col-md-6 form-group d-inline">
                                                 <div class="input-group">
                                                     <span class="input-group-text">to</span>
-                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="{{@key}}-0-to">
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="sun-time-0-to">
                                                 </div>
                                             </div>
                                         </div>
 
-                                    </div>
-
-                                    <div class="row d-flex justify-content-end">
-                                        <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-primary" onclick="addNewDate('{{@key}}')">+</button>
-                                        <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-danger" onclick="deleteDate('{{@key}}')">-</button>
-                                    </div>
-
+                                    {{/if}}
                                 </div>
+
+                                <div class="row d-flex justify-content-end">
+                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-primary" onclick="addNewDate('sun-time')">+</button>
+                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-danger" onclick="deleteDate('sun-time')">-</button>
+                                </div>
+
                             </div>
-                        {{/each}}
-                         
+                        </div>
+                        {{!-- monday --}}
+                        <div class="row m-1 py-4 px-1 border border-1">
+                            <div class="col-md-2">
+                                <h5 style="text-transform: capitalize;">Monday: </h5>
+                            </div>
+                            <div> 
+                                <div id="mon-time">
+                                    {{#if monday}}
+                                        {{#each monday}}
+                                        
+                                            <div class="row" id="mon-time-{{id}}"> 
+                                                <div class="col-md-6 form-group d-inline">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">from</span>
+                                                        <input class="form-control" type="time" oninput="removeErrorMsg()" value="{{from}}" id="mon-time-{{id}}-from">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 form-group d-inline">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">to</span>
+                                                        <input class="form-control" type="time" oninput="removeErrorMsg()" value="{{to}}" id="mon-time-{{id}}-to">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{/each}}
+                                    {{else}}
+
+                                        <div class="row" id="mon-time-0"> 
+                                            <div class="col-md-6 form-group d-inline">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">from</span>
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="mon-time-0-from">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 form-group d-inline">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">to</span>
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="mon-time-0-to">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    {{/if}}
+                                </div>
+
+                                <div class="row d-flex justify-content-end">
+                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-primary" onclick="addNewDate('mon-time')">+</button>
+                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-danger" onclick="deleteDate('mon-time')">-</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        {{!-- tuesday --}}
+                        <div class="row m-1 py-4 px-1 border border-1">
+                            <div class="col-md-2">
+                                <h5 style="text-transform: capitalize;">tuesday: </h5>
+                            </div>
+                            <div> 
+                                <div id="tue-time">
+                                    {{#if tuesday}}
+                                        {{#each tuesday}}
+                                        
+                                            <div class="row" id="tue-time-{{id}}"> 
+                                                <div class="col-md-6 form-group d-inline">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">from</span>
+                                                        <input class="form-control" type="time" oninput="removeErrorMsg()" value="{{from}}" id="tue-time-{{id}}-from">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 form-group d-inline">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">to</span>
+                                                        <input class="form-control" type="time" oninput="removeErrorMsg()" value="{{to}}" id="tue-time-{{id}}-to">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{/each}}
+                                    {{else}}
+
+                                        <div class="row" id="tue-time-0"> 
+                                            <div class="col-md-6 form-group d-inline">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">from</span>
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="tue-time-0-from">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 form-group d-inline">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">to</span>
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="tue-time-0-to">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    {{/if}}
+                                </div>
+
+                                <div class="row d-flex justify-content-end">
+                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-primary" onclick="addNewDate('tue-time')">+</button>
+                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-danger" onclick="deleteDate('tue-time')">-</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        {{!-- wednesday --}}
+                        <div class="row m-1 py-4 px-1 border border-1">
+                            <div class="col-md-2">
+                                <h5 style="text-transform: capitalize;">wednesday: </h5>
+                            </div>
+                            <div> 
+                                <div id="wed-time">
+                                    {{#if wednesday}}
+                                        {{#each wednesday}}
+                                        
+                                            <div class="row" id="wed-time-{{id}}"> 
+                                                <div class="col-md-6 form-group d-inline">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">from</span>
+                                                        <input class="form-control" type="time" oninput="removeErrorMsg()" value="{{from}}" id="wed-time-{{id}}-from">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 form-group d-inline">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">to</span>
+                                                        <input class="form-control" type="time" oninput="removeErrorMsg()" value="{{to}}" id="wed-time-{{id}}-to">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{/each}}
+                                    {{else}}
+
+                                        <div class="row" id="wed-time-0"> 
+                                            <div class="col-md-6 form-group d-inline">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">from</span>
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="wed-time-0-from">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 form-group d-inline">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">to</span>
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="wed-time-0-to">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    {{/if}}
+                                </div>
+
+                                <div class="row d-flex justify-content-end">
+                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-primary" onclick="addNewDate('wed-time')">+</button>
+                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-danger" onclick="deleteDate('wed-time')">-</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        {{!-- thursday --}}
+                        <div class="row m-1 py-4 px-1 border border-1">
+                            <div class="col-md-2">
+                                <h5 style="text-transform: capitalize;">thursday: </h5>
+                            </div>
+                            <div> 
+                                <div id="thu-time">
+                                    {{#if thursday}}
+                                        {{#each thursday}}
+                                        
+                                            <div class="row" id="thu-time-{{id}}"> 
+                                                <div class="col-md-6 form-group d-inline">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">from</span>
+                                                        <input class="form-control" type="time" oninput="removeErrorMsg()" value="{{from}}" id="thu-time-{{id}}-from">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 form-group d-inline">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">to</span>
+                                                        <input class="form-control" type="time" oninput="removeErrorMsg()" value="{{to}}" id="thu-time-{{id}}-to">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{/each}}
+                                    {{else}}
+
+                                        <div class="row" id="thu-time-0"> 
+                                            <div class="col-md-6 form-group d-inline">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">from</span>
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="thu-time-0-from">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 form-group d-inline">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">to</span>
+                                                    <input class="form-control" type="time" oninput="removeErrorMsg()" id="thu-time-0-to">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    {{/if}}
+                                </div>
+
+                                <div class="row d-flex justify-content-end">
+                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-primary" onclick="addNewDate('thu-time')">+</button>
+                                    <button style="max-width:40px; margin:auto;" class="mt-2 btn btn-danger" onclick="deleteDate('thu-time')">-</button>
+                                </div>
+
+                            </div>
+                        </div>
                         <div class="mt-5">
                             <hr>
                             <button class="btn btn-success" onclick="submit()">Submit Dates</button>
