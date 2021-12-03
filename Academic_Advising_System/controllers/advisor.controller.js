@@ -1,6 +1,6 @@
 
 const AbsenceExcuse = require('../models/AbsenceExcuse.model')
-const {uploadFile,getFileStream} = require ('../utils/s3')
+const { uploadFile, getFileStream } = require('../utils/s3')
 
 // StudentsAdvisor MODELS
 const AdvivsorStudents = require('../models/studentsAdvisor')
@@ -11,96 +11,121 @@ const message = require('../models/messages.model')
 // Students MODELS
 const Students = require('../models/student.model')
 
+// Advisor Times Model 
+const AdvisorTimes = require('../models/advisorTimes.model')
+
+// constants
+const TIME_SLOTS = require('../utils/time-slots')
+const {TimesArray} = require('../utils/constants')
 
 exports.renderMainPage = (req, res) => {
     console.log(res.user)
-    res.render('advisorPages/advisorMain',{
+    res.render('advisorPages/advisorMain', {
         layout: 'advisor'
     })
 }
 
 exports.renderPersonalProfile = (req, res) => {
-    res.render('advisorPages/advisorProfile',{
+    res.render('advisorPages/advisorProfile', {
         layout: 'advisor'
     })
 }
 
 exports.renderMyStudents = async (req, res) => {
-    const studentofadvisor = await AdvivsorStudents.find({"advisor" : `${res.user.userId}`}).populate("students","-password");
+    const studentofadvisor = await AdvivsorStudents.find({ "advisor": `${res.user.userId}` }).populate("students", "-password");
     let x = studentofadvisor[0];
     let y = x.students;
 
-    res.render('advisorPages/advisorMyStudents',{
-        studentsad : y,
+    res.render('advisorPages/advisorMyStudents', {
+        studentsad: y,
         layout: 'advisor'
     })
 }
 
 exports.renderRequestReports = (req, res) => {
-    res.render('advisorPages/advisorRequestReports',{
+    res.render('advisorPages/advisorRequestReports', {
         layout: 'advisor'
     })
 }
 
-exports.renderOfficeHours = (req, res) => {
-    res.render('advisorPages/advisorOfficeHours',{
-        layout: 'advisor'
-    })
+exports.renderOfficeHours = async (req, res) => {
+    try {
+        let advisorTimes = await AdvisorTimes.findOne({advisor: res.user.userId}).select('-advisor')
+        let sunday = [], monday = [], tuesday = [], wednesday = [],thursday = [];
+        advisorTimes.sunday.time_slots.forEach((time,index) => { let obj = {};  obj['from'] = time.from; obj['to'] = time.to;  obj['id'] = index;  sunday.push(obj); })
+        advisorTimes.monday.time_slots.forEach((time,index) => { let obj = {};  obj['from'] = time.from;  obj['to'] = time.to;  obj['id'] = index;  monday.push(obj); })
+        advisorTimes.tuesday.time_slots.forEach((time,index) => { let obj = {};  obj['from'] = time.from;  obj['to'] = time.to;  obj['id'] = index;  tuesday.push(obj); })
+        advisorTimes.wednesday.time_slots.forEach((time,index) => { let obj = {}; obj['from'] = time.from; obj['to'] = time.to; obj['id'] = index; wednesday.push(obj); })
+        advisorTimes.thursday.time_slots.forEach((time,index) => { let obj = {}; obj['from'] = time.from; obj['to'] = time.to; obj['id'] = index; thursday.push(obj); })
+   
+        res.render('advisorPages/advisorOfficeHours', {
+            layout: 'advisor',
+            sunday,
+            monday,
+            tuesday,
+            wednesday,
+            thursday,
+        })
+        
+    } catch(err) {
+        console.log('errors')
+        res.render('errorPage')
+    }
 }
 
 exports.renderAppointments = (req, res) => {
-    res.render('advisorPages/advisorAppointments',{
+    res.render('advisorPages/advisorAppointments', {
         layout: 'advisor'
     })
 }
 
 exports.renderMessageStudents = async (req, res) => {
 
-    const studentofadvisor = await AdvivsorStudents.find({"advisor" : `${res.user.userId}`}).populate("students","-password");
-        let x = studentofadvisor[0];
-        let y = x.students;
-    res.render('advisorPages/advisorMessageStudents',{
-        studentsad : y,
+    const studentofadvisor = await AdvivsorStudents.find({ "advisor": `${res.user.userId}` }).populate("students", "-password");
+    let x = studentofadvisor[0];
+    let y = x.students;
+    res.render('advisorPages/advisorMessageStudents', {
+        studentsad: y,
         layout: 'advisor'
     })
 }
 
 exports.renderFindMessage = async (req, res) => {
-    let x = await message.find({"msgto" : `${res.user.userId}`}).populate('msgfrom','name -_id').exec(function(err,posts){
+    let x = await message.find({ "msgto": `${res.user.userId}` }).populate('msgfrom', 'name -_id').exec(function (err, posts) {
         // ther is ero her that the msg from advisor return null
         console.log(posts)
-        if(err){
-            res.render('advisorPages/advisorFindMessages',{
-                    err: err ,
-                }); 
-                console.log(err);
-            }
-            else {
-                res.render('advisorPages/advisorFindMessages',{
-                 messagesList : posts.reverse(),
-                 layout: 'advisor'
-             })      
-            } 
-      });
-    
+        if (err) {
+            res.render('advisorPages/advisorFindMessages', {
+                err: err,
+            });
+            console.log(err);
+        }
+        else {
+            res.render('advisorPages/advisorFindMessages', {
+                messagesList: posts.reverse(),
+                layout: 'advisor'
+            })
+        }
+    });
+
 }
 
 exports.renderIssueComplaint = (req, res) => {
-    res.render('advisorPages/advisorIssueComplaint',{
+    res.render('advisorPages/advisorIssueComplaint', {
         layout: 'advisor'
     })
 }
 
-exports.renderPostResolveExcuses = async (req,res)=> {
+exports.renderPostResolveExcuses = async (req, res) => {
     const excuseId = req.body.exId;
     const advisorComment = req.body.advisorComment;
     if (req.body.hasOwnProperty('recommend')) {
-         await AbsenceExcuse.findByIdAndUpdate(excuseId, {
+        await AbsenceExcuse.findByIdAndUpdate(excuseId, {
             $set: {
                 advisorComment: advisorComment,
                 status: 'AdvisorApproved'
             }
-        }, {new: true}, (err, doc) => {
+        }, { new: true }, (err, doc) => {
             if (err) {
                 const errorMsg = err.message
                 // res.render('advisorPages/advisorResolveExcuses',{
@@ -124,7 +149,7 @@ exports.renderPostResolveExcuses = async (req,res)=> {
                 advisorComment: advisorComment,
                 status: 'AdvisorRejected'
             }
-        }, {new: true}, (err, doc) => {
+        }, { new: true }, (err, doc) => {
             if (err) {
                 const errorMsg = err.message;
                 // res.render('advisorPages/advisorResolveExcuses',{
@@ -147,56 +172,160 @@ exports.renderPostResolveExcuses = async (req,res)=> {
 
 exports.renderGetResolveExcuses = async (req, res) => {
 
-  await AbsenceExcuse.find({status:'pending'}).populate({path :'student' ,match: {advisor_id : res.user.userId }}).
-    exec(function (err, doc) {
-        if (err) {
-            const errorMsg = err.message
-            res.status('400').redirect('advisorPages/advisorResolveExcuses')
-            // res.render('advisorPages/advisorResolveExcuses',{
-            //     hasError: true ,
-            //     errorMsg: errorMsg ,
-            //     layout: 'advisor',
-            // })
-        }
-        else {
-            res.render('advisorPages/advisorResolveExcuses',{
-                hasError: false ,
-                docs:doc,
-                layout: 'advisor',
-            })
-        }
-    });
+    await AbsenceExcuse.find({ status: 'pending' }).populate({ path: 'student', match: { advisor_id: res.user.userId } }).
+        exec(function (err, doc) {
+            if (err) {
+                const errorMsg = err.message
+                res.status('400').redirect('advisorPages/advisorResolveExcuses')
+                // res.render('advisorPages/advisorResolveExcuses',{
+                //     hasError: true ,
+                //     errorMsg: errorMsg ,
+                //     layout: 'advisor',
+                // })
+            }
+            else {
+                res.render('advisorPages/advisorResolveExcuses', {
+                    hasError: false,
+                    docs: doc,
+                    layout: 'advisor',
+                })
+            }
+        });
 
 }
 
-exports.renderGetProof = async (req , res)=>{
+exports.renderGetProof = async (req, res) => {
     let key = req.params.key
-    const readStream =  await getFileStream(key)
+    const readStream = await getFileStream(key)
     await readStream.pipe(res)
 }
 
 
 exports.messagesend = async (req, res) => {
-    const z = await Students.find({"id" : `${req.body.msgto}`});
-    const inarr =z[0];
+    const z = await Students.find({ "id": `${req.body.msgto}` });
+    const inarr = z[0];
     let thedatenow = new Date();
     let messagerecord = new message({
-        msgfrom    : res.user.userId ,
-        msgto      : inarr._id,
-        msgtitel   : req.body.Titelmsg,
-        msgcontent : req.body.massegContent,
-        thetime    : `${thedatenow.getHours()}:${thedatenow.getMinutes()}`,
-        thedate    : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
-    }); 
+        msgfrom: res.user.userId,
+        msgto: inarr._id,
+        msgtitel: req.body.Titelmsg,
+        msgcontent: req.body.massegContent,
+        thetime: `${thedatenow.getHours()}:${thedatenow.getMinutes()}`,
+        thedate: `${thedatenow.getDate()}/${thedatenow.getMonth() + 1}/${thedatenow.getFullYear()}`
+    });
     messagerecord.save();
 
-    const studentofadvisor = await AdvivsorStudents.find({"advisor" : `${res.user.userId}`}).populate("students","-password");
+    const studentofadvisor = await AdvivsorStudents.find({ "advisor": `${res.user.userId}` }).populate("students", "-password");
     let x = studentofadvisor[0];
     let y = x.students;
 
-    res.render('advisorPages/advisorMessageStudents',{
-        studentsad : y,
+    res.render('advisorPages/advisorMessageStudents', {
+        studentsad: y,
         layout: 'advisor'
     })
+
+}
+exports.createTimeSchedules = async (req, res) => {
+    try {
+
+        const time = req.body.times;
+        const timeSlotDuration = TIME_SLOTS.fifteen;
+        let timesArray = {}; // purpose of this array is to store times
+        
+        for (let key of Object.keys(time)) {
+            let dayReservedTimes = time[key] // => key here is the name of the day
+
+            let durationTimesForDay = [] // contain duration times for this day
+
+            for(let i = 0; i < dayReservedTimes.length; i++){
+
+                // to time should always be bigger then from time 
+                let fromTime = timeInMinutes(dayReservedTimes[i].from); // start 
+                
+                let toTime = timeInMinutes(dayReservedTimes[i].to);  // end 15:38
+                // let toTime = timeINMinutes('15:38');  // end 15:38
+
+                let numberOfTimeSlots = Math.floor((toTime-fromTime) / timeSlotDuration)
+                // we could have some errors, why ??
+
+                let slotFromTime = dayReservedTimes[i].from ;
+                let slotHourTime = parseInt(dayReservedTimes[i].from.split(':')[0])
+                let slotMinutesTime = parseInt(dayReservedTimes[i].from.split(':')[1])
+
+
+                /**
+                 * @ this loop will calculate the time slot
+                 * for example if we have this time { from: '16:30', to: '17:30' }
+                 * the durations will be from 
+                 * [
+                 *  { from: '16:30', to: '16:45'},
+                 *  { from: '16:45', to: '17:00'},
+                 *  { from: '17:00', to: '17:15'},
+                 *  { from: '17:15', to: '17:30'},
+                 * ]
+                 */
+
+                for(let i = 0; i < numberOfTimeSlots; i++){
+
+                    slotMinutesTime += timeSlotDuration
+                    if(slotMinutesTime > 60){ // < check this cond
+                        slotHourTime++;
+                        slotMinutesTime -= 60 ;
+                    }
+                    let slotToTime = `${slotHourTime}:${slotMinutesTime == 60 ? slotMinutesTime-1 :slotMinutesTime}`
+                    let durationObj = {from: slotFromTime, to:slotToTime }
+
+                    durationTimesForDay.push(durationObj) // this durationTimesForDay
+                    slotFromTime = slotToTime
+                }
+
+            }
+            // here add to DB
+            let selectedDay = TimesArray[key]
+            if(selectedDay){
+
+                timesArray[selectedDay] = {
+                    durations: durationTimesForDay,
+                    time_slots: dayReservedTimes,
+                }
+            }
+
+        }
+        timesArray['advisor'] = res.user.userId; // I am not sure of this
+
+        // here we should update the things 
+        let foundSchedule = await AdvisorTimes.findOne({advisor: res.user.userId})
+        let createSchedule;
+        if(!foundSchedule){
+            // create 
+            createSchedule = await AdvisorTimes.create([timesArray])
+        } else {
+            // update
+            createSchedule = await AdvisorTimes.updateOne({advisor:res.user.userId},timesArray, {new:true})
+        }
+        
+
+        res.json({ message: 'Every Thing is working' })
+    } catch (err) {
+        console.log('Errors')
+        console.log(err)
+        res.send(err)
+    }
+}
+
+/**
+ * return total of mins
+ * @param {string} time in form of 'mm:ss'
+ */
+function timeInMinutes(time){
+    // console.log(typeof time)
     
+    let totalMin = 0
+    let hour = parseInt(time.split(':')[0])
+    
+    let hours2min = hour * 60 ;
+
+    let min = parseInt(time.split(':')[1])
+    totalMin  = hours2min + min
+    return totalMin
 }
