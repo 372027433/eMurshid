@@ -904,3 +904,10 @@ Student complaint
   margin: 20px;
   padding: 10px;
 }
+
+#diss {
+  width: 100%;
+  height: 10rem;
+  resize: initial;
+  autofill: false;
+}

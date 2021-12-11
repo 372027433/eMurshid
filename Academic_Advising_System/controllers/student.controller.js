@@ -273,13 +273,18 @@ exports.renderUpdateAbsence = (req, res) => {
 };
 
 exports.renderNewComplaint = async (req, res) => {
-    const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
-    const getinarr = getstuinfo[0];
+    let thedatenow = new Date();
+
+    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const stuName = student.name;
+    const stuId = student.id;
+    const major = student.major;
+    const level = student.level;
     res.render('studentPages/studentNewComplaint', {
-        stuname :getinarr.name ,
-        stuid : getinarr.id,
-        stumajor : getinarr.major,
-        stuadvisor : getinarr.advisor_id.name,
+        stuName :stuName ,
+        stuId : stuId,
+        major : major,
+        level :level,
         layout: 'student'
     });
 };
@@ -653,15 +658,65 @@ exports.messagesend = async (req, res) => {
 
 exports.submitcomp = async (req, res) => {
     let thedatenow = new Date();
-    let complrecord = new Complaint({
-        compfrom : res.user.userId ,
-        disc : req.body.DisComp,
-        prove : "filepath",
-        diss : "null",
-        dateofdiss : "null",
-        dateofsubmit : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
-    });
-    complrecord.save();
+
+    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const stuName = student.name;
+    const stuId = student.id;
+    const major = student.major;
+    const level = student.level;
+    if (req.uploadError) {
+        console.log(req.uploadError)
+        res.status(422).render('studentPages/studentNewComplaint', {
+            hasError: true,
+            stuName: stuName,
+            stuId: stuId,
+            major: major,
+            level: level,
+            errorMsg: 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code,
+            layout: 'student',
+        })
+
+    } else {
+        // get the file after it was filtered and was successfully uploaded to the server
+        const proof = req.file;
+        console.log(proof)
+        // upload file to AWS S3
+        const result = await uploadFile(proof);
+        //Delete the file from the server
+        await unlinkFile(proof.path)
+        console.log(result)
+        // get File Key from AWS S3 to save in DB
+        const proofURI = result.Key;
+
+        //save the data in the DB
+        const complrecord = new Complaint({
+            compfromstudent : res.user.userId ,
+            compfromadvisor : null,
+            role : false,
+            disc : req.body.DisComp,
+            prove : proofURI,
+            diss : "null",
+            dateofdiss : "null",
+            dateofsubmit : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
+        });
+        console.log(complrecord)
+        complrecord.save(function (err, excuse) {
+            if (err) {
+                return console.error(err);
+            }
+            res.render('studentPages/studentNewComplaint', {
+                hasError: false,
+                stuName: stuName,
+                stuId: stuId,
+                major: major,
+                level: level,
+                successMsg: 'Your complain was sent successfully',
+                layout: 'student',
+            })
+        });
+    }
+
+   
     console.log("uploaded sucssec")
     const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
     const getinarr = getstuinfo[0];

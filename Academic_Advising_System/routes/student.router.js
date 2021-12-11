@@ -100,5 +100,18 @@ studentRouter.post('/newExamExcuse' ,[(req, res,next)=>{
 
 
 studentRouter.post("/hm" , controller.messagesend);
- studentRouter.post("/compl" , controller.submitcomp);
+ studentRouter.post("/compl" , 
+ [(req, res,next)=>{
+    uploader(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            // A Multer error occurred when uploading.
+            req.uploadError = err
+        } else if (err) {
+            req.uploadError = err
+        }
+        next()
+        // Everything went fine and save document in DB here.
+    })},
+]
+ , controller.submitcomp);
 module.exports = studentRouter ;

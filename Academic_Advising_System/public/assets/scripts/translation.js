@@ -67,6 +67,9 @@ let navTrans = {
         ar: "طلاب الكلية",
     },
     "resolve excuses": {
+        ar: "معالجة الأعذار",
+    },
+    "resolve Complaint": {
         ar: "معالجة الشكاوى",
     },
     "register students": {
@@ -215,6 +218,9 @@ let mainContentTrans = {
 
     "Resolve Excuses": {
         ar: "معالجة الأعذار",
+    },
+    "Resolve Complaint": {
+        ar: "معالجة الشكاوى",
     },
 
 

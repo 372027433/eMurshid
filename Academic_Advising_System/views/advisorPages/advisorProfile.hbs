@@ -14,10 +14,10 @@
                             <div class="card shadow-sm">
                                 <div class="card-header bg-transparent text-center">
                                     <img class="profile_img" src="https://placeimg.com/640/480/arch/any" alt="">
-                                    <h3>Dr.Jhon Doe</h3>
+                                    <h3>{{advname}}</h3>
                                 </div>
                                 <div class="card-body">
-                                    <p class="mb-0"><strong class="pr-1">Advisor ID: </strong>333333</p>
+                                    <p class="mb-0"><strong class="pr-1">Advisor ID: </strong>{{advid}}</p>
                                     <!--                                <p class="mb-0"><strong class="pr-1">Class:</strong>4</p>-->
                                     <!--                                <p class="mb-0"><strong class="pr-1">Section:</strong>A</p>-->
                                 </div>
@@ -41,22 +41,22 @@
                                         <tr>
                                             <th >Faculty ID:</th>
                                             <!--                                        <td width="2%">:</td>-->
-                                            <td>computer_college</td>
+                                            <td>{{advisor.faculty_id}}</td>
                                         </tr>
                                         <tr>
                                             <th >Role:</th>
                                             <!--                                        <td width="2%">:</td>-->
-                                            <td>Advising Unit</td>
+                                            <td>{{advisor.id}}</td>
                                         </tr>
                                         <tr>
                                             <th>Email: </th>
                                             <!--                                        <td width="2%">:</td>-->
-                                            <td> 333333@iu.edu.sa </td>
+                                            <td> {{advisor.email}} </td>
                                         </tr>
                                         <tr>
                                             <th>Phone Number:</th>
                                             <!--                                        <td width="2%">:</td>-->
-                                            <td>550000000</td>
+                                            <td>{{advisor.phone}}</td>
                                         </tr>
 
                                     </table>

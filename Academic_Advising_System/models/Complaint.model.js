@@ -3,10 +3,17 @@ const { Schema } = mongoose ;
 
 const Complaints = new Schema({
    
-    compfrom: {
+    compfromstudent: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:'students'
+        ref:'students'      
         
+    },
+    compfromadvisor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'staff'      
+    },
+    role:{
+        type: Boolean
     },
     disc: {
         type:String,
