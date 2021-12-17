@@ -1,6 +1,9 @@
 let navTrans = {
 
     /* Student Nav */
+    "عربي": {
+        ar: "English",
+    },
     "personal file": {
         ar: 'الملف الشخصي',
     },
@@ -34,6 +37,21 @@ let navTrans = {
     "Excuses": {
         ar: "الأعذار",
     },
+    "Sign out": {
+        ar: "تسجيل خروج",
+    },
+    "": {
+        ar: "",
+    },
+    "": {
+        ar: "",
+    },
+    "": {
+        ar: "",
+    },
+  
+    
+
     /* Advisor Nav */
     "personal profile": {
         ar: "الملف الشخصي",
