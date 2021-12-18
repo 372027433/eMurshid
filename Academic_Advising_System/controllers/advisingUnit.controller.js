@@ -8,6 +8,9 @@ const bcrypt = require('bcrypt')
 /// NODE CORE LIBRARIES
 const path = require("path")
 
+// complaint  Model 
+const Complaint = require('../models/Complaint.model')
+
 /// DATABASE MODELS
 const Students = require('../models/student.model')
 const Staff = require('../models/staff.model')
@@ -91,6 +94,51 @@ exports.renderGetResolveExcuses = async (req, res) => {
     })
     }
   });
+};
+
+
+
+  exports.renderSolvingComplains = async (req, res) => {
+    // Complaint
+     
+    let x = await Complaint.find({}).populate('compfromstudent', 'name id -_id').populate('compfromadvisor', 'name id -_id');
+     // ther is ero her that the msg from advisor return null
+    console.log('\t\t\twe are here')
+     let readydata = [] ;
+     for(let c = 0 ; c < x.length;c++){
+       let tempobj ={};
+       tempobj = x[c];
+       console.log('\n\n')
+       let obj={
+        compfromstudent_id : tempobj.compfromstudent?.id ? tempobj.compfromstudent?.id : 'a6s5d4f6as54df64a' ,
+        compfromstudent_name : tempobj.compfromstudent?.name ? tempobj.compfromstudent.name : "khaled student",
+        compfromadvisor_id : tempobj.compfromadvisor?.id? tempobj.compfromadvisor.id : 'sd6f46sa54df987sdf' ,
+        compfromadvisor_name : tempobj.compfromadvisor?.name ? tempobj.compfromadvisor.name : 'saliem advisor',
+        role : tempobj.role,
+        disc : tempobj.disc,
+        prove : tempobj.prove,
+        dateofsubmit : tempobj.dateofsubmit,
+        diss : tempobj.diss,
+        dateofdiss : tempobj.dateofdiss
+       };
+       readydata.push(obj);       
+
+     }
+    //  console.log('ready state')
+     console.log(readydata)
+
+    //  if (err) {
+        //  res.render('advisingUnitPages/aauSolvingComplains', {
+        //      err: err,
+        //  });
+        //  console.log(err);
+    //  }
+    //  else {
+    res.render('advisingUnitPages/aauSolvingComplains', {
+      compList: readydata.reverse(),
+      layout: 'advisingUnit'      
+    })
+    //  }
 };
 
 exports.renderPostResolveExcuses = async (req, res) => {

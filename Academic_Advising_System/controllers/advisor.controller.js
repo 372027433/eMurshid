@@ -11,12 +11,24 @@ const message = require('../models/messages.model')
 // Students MODELS
 const Students = require('../models/student.model')
 
+// staff MODELS
+const staff = require('../models/staff.model')
+
 // Advisor Times Model 
 const AdvisorTimes = require('../models/advisorTimes.model')
+
+// Complaint MODEL
+const Complaint = require('../models/Complaint.model')
 
 // constants
 const TIME_SLOTS = require('../utils/time-slots')
 const {TimesArray} = require('../utils/constants')
+
+// const multer = require("multer");
+const fs = require('fs');
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+
 
 exports.renderMainPage = (req, res) => {
     console.log(res.user)
@@ -25,8 +37,25 @@ exports.renderMainPage = (req, res) => {
     })
 }
 
-exports.renderPersonalProfile = (req, res) => {
+exports.renderPersonalProfile = async (req, res) => {
+    let advisor = await staff.findById(res.user.userId);
+    const advname = advisor.name;
+    const advid = advisor.id;
+    const advemail = advisor.email;
+    
+    let advisorinfo ={
+        id: advisor.id,
+        name :advisor.name,
+        email : advisor.email,
+        role : advisor.role,
+        phone : advisor.phone,
+        faculty_id :advisor.faculty_id
+    }
     res.render('advisorPages/advisorProfile', {
+        advisor : advisorinfo,
+        advname: advname,
+        advid: advid,
+        adviemail : advemail,
         layout: 'advisor'
     })
 }
@@ -110,8 +139,23 @@ exports.renderFindMessage = async (req, res) => {
 
 }
 
-exports.renderIssueComplaint = (req, res) => {
+exports.renderIssueComplaint = async (req, res) => {
+    let advisor = await staff.findById(res.user.userId);
+    const advname = advisor.name;
+    const advid = advisor.id;
+    const advemail = advisor.email;
+    let advisorinfo ={
+        id: advisor.id,
+        name :advisor.name,
+        email : advisor.email,
+        role : advisor.role
+    }
+    console.log(advisorinfo)
     res.render('advisorPages/advisorIssueComplaint', {
+        advisorifo : advisorinfo,
+        advname: advname,
+        advid: advid,
+        adviemail : advemail,
         layout: 'advisor'
     })
 }
@@ -328,4 +372,78 @@ function timeInMinutes(time){
     let min = parseInt(time.split(':')[1])
     totalMin  = hours2min + min
     return totalMin
+}
+
+
+exports.submitcomp = async (req, res) => {
+    let thedatenow = new Date();
+
+    const advisor = await staff.findById(res.user.userId).select("-password").exec();
+    const advname = advisor.name;
+    const advid = advisor.id;
+    const advemail = advisor.email;
+   
+    if (req.uploadError) {
+        console.log(req.uploadError)
+        res.status(422).render('advisorPages/advisorIssueComplaint', {
+            hasError: true,
+            advname: advname,
+            advid: advid,
+            adviemail : advemail,
+         
+            errorMsg: 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code,
+            layout: 'advisor',
+        })
+
+    } else {
+        // get the file after it was filtered and was successfully uploaded to the server
+        const proof = req.file;
+        console.log(proof)
+        // upload file to AWS S3
+        const result = await uploadFile(proof);
+        //Delete the file from the server
+        await unlinkFile(proof.path)
+        console.log(result)
+        // get File Key from AWS S3 to save in DB
+        const proofURI = result.Key;
+
+        //save the data in the DB
+        const complrecord = new Complaint({
+            compfromstudent : null,
+            compfromadvisor : res.user.userId ,
+            role : true,
+            disc : req.body.DisComp,
+            prove : proofURI,
+            diss : "null",
+            dateofdiss : "null",
+            dateofsubmit : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
+        });
+        console.log(complrecord)
+        complrecord.save(function (err, excuse) {
+            if (err) {
+                return console.error(err);
+            }
+            res.render('advisorPages/advisorIssueComplaint', {
+                hasError: false,
+                advname: advname,
+                advid: advid,
+                adviemail : advemail,
+             
+                successMsg: 'Your complain was sent successfully',
+                layout: 'advisor',
+            })
+        });
+    }
+
+    
+    console.log("uploaded sucssec")
+    const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
+    const getinarr = getstuinfo[0];
+    res.render('advisorPages/advisorIssueComplaint', {
+        advname: advname,
+        advid: advid,
+        adviemail : advemail,
+        layout: 'advisor'
+    });
+    
 }
