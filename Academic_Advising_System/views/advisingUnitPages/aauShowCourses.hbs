@@ -1,0 +1,45 @@
+<main class="main-content">
+    <div class="content">
+        <div class="body-header">
+            <header>
+                <h1><span class="trn">College Students</span></h1>
+            </header>
+            <hr>
+        </div>
+        <div class="body-content">
+
+            <div>
+                <p id="informUserMsg"></p>
+            </div>
+
+            <table id="studentsDisplayTable" class="display" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>code</th>
+                    <th>hours</th>
+                    <th>major</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each courses}}
+{{log courses}}
+                    <tr>
+                        <td>{{this.name}}</td>
+                        <td>{{this.code}}</td>
+                        <td>{{this.hours}}</td>
+                        <td>{{this.major}}</td>
+                    </tr>
+
+                {{/each}}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<script>
+    $(document).ready(function() {
+        $('#studentsDisplayTable').DataTable();
+    });
+</script>

@@ -1,7 +1,6 @@
 {
-  "name": "Acacemic_Advising_System",
+  "name": "acacemic_advising_system",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server",
@@ -32,5 +31,6 @@
   "devDependencies": {
     "nodemon": "^2.0.7",
     "perf_hooks": "0.0.1"
-  }
+  },
+  "description": ""
 }

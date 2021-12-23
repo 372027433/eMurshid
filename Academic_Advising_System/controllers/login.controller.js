@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 // Users Models
 const Students = require('../models/student.model')
 const Staff = require('../models/staff.model')
+const Colleges = require('../models/colleges.model')
 
 // roles
 const roles = require('../utils/roles')
@@ -20,7 +21,7 @@ exports.login = async (req, res) => {
 
         try {
             // get student from DB _id, id 
-            const student = await Students.findOne({id: id}).select('password').exec();
+            const student = await Students.findOne({id: id}).select('password college').populate('college').exec();
             // if no student present with this id this gonna be a bad request
             if(!student) return res.status(400).render('signIn',{
                 err: true, 
@@ -42,8 +43,10 @@ exports.login = async (req, res) => {
             let tokenBody = {
                 userId: student._id, // _id student in DB [not his uni id]
                 role: roles.student,
-            }
+                college: student.college._id
 
+            }
+        console.log(tokenBody)
             let token = await jwt.sign(tokenBody,process.env.JWT_ACCESS_KEY);
 
             res.setHeader('Set-Cookie', `authorization=Bearer ${token}; HttpOnly`)
@@ -63,7 +66,7 @@ exports.login = async (req, res) => {
 
         try {
             // query DB for the id
-            const staff = await Staff.findOne({id: id}).select('password role faculty_id').exec()
+            const staff = await Staff.findOne({id: id}).select('password role faculty_id college').populate('college').exec()
             // once you get the id,
             // check if user exists
 
@@ -84,6 +87,7 @@ exports.login = async (req, res) => {
                 userId: staff._id , // _id staff in DB [not his uni id]
                 role: staff.role ,
                 faculty: staff.faculty_id,
+                college:staff.college._id,
             }
 
             let token = await jwt.sign(tokenBody, process.env.JWT_ACCESS_KEY);

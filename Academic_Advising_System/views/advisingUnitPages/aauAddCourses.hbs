@@ -1,0 +1,74 @@
+<div class="main-content">
+    <div class="content">
+        <div class="body-header">
+            <header>
+                <h1><span class="trn">Add Courses</span></h1>
+            </header>
+            <hr>
+        </div>
+        <div class="body-content" >
+            <form method="post" name="manageCourses" id="manageCourses" action="/advisingUnit/addCourses" >
+            <table>
+                <th>
+                    Course Name
+                </th>
+                <td>
+                    <input class="form-control" name="stuName" id="stuName" value="{{stuName}}"></td>
+                </td>
+                <th>
+                    Code
+                </th>
+                <td>
+                    <input class="form-control" name="stuName" id="stuName" value="{{stuName}}"></td>
+                </td>
+                <th>
+                    Hours
+                </th>
+                <td>
+                    <input class="form-control" name="stuName" id="stuName" value="{{stuName}}"></td>
+                </td>
+            </table>
+            </form>
+                        {{#if successMsg}}
+                            <h4 class="success"><span class="trn">{{successMsg}}</span></h4>
+                        {{/if}}
+
+                        <form action="/advisingUnit/addCourses" method="post" enctype="multipart/form-data">
+                            <div style="border: 1px solid black;padding:10px 0 ; margin:10px 0">
+
+                                <label for="reg_file_courses"><span class="trn">Attach courses register file (EXCEL):</span></label>
+                                {{!-- remove after --}}
+                                <br>
+
+                                <input type="file" name="students_register_file">
+                                {{!-- remove after --}}
+                                <br>
+                                <button id="submitbtn" type="submit"><span class="trn">Add courses</span></button>
+                            </div>
+                        </form>
+
+                        {{#if displayRegistered }}
+                            <h2> Courses are Already in the system: </h2>
+                            <table class="table table-strip">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Code</th>
+                                </tr>
+                                {{#each registeredCourses as |courseObj courseKey| }}
+                                    {{#each courseObj}}
+                                        {{#if this.name}}
+                                            <tr>
+                                                <td>{{ this.name}}</td>
+                                                <td>{{ this.code}}</td>
+                                            </tr>
+                                        {{/if}}
+                                    {{/each}}
+                                {{/each}}
+                            </table>
+                        {{/if}}
+
+
+
+        </div>
+    </div>
+</div>

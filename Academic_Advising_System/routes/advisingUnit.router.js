@@ -59,7 +59,7 @@ advisingUnitRouter.get('/registerStudents', controller.renderStudentRegisterPage
 // here we need to create the form to fill students then we can add new students to the system
 advisingUnitRouter.post('/registerStudents', upload, controller.registerStudents)
 
-advisingUnitRouter.get('/collageStudents',controller.renderCollageStudents);
+advisingUnitRouter.get('/collegeStudents',controller.renderCollegeStudents);
 
 advisingUnitRouter.get('/resolveExcuses', controller.renderGetResolveExcuses );
 advisingUnitRouter.post('/resolveExcuses', controller.renderPostResolveExcuses);
@@ -74,5 +74,12 @@ advisingUnitRouter.post('/registerAdvisors', controller.registerAdvisors); //
 advisingUnitRouter.get('/assign',controller.renderAssignStudentsToAdvisors);
 
 advisingUnitRouter.put('/assign',controller.assignStudentsToAdvisors);
+
+advisingUnitRouter.get('/addCourses',controller.renderGetAddCourses);
+advisingUnitRouter.post('/addCourses',upload,controller.renderPostAddCourses);
+
+advisingUnitRouter.get('/showCourses',controller.renderGetShowCourses);
+
+advisingUnitRouter.get('/mangeMajors',controller.renderGetManageMajors);
 
 module.exports = advisingUnitRouter ;
