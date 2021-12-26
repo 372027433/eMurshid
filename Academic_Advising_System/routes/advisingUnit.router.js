@@ -77,5 +77,7 @@ advisingUnitRouter.get('/assign',controller.renderAssignStudentsToAdvisors);
 
 advisingUnitRouter.put('/assign',controller.assignStudentsToAdvisors);
 
+advisingUnitRouter.post('/SolvingComplains/solvecomplan' , controller.solvecomp)
+
 
 module.exports = advisingUnitRouter ;

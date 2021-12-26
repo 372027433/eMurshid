@@ -40,12 +40,7 @@ let navTrans = {
     "Sign out": {
         ar: "تسجيل خروج",
     },
-    "": {
-        ar: "",
-    },
-    "": {
-        ar: "",
-    },
+  
     "": {
         ar: "",
     },
@@ -206,8 +201,14 @@ let mainContentTrans = {
     "Resolve Excuses": {
         ar: "معالجة الأعذار",
     },
-    "": {
-        ar: "",
+    "student Information": {
+        ar: "معلومات الطالب",
+    },
+    "Discribe your Complaint and/or appeal case": {
+        ar: "شرح المشكلة",
+    },
+    "provid supporting documents": {
+        ar: "اثبات للمشكلة",
     },
 
 

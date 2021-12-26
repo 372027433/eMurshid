@@ -26,6 +26,8 @@ advisorRouter.get('/findMessage',controller.renderFindMessage);
 
 advisorRouter.get('/issueComplaint',controller.renderIssueComplaint);
 
+advisorRouter.get('/advisorshowTheResultOfComplain',controller.renderadvisorshowTheResultOfComplain);
+
 advisorRouter.get('/resolveExcuses',controller.renderGetResolveExcuses);
 advisorRouter.post('/resolveExcuses',controller.renderPostResolveExcuses);
 advisorRouter.get('/resolveExcuses/proof/:key',controller.renderGetProof);

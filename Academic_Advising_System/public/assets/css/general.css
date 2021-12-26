@@ -242,6 +242,9 @@ ul {
     grid-row: 3/4;
     min-height: 100px;
     background-color: rgb(73, 73, 73) ;
+    text-align: center;
+    color: #f7f9fb;
+    padding: 25px;
 }
  
 @media screen and (max-width: 450px) {
@@ -1033,4 +1036,13 @@ main {
   border: 0;
   border-radius: .25rem;
   padding: 15px;
+}
+
+#closebtnforsidebar {
+        margin: -9px;
+    
+}
+.bg-light {
+  background-color: #f8f9fa !important;
+  height: 100%;
 }

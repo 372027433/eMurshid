@@ -41,9 +41,92 @@
       <!-- header  -->
       {{> header }}
       <!-- /header  -->
-      
+     
       <div  class="content-container">
-          
+
+        <div id="sidebarshort">
+  <div class="d-flex flex-column flex-shrink-0 bg-light" style="width: 4.5rem;">
+          <a onclick="openNav()" >   <img class="bi me-2" style= "" width="25" height="25"  src="/assets/img/toggle-btn.svg" alt="#"></a>      
+     
+    </a>
+    <hr>
+    <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+      <li class="nav-item">
+         <a href="/student" class="nav-link py-3 border-bottom" title="Home" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home" >
+          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/home.png" alt="#">
+                 </a>
+      </li>
+        <li class="nav-item">
+         <a href="/student/studentProfile" class="nav-link py-3 border-bottom" title="student Profile" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="student Profile" >
+          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/user.png" alt="#">
+                 </a>
+      </li>
+        <li class="nav-item">
+         <a href="/student/contactAdvisor" class="nav-link py-3 border-bottom" title="contact Advisor" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="contact Advisor" >
+          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/send.png" alt="#">
+                 </a>
+      </li>
+        <li class="nav-item">
+         <a href="/student/studentMessages" class="nav-link py-3 border-bottom" title="studentMessages" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="studentMessages" >
+          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/chat.png" alt="#">
+                 </a>
+      </li>
+        <li class="nav-item">
+         <a href="/student/bookAnAppointment" class="nav-link py-3 border-bottom" title="book An Appointment" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="book An Appointment" >
+          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/calendar.png" alt="#">
+                 </a>
+      </li>
+        <li class="nav-item">
+         <a href="/student/updateMarks" class="nav-link py-3 border-bottom" title="update Marks" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="update Marks" >
+          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/mark.png" alt="#">
+                 </a>
+      </li>
+        <li class="nav-item">
+         <a href="/student/updateAbsence" class="nav-link py-3 border-bottom" title="update Absence" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="update Absence" >
+          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/absent.png" alt="#">
+                 </a>
+      </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link py-3 border-bottom"  class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" title="Complaints" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false" data-bs-placement="right" data-bs-original-title="Complaints">
+          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/dissatisfaction.png" alt="#">
+                 </a>
+                   <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+                <li><a class="dropdown-item" href="/student/newComplaint"><span class="trn">Submit New Complaint</span></a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/student/showTheResultOfComplain"><span class="trn">Show Submitted Complaint </span></a></li>
+              </ul> 
+      </li>
+        <li class="nav-item">       
+          <a href="#" class="nav-link py-3 border-bottom"  class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" title="Execuse" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false" data-bs-placement="right" data-bs-original-title="Execuse">
+             <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/argument.png" alt="#">
+           
+          </a>  
+              <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                <li><a class="dropdown-item" href="/student/newAbsenceExcuse"><span class="trn">Submit Absence Excuse</span></a></li>
+                <li><a class="dropdown-item" href="/student/newExamExcuse"><span class="trn">Submit Make-up Exam Excuse</span></a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/student/showExcuses"><span class="trn">Show Submitted Excuses Status</span></a></li>
+              </ul>      
+         </li>
+
+    </ul>
+    <hr>
+    <div class="dropdown">
+      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="/assets/img/profile.png" alt="*" class="rounded-circle me-2" width="32" height="32">
+        </a>
+      <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+        <li><a class="dropdown-item" id="translateBtn" onclick="toggleLang()" ><span class="trn">عربي</span></a></li>
+               <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" onclick="logout()"><span class="trn">Sign out</span></a></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+
+           <div id="sidebarlong" style="display: none;">
         <nav class="navigation">
           {{!-- <div class="toggle-bar">
             <button type="button" id="toggle-btn" class="toggle-btn btn dn">
@@ -58,13 +141,12 @@
                 <img src="/assets/img/close-button.svg" height="20px" class="close-nav" alt="close navigation button" />
               </button> --}}
             {{!-- </div> --}}
-<div id="sidebarlong" style="display: none;">
+
 <div  class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-      <span class="fs-4">
-        <a href="javascript:void(0)" onclick="closeNav()" class="nav-link link-dark ">  <img class="bi me-2" href="javascript:void(0)"   style= "" width="50" height="50" src="/assets/img/cancel.png" alt="#"></span>
+         <span class="fs-4">
+        <a href="javascript:void(0)" id="closebtnforsidebar" onclick="closeNav()" class="nav-link link-dark ">  <img class="bi me-2" href="javascript:void(0)"   style= "" width="50" height="50" src="/assets/img/cancel.png" alt="#"></span>
     </a>
-    </a>
+    
       
         <hr class="dropdown-divider">
     <ul class="nav nav-pills flex-column mb-auto">
@@ -111,10 +193,15 @@
         </a>
       </li>
          <li class="nav-item">
-        <a href="/student/newComplaint" class="nav-link link-dark">
+        <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
           <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/dissatisfaction.png" alt="#">
-         <span class="trn">issue a complaint to academic advising unit</span>
+         <span style="padding: 5px;" class="trn">complaints</span>
         </a>
+              <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+                <li><a class="dropdown-item" href="/student/newComplaint"><span class="trn">Submit New Complaint</span></a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/student/showTheResultOfComplain"><span class="trn">Show Submitted Complaint </span></a></li>
+              </ul>  
          </li>
         <li class="nav-item">       
           <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -146,82 +233,7 @@
   </div>
   </div>
 
-  <div id="sidebarshort">
-<div class="d-flex flex-column flex-shrink-0 bg-light" style="width: 4.5rem;">
-    <a href="/" class="d-block p-3 link-dark text-decoration-none" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Icon-only">
-      <a onclick="openNav()">  <img class="bi me-2" style= "" width="40" height="40"  src="/assets/img/toggle-btn.svg" alt="#"></a>      
-     
-    </a>
-    <hr>
-    <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
-      <li class="nav-item">
-         <a href="/student" class="nav-link py-3 border-bottom" title="Home" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home" >
-          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/home.png" alt="#">
-                 </a>
-      </li>
-        <li class="nav-item">
-         <a href="/student/studentProfile" class="nav-link py-3 border-bottom" title="student Profile" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="student Profile" >
-          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/user.png" alt="#">
-                 </a>
-      </li>
-        <li class="nav-item">
-         <a href="/student/contactAdvisor" class="nav-link py-3 border-bottom" title="contact Advisor" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="contact Advisor" >
-          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/send.png" alt="#">
-                 </a>
-      </li>
-        <li class="nav-item">
-         <a href="/student/studentMessages" class="nav-link py-3 border-bottom" title="studentMessages" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="studentMessages" >
-          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/chat.png" alt="#">
-                 </a>
-      </li>
-        <li class="nav-item">
-         <a href="/student/bookAnAppointment" class="nav-link py-3 border-bottom" title="book An Appointment" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="book An Appointment" >
-          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/calendar.png" alt="#">
-                 </a>
-      </li>
-        <li class="nav-item">
-         <a href="/student/updateMarks" class="nav-link py-3 border-bottom" title="update Marks" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="update Marks" >
-          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/mark.png" alt="#">
-                 </a>
-      </li>
-        <li class="nav-item">
-         <a href="/student/updateAbsence" class="nav-link py-3 border-bottom" title="update Absence" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="update Absence" >
-          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/absent.png" alt="#">
-                 </a>
-      </li>
-        <li class="nav-item">
-         <a href="/student/newComplaint" class="nav-link py-3 border-bottom" title="new Complaint" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="newComplaint" >
-          <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/dissatisfaction.png" alt="#">
-                 </a>
-      </li>
-        <li class="nav-item">       
-          <a href="#" class="nav-link py-3 border-bottom"  class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" title="Execuse" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false" data-bs-placement="right" data-bs-original-title="Execuse">
-             <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/argument.png" alt="#">
-           
-          </a>  
-              <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-                <li><a class="dropdown-item" href="/student/newAbsenceExcuse"><span class="trn">Submit Absence Excuse</span></a></li>
-                <li><a class="dropdown-item" href="/student/newExamExcuse"><span class="trn">Submit Make-up Exam Excuse</span></a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/student/showExcuses"><span class="trn">Show Submitted Excuses Status</span></a></li>
-              </ul>      
-         </li>
 
-    </ul>
-    <hr>
-    <div class="dropdown">
-      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-        <img src="/assets/img/profile.png" alt="*" class="rounded-circle me-2" width="32" height="32">
-        </a>
-      <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-        <li><a class="dropdown-item" id="translateBtn" onclick="toggleLang()" ><span class="trn">عربي</span></a></li>
-               <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" onclick="logout()"><span class="trn">Sign out</span></a></li>
-      </ul>
-    </div>
-  </div>
-
-  </div>
 
             {{!-- <div class="nav-links">
               <ul>
@@ -285,24 +297,21 @@
     {{!-- ====================================================== --}}
   </body>
 
-<script>
-    {{!-- $(document).ready( ()=>{
-        $('#excusesDropDownMenu').hide(); --}}
+  <script>
+    function openNav() {
+      console.log("open my love")
+      document.getElementById("sidebarlong").style.display = "block";
+        document.getElementById("sidebarshort").style.display = "none";
+    
+    }
 
-function openNav() {
-  console.log("open my love")
-   document.getElementById("sidebarlong").style.display = "block";
-    document.getElementById("sidebarshort").style.display = "none";
- 
-}
-
-/* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-function closeNav() {
-   console.log("close my love")
-    document.getElementById("sidebarlong").style.display = "none";
-    document.getElementById("sidebarshort").style.display = "block";
-}
-    {{!-- }) --}}
-</script>
+    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+    function closeNav() {
+      console.log("close my love")
+        document.getElementById("sidebarlong").style.display = "none";
+        document.getElementById("sidebarshort").style.display = "block";
+    }
+      
+  </script>
 
 </html>
