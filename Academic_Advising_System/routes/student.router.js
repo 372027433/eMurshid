@@ -43,6 +43,12 @@ studentRouter.get('/studentMessages',controller.renderMyMessages);
 
 //student messages router
 studentRouter.get('/bookAnAppointment',controller.renderBookAppointment);
+// student book appointments
+studentRouter.post('/appointment/show',controller.showAvailabilityTimes);
+
+studentRouter.post('/appointment/book',controller.bookTimeWithAdvisor);
+// show student booked times
+studentRouter.get('/appointments',controller.renderReservedAppointments);
 
 
 //student marks update router

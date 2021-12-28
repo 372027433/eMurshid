@@ -1,7 +1,7 @@
 //express imports
 const fs = require('fs');
 const path = require('path');
-
+const mongoose = require('mongoose');
 const studentRouter = require("../routes/student.router");
 const {renderMyMessages} = require("./student.controller");
 // define multer lib
@@ -15,6 +15,11 @@ const staff = require('../models/staff.model')
 // Students MODEL
 const Students = require('../models/student.model')
 
+// AdvisorTimes
+const AdvisorTimes = require('../models/advisorTimes.model');
+
+// reserved times model
+const ReservedTimes = require('../models/ReservedTimes.model');
 
 //Absence Model
 const Excuses = require('../models/AbsenceExcuse.model')
@@ -254,12 +259,150 @@ exports.renderMyMessages = async (req, res) => {
 };
 
 
-exports.renderBookAppointment = (req, res) => {
+exports.renderBookAppointment = async (req, res) => {
+    /**
+     * get the student advisor 
+     * // 
+     */
+    let student = await Students.findOne({_id: res.user.userId})
+
+    let sunday=[], monday=[], tuesday=[], wednesday=[], thursday = [];
+    let foundTimes = false ;
+    let advisorTimes = await AdvisorTimes.findOne({advisor: student.advisor_id})
+    // console.log("🚀 ~ file: student.controller.js ~ line 270 ~ advisorTimes", advisorTimes)
+
+    if(advisorTimes){
+        foundTimes = true ;
+        advisorTimes.sunday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; sunday.push(obj)})
+        advisorTimes.monday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; monday.push(obj)})
+        advisorTimes.tuesday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; tuesday.push(obj)})
+        advisorTimes.wednesday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; wednesday.push(obj)})
+        advisorTimes.thursday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; thursday.push(obj)})
+    }
+    console.log("🚀 sunday", sunday)
+    
     res.render('studentPages/bookAppointment', {
-        layout: 'student'
+        layout: 'student',
+        foundTimes,
+        sunday,
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
     });
 };
 
+// add validation on date on req.body
+const datesObject = {
+    0: 'sunday',
+    1:'monday',
+    2:'tuesday',
+    3:'wednesday',
+    4:'thursday',
+    5:'friday',
+    6:'saturday',
+}
+exports.showAvailabilityTimes = async (req, res) => {
+
+    const day = new Date(req.body.date);
+
+    let isValidDate = day instanceof Date && !isNaN(day.valueOf());
+
+    if(!isValidDate){
+        return res.status(400).json({msg: 'bad input'});
+    }
+    let dayNumber = day.getDay();
+
+    if(dayNumber == 5 || dayNumber == 6){
+        console.log('holiday');
+        return res.status(400).json({msg: 'this day is in weekend'});
+    }
+    
+    let selectedDay = datesObject[dayNumber];
+
+    const student = await Students.findOne({_id:res.user.userId});
+    const advisorTimes = await AdvisorTimes.findOne({advisor: student.advisor_id});
+
+    const selectedAdvisorTimes = advisorTimes[selectedDay].durations ;
+    
+    // based on the day selected will select the day
+    let now = day.getTime();
+    
+    const dayReservedAppointments = await ReservedTimes.find({
+        advisor: mongoose.Types.ObjectId(student.advisor_id),
+        date: {
+            $gte: now,
+            $lt: now + (24* 60 * 60 * 1000) -1,
+        }
+    });
+    const availableTime = [];
+    for(let obj of selectedAdvisorTimes){
+        availableTime.push({from:obj.from, to: obj.to});
+        
+        for(let reservedDays of dayReservedAppointments){
+            if(obj.to == reservedDays.to && obj.from == reservedDays.from){
+                console.log('\t\tmatch');
+                availableTime.pop();
+            }
+        }
+    }
+
+    res.json({
+        day: selectedDay,
+        appointments: availableTime,
+    })
+}
+
+// check the object and see if it has the required params.
+
+exports.bookTimeWithAdvisor = async (req, res) => {
+
+    const student = await Students.findOne({_id:res.user.userId});
+    
+    let bookedTime = req.body.time; // will have to, from , day
+    
+    let appointmentDay = new Date(bookedTime.date).getTime();
+
+    let BookedAppointment = {
+        student: student._id,
+        advisor: student.advisor_id,
+        to: bookedTime.to,
+        day: bookedTime.day, 
+        from: bookedTime.from,
+        date: appointmentDay,
+    }
+
+    let createdAppointment = await ReservedTimes.create([BookedAppointment]);
+
+    res.json({
+        msg: 'you have successfully created appointment',
+        appointment: createdAppointment,
+    })
+}
+
+exports.renderReservedAppointments = async (req, res) => {
+    
+    let reservedTimes = await ReservedTimes.find({student:res.user.userId}); 
+
+    let appointments = [];
+    for(let time of reservedTimes){
+        let obj = {};
+        obj['isCanceled'] = time.isCanceled;
+        obj['accepted'] = time.accepted;
+        obj['isCompleted'] = time.isCompleted;
+        obj['to'] = time.to;
+        obj['from'] = time.from;
+        obj['day'] = time.day;
+        obj['date'] = (new Date(time.date).toISOString()).split('T')[0];
+
+        appointments.push(obj)
+    }
+    
+    res.render('studentPages/showAppointments', {
+        layout: 'student',
+        appointments 
+    });
+};
 exports.renderUpdateMarks = (req, res) => {
     res.render('studentPages/studentUpdateMarks', {
         layout: 'student'
