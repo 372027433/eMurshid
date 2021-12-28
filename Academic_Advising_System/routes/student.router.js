@@ -65,6 +65,9 @@ studentRouter.get('/updateAbsence',(req, res) => {
 //issue a new complaint router
 studentRouter.get('/newComplaint',controller.renderNewComplaint);
 
+ // Show the Result Of the Complaint
+ studentRouter.get('/showTheResultOfComplain',controller.rendershowTheResultOfComplain);
+
 
 //get newAbsenceExcuse router
 studentRouter.get('/newAbsenceExcuse',controller.renderGetNewAbsenceExcuse);
@@ -120,4 +123,8 @@ studentRouter.post("/hm" , controller.messagesend);
     })},
 ]
  , controller.submitcomp);
+
+
+
+
 module.exports = studentRouter ;

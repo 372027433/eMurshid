@@ -447,3 +447,40 @@ exports.submitcomp = async (req, res) => {
     });
     
 }
+
+
+exports.renderadvisorshowTheResultOfComplain = async (req, res) => {
+          
+   let complaintforuser = await Complaint.find({"compfromadvisor": `${res.user.userId}`}).populate('compfromstudent', 'name id -_id').populate('compfromadvisor', 'name id -_id');
+   // ther is ero her that the msg from advisor return null
+  
+   let readydata = [] ;
+   for(let c = 0 ; c < complaintforuser.length;c++){
+     let tempobj ={};
+     tempobj = complaintforuser[c];
+     
+     let obj={
+       Complaintid:tempobj._id,
+      compfromstudent_id : tempobj.compfromstudent?.id ? tempobj.compfromstudent?.id : 'a6s5d4f6as54df64a' ,
+      compfromstudent_name : tempobj.compfromstudent?.name ? tempobj.compfromstudent.name : "khaled student",
+      compfromadvisor_id : tempobj.compfromadvisor?.id? tempobj.compfromadvisor.id : 'sd6f46sa54df987sdf' ,
+      compfromadvisor_name : tempobj.compfromadvisor?.name ? tempobj.compfromadvisor.name : 'saliem advisor',
+      role : tempobj.role,
+      disc : tempobj.disc,
+      prove : tempobj.prove,
+      dateofsubmit : tempobj.dateofsubmit,
+      diss : tempobj.diss,
+      dateofdiss : tempobj.dateofdiss
+     };
+     readydata.push(obj);       
+
+   }
+
+
+    //**************************************** */
+    console.log(complaintforuser);
+        res.render('advisorPages/advisorshowTheResultOfComplain', {
+        compList: readydata.reverse(),
+        layout: 'advisor'
+    })
+}

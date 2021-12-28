@@ -16,6 +16,7 @@ const Students = require('../models/student.model')
 const Staff = require('../models/staff.model')
 const AdvivsorStudents = require('../models/studentsAdvisor')
 
+
 // functions and libraries
 const roles = require('../utils/roles')
 const college = require('../utils/facultyType')
@@ -110,6 +111,7 @@ exports.renderGetResolveExcuses = async (req, res) => {
        tempobj = x[c];
        console.log('\n\n')
        let obj={
+         Complaintid:tempobj._id,
         compfromstudent_id : tempobj.compfromstudent?.id ? tempobj.compfromstudent?.id : 'a6s5d4f6as54df64a' ,
         compfromstudent_name : tempobj.compfromstudent?.name ? tempobj.compfromstudent.name : "khaled student",
         compfromadvisor_id : tempobj.compfromadvisor?.id? tempobj.compfromadvisor.id : 'sd6f46sa54df987sdf' ,
@@ -491,3 +493,64 @@ async function doSomething(){
 
 }
 
+
+
+//solving the complaint
+
+exports.solvecomp = async (req, res) => {
+  let thedatenow = new Date();
+  console.log("solve comp func is work")
+  await Complaint.findOneAndUpdate(
+    {"_id" : req.body.compid}, // specifies the document to update
+    {
+      $set: {  "diss" : req.body.diss,  "dateofdiss" : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}` },
+      $currentDate: { "lastModified": true }
+    }
+  )
+  console.log("solve comp updated data")
+
+  console.log(req.body.compid)
+   // Complaint
+     
+   let x = await Complaint.find({}).populate('compfromstudent', 'name id -_id').populate('compfromadvisor', 'name id -_id');
+   // ther is ero her that the msg from advisor return null
+  
+   let readydata = [] ;
+   for(let c = 0 ; c < x.length;c++){
+     let tempobj ={};
+     tempobj = x[c];
+     
+     let obj={
+       Complaintid:tempobj._id,
+      compfromstudent_id : tempobj.compfromstudent?.id ? tempobj.compfromstudent?.id : 'a6s5d4f6as54df64a' ,
+      compfromstudent_name : tempobj.compfromstudent?.name ? tempobj.compfromstudent.name : "khaled student",
+      compfromadvisor_id : tempobj.compfromadvisor?.id? tempobj.compfromadvisor.id : 'sd6f46sa54df987sdf' ,
+      compfromadvisor_name : tempobj.compfromadvisor?.name ? tempobj.compfromadvisor.name : 'saliem advisor',
+      role : tempobj.role,
+      disc : tempobj.disc,
+      prove : tempobj.prove,
+      dateofsubmit : tempobj.dateofsubmit,
+      diss : tempobj.diss,
+      dateofdiss : tempobj.dateofdiss
+     };
+     readydata.push(obj);       
+
+   }
+  //  console.log('ready state')
+   
+
+  //  if (err) {
+      //  res.render('advisingUnitPages/aauSolvingComplains', {
+      //      err: err,
+      //  });
+      //  console.log(err);
+  //  }
+  //  else {
+  res.render('advisingUnitPages/aauSolvingComplains', {
+    compList: readydata.reverse(),
+    layout: 'advisingUnit'      
+  })
+  //  }
+
+
+}
