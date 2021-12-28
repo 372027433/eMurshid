@@ -429,7 +429,6 @@
                     data: {times: submittedDays }
                 })
                 .done((value) => {
-                    console.log('we have the value of the call back')
                     
                     let successMsg = document.getElementById('success-msg') ;
                     successMsg.classList.add('alert','alert-success')
@@ -438,10 +437,8 @@
                         successMsg.classList.remove('alert','alert-success')
                         successMsg.innerText = ""
                     },3000)
-                    console.log(value)
                 })
             }
-            console.log(submittedDays)
             // once finished with the for loop then make the request to server
         }
     

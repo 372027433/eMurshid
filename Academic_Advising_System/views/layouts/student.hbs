@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>الطالب</title>
     <link href="/assets/css/general.css" rel="stylesheet" />
-    
+    <link href="/assets/css/student.css" rel="stylesheet" />
 
     {{> externalLibraries}}
     
@@ -237,6 +237,9 @@
                 <li onclick="location.href='/student/bookAnAppointment';">
                     <span class="trn">book an appointment with advisor</span>
                 </li>
+                <li onclick="location.href='/student/appointments';">
+                    <span class="trn">my Appointments</span>
+                </li>
                 <li onclick="location.href='/student/updateMarks';">
                     <span class="trn">update marks</span>
                 </li>
@@ -247,7 +250,7 @@
                 <li onclick="location.href='/student/newComplaint';">
 
                    <span class="trn">issue a complaint to academic advising unit</span>
-                    <!--                    must add follow up -->
+                    <!-- must add follow up -->
                 </li>
                   <li  onclick="$('#excusesDropDownMenu').toggle()">
                       <span  class="trn" >Excuses</span>
