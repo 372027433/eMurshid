@@ -38,8 +38,10 @@ const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
 
 
-exports.renderMainPage = (req, res) => {
+exports.renderMainPage = async (req, res) => {
+    const student = await Students.findById(res.user.userId).select("-password").exec();
     res.render('studentPages/studentMain',{
+        userName : student.name,
         layout: 'student'
     })
 };
@@ -60,6 +62,7 @@ exports.renderStudentProfile = async (req, res) => {
         reference_person_phone: student.reference_person_phone,
         advisor: student.advisor,
         editMode : false,
+        userName : student.name,
         layout: 'student',
     });
 };
@@ -111,6 +114,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
         single : maritalSelection.single,
         married : maritalSelection.married,
         editMode: true,
+        userName : student.name,
         layout: 'student',
     });
         // On Update Button Click
@@ -163,6 +167,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                 invalid : invalid,
                 editMode : true,
                 valErrors : validationErrors.array()[0].msg,
+                userName : student.name,
                 layout: 'student',
             });
         }
@@ -201,6 +206,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                         advisor: student.advisor,
                         editMode : false,
                         errorMessage : error.message,
+                        userName : student.name,
                         layout: 'student',
                     });
                 }
@@ -221,6 +227,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                         advisor: docs.advisor,
                         layout: 'student',
                         successMessage : "Data Updated Successfully",
+                        userName : student.name,
                         editMode : false,
                     });
                 }
@@ -230,15 +237,17 @@ exports.renderStudentProfileEdit = async (req, res) =>{
 
 
 
-exports.renderContactAdvisor = (req, res) => {
+exports.renderContactAdvisor = async (req, res) => {
+    const student = await Students.findById(res.user.userId).select("-password").exec();
     res.render('studentPages/contactStudentToAdvisor', {
+        userName : student.name,
         layout: 'student'
     });
 };
 
 exports.renderMyMessages = async (req, res) => {
   let x = await message.find({"msgto" : `${res.user.userId}`}).populate('msgfrom','name -_id').exec(async function(err,posts){
-
+    const student = await Students.findById(res.user.userId).select("-password").exec();
     let resevedmsg = await message.find({"msgfrom" : `${res.user.userId}`}).populate('msgto','name -_id');
     // ther is ero her that the msg from advisor return null
     if(err){
@@ -251,6 +260,7 @@ exports.renderMyMessages = async (req, res) => {
          res.render('studentPages/studentMessages' , {
              messagesList : posts.reverse(),
              reseved : resevedmsg.reverse(),
+             userName : student.name,
              layout : 'student'
          })      
         } 
@@ -260,6 +270,7 @@ exports.renderMyMessages = async (req, res) => {
 
 
 exports.renderBookAppointment = async (req, res) => {
+
     /**
      * get the student advisor 
      * // 
@@ -403,26 +414,39 @@ exports.renderReservedAppointments = async (req, res) => {
         appointments 
     });
 };
-exports.renderUpdateMarks = (req, res) => {
+ 
+
+exports.renderUpdateMarks = async (req, res) => {
+    const student = await Students.findById(res.user.userId).select("-password").exec();
+
     res.render('studentPages/studentUpdateMarks', {
+        userName : student.name,
         layout: 'student'
     });
 };
 
-exports.renderUpdateAbsence = (req, res) => {
+exports.renderUpdateAbsence = async (req, res) => {
+    const student = await Students.findById(res.user.userId).select("-password").exec();
     res.render('studentPages/studentUpdateAbsence', {
+        userName : student.name,
         layout: 'student'
     });
 };
 
 exports.renderNewComplaint = async (req, res) => {
-    const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
-    const getinarr = getstuinfo[0];
+    let thedatenow = new Date();
+
+    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const stuName = student.name;
+    const stuId = student.id;
+    const major = student.major;
+    const level = student.level;
     res.render('studentPages/studentNewComplaint', {
-        stuname :getinarr.name ,
-        stuid : getinarr.id,
-        stumajor : getinarr.major,
-        stuadvisor : getinarr.advisor_id.name,
+        stuName :stuName ,
+        stuId : stuId,
+        major : major,
+        level :level,
+        userName : student.name,
         layout: 'student'
     });
 };
@@ -437,6 +461,7 @@ exports.renderGetNewAbsenceExcuse = async (req, res) => {
         stuId : student.id,
         major : student.major,
         level : student.level,
+        userName : student.name,
         layout: 'student'
     });
 };
@@ -529,6 +554,7 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
                     dateFrom: dateFrom,
                     dateTo : dateTo,
                     info:info,
+                    userName : student.name,
                 },
                 errorMsg : 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code ,
                 layout: 'student',
@@ -561,6 +587,7 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
                     stuId : stuId,
                     major:major,
                     level:level,
+                    userName : student.name,
                     oldData : {
                         dateFrom: dateFrom,
                         dateTo : dateTo,
@@ -618,6 +645,7 @@ exports.renderGetNewExamExcuse = async (req,res) =>{
             stuId : student.id,
             major : student.major,
             level : student.level,
+            userName : student.name,
             layout: 'student'
         });
 }
@@ -718,6 +746,7 @@ exports.renderPostNewExamExcuse = async (req, res) => {
                     info: info,
                 },
                 errorMsg: 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code,
+                userName : student.name,
                 layout: 'student',
             })
 
@@ -757,6 +786,7 @@ exports.renderPostNewExamExcuse = async (req, res) => {
                         info: info,
                     },
                     successMsg: 'Your excuse was sent successfully',
+                    userName : student.name,
                     layout: 'student',
                 })
             });
@@ -789,6 +819,7 @@ exports.messagesend = async (req, res) => {
     messagerecord.save();
 
     res.render("studentPages/contactStudentToAdvisor",{
+        userName : student.name,
         layout: 'student' 
     })
     
@@ -796,15 +827,67 @@ exports.messagesend = async (req, res) => {
 
 exports.submitcomp = async (req, res) => {
     let thedatenow = new Date();
-    let complrecord = new Complaint({
-        compfrom : res.user.userId ,
-        disc : req.body.DisComp,
-        prove : "filepath",
-        diss : "null",
-        dateofdiss : "null",
-        dateofsubmit : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
-    });
-    complrecord.save();
+
+    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const stuName = student.name;
+    const stuId = student.id;
+    const major = student.major;
+    const level = student.level;
+    if (req.uploadError) {
+        console.log(req.uploadError)
+        res.status(422).render('studentPages/studentNewComplaint', {
+            hasError: true,
+            stuName: stuName,
+            stuId: stuId,
+            major: major,
+            level: level,
+            errorMsg: 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code,
+            userName : student.name,
+            layout: 'student',
+        })
+
+    } else {
+        // get the file after it was filtered and was successfully uploaded to the server
+        const proof = req.file;
+        console.log(proof)
+        // upload file to AWS S3
+        const result = await uploadFile(proof);
+        //Delete the file from the server
+        await unlinkFile(proof.path)
+        console.log(result)
+        // get File Key from AWS S3 to save in DB
+        const proofURI = result.Key;
+
+        //save the data in the DB
+        const complrecord = new Complaint({
+            compfromstudent : res.user.userId ,
+            compfromadvisor : null,
+            role : false,
+            disc : req.body.DisComp,
+            prove : proofURI,
+            diss : "null",
+            dateofdiss : "null",
+            dateofsubmit : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
+        });
+        console.log(complrecord)
+        complrecord.save(function (err, excuse) {
+            if (err) {
+                return console.error(err);
+            }
+            res.render('studentPages/studentNewComplaint', {
+                hasError: false,
+                stuName: stuName,
+                stuId: stuId,
+                major: major,
+                level: level,
+                successMsg: 'Your complain was sent successfully',
+                userName : student.name,
+                layout: 'student',
+            })
+        });
+    }
+
+   
     console.log("uploaded sucssec")
     const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
     const getinarr = getstuinfo[0];
@@ -813,6 +896,7 @@ exports.submitcomp = async (req, res) => {
         stuid : getinarr.id,
         stumajor : getinarr.major,
         stuadvisor : getinarr.advisor_id.name,
+        userName : student.name,
         layout: 'student'
     });
     
