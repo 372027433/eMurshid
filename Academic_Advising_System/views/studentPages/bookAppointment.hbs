@@ -11,7 +11,8 @@
 
             <div>
                 select a date
-                <input id="appointment-time-select" onchange="appointmentTimeSelection()" type="date" min="2021-12-11" max="2021-12-30"> 
+                
+                <input id="appointment-time-select" onchange="appointmentTimeSelection()" type="date" min="{{minDate}}" max="{{maxDate}}"> 
             </div>
             <div>
                 
@@ -171,6 +172,7 @@
                 data: {date: selectedDate}
             })
             .done((data) => {
+                console.log("🚀 ~ file: bookAppointment.hbs ~ line 175 ~ .done ~ data", data)
                 let day = document.getElementById('day');
                 day.innerText = data.day ;
 
@@ -200,6 +202,16 @@
 
                 }
 
+            })
+            .fail((error) => {
+                console.log("🚀 ~ file: bookAppointment.hbs ~ line 207 ~ .fail ~ error", error)
+                let timesArea = document.querySelector('.times');
+                timesArea.innerHTML = '';
+                submitBtn.disabled = true;
+                let div = document.createElement('div');
+                div.setAttribute('style', 'grid-column-start: 1; grid-column-end:5');
+                div.innerHTML = `<span>No appointments in week end days </span>`;
+                timesArea.append(div);
             })
         }   
     </script>

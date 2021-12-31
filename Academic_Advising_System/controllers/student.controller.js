@@ -290,10 +290,16 @@ exports.renderBookAppointment = async (req, res) => {
         advisorTimes.wednesday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; wednesday.push(obj)})
         advisorTimes.thursday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; thursday.push(obj)})
     }
-    console.log("🚀 sunday", sunday)
-    
+    let now = Date.now();
+    let afterWeekTime = 14 * 24 * 60 * 60 * 1000 ;
+
+    let dateAfterWeek = new Date(now + afterWeekTime ).toISOString().split('T')[0];
+    let thisDay = new Date(now).toISOString().split('T')[0];
+
     res.render('studentPages/bookAppointment', {
         layout: 'student',
+        minDate: thisDay,
+        maxDate: dateAfterWeek ,
         foundTimes,
         sunday,
         monday,
