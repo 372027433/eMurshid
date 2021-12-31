@@ -2,7 +2,7 @@
     <div class="content">
         <div class="body-header">
             <header>
-                <h1><span class="trn">College Students</span></h1>
+                <h1><span class="trn">College Majors</span></h1>
             </header>
             <hr>
         </div>
@@ -12,32 +12,67 @@
                 <p id="informUserMsg"></p>
             </div>
 
-            <table id="studentsDisplayTable" class="display" style="width:100%">
+            <table id="majorsDisplayTable" class="display" style="width:100%">
                 <thead>
                 <tr>
                     <th>Name</th>
                     <th>code</th>
-                    <th>hours</th>
-                    <th>major</th>
                 </tr>
                 </thead>
                 <tbody>
                 {{#each majors}}
-                    {{log courses}}
                     <tr>
                         <td>{{this.name}}</td>
                         <td>{{this.code}}</td>
                     </tr>
-
                 {{/each}}
-
                 </tbody>
             </table>
         </div>
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <button  name="manageMajors" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add/delete</button>
+<!--                    <button  name="delete" type="button" class="btn btn-danger">Delete</button>-->
+                </div>
+            </div>
+        </div>
     </div>
+
+
+    <!-- Modal -->
+    <form name="manageMajors" method="post" action="/advisingUnit/mangeMajors">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Add/Delete Major</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput" class="form-label">Major's Name</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput" >
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput2" class="form-label">Major's code</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput2" >
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button name="addMajor" id="addMajor" type="button" class="btn btn-primary">Add</button>
+                    <button name="deleteMajor" id="deleteMajor" type="button" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </form>
+
 </main>
 <script>
     $(document).ready(function() {
-        $('#studentsDisplayTable').DataTable();
+        $('#majorsDisplayTable').DataTable();
     });
 </script>

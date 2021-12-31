@@ -39,7 +39,7 @@ const studentSchema = new Schema({
     // and advisors
     
     status: String , // should be undergraduate
-    major: String,
+    major: { type: Schema.Types.ObjectId , ref : 'majors'},
     phone: {
         type: Number,
         max: [9999999999, 'phone numbers do not have more than 10 digits'],

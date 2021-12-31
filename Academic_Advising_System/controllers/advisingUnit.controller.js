@@ -386,7 +386,8 @@ exports.registerStudents = async (req, res) => {
     let bulkStudentWrite = [];
     for (record of records) {
       let obj = JSON.parse(JSON.stringify(record));
-      obj.faculty_id = res.user.faculty,
+      // obj.faculty_id = res.user.faculty,
+      obj.college =  res.user.college,
       obj.email = `${record.id}@stu.iu.edu.sa`;
       obj.status = "undergraduate";
       bulkStudentWrite.push(obj);
@@ -619,39 +620,36 @@ exports.renderGetShowCourses = async (req, res) => {
 
 exports.renderGetManageMajors = async (req, res) => {
   try{
-    console.log(res.user)
-    // let majors = await Majors.find({}).populate('collage')
-    //should compare with aau acc to find it's collage
+    console.log(res.user.college)
+    let majors = await Majors.find({college : res.user.college}).exec()
+    const majorsArr = []
+    for(let major of majors){
+      let majorObj = {}
+      majorObj['name'] = major.name
+      majorObj['code'] = major.code
 
-    // const majorsArr = []
-    // for(let major of majors){
-    //   let courseObj = {}
-    //   courseObj['name'] = majors.name
-    //   courseObj['code'] = majors.code
-
-      //check if major is undefined or not, add all related majors codes
-    //   let tempMajor = "";
-    //   for (let i =0 ; i<course.major.length ; i++){
-    //     if(typeof course.major[i] !== 'undefined' ) {
-    //       console.log( course.major[i])
-    //       tempMajor += ' ' + course.major[i].code.toString()
-    //     }
-    //   }
-    //   courseObj['major'] =  tempMajor;
-    //   coursesArr.push(courseObj)
-    //
-    // }
-
+      majorsArr.push(majorObj)
+    }
 
     res.render("advisingUnitPages/aauManageMajors", {
       layout: "advisingUnit",
-
+      majors: majorsArr,
     });
-
   } catch(e){
     res.status(400).json({msg: 'error happening' + e})
   }
 };
+
+
+exports.renderPostManageMajors = async (req, res) => {
+  if(!req.body){
+    return res.sendStatus(400);
+  }
+  else if(req.body.hasOwnProperty("addMajor")) {
+  }
+  else if(req.body.hasOwnProperty("deleteMajor")) {
+  }
+  }
 
 
 
