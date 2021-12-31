@@ -172,7 +172,6 @@
                 data: {date: selectedDate}
             })
             .done((data) => {
-                console.log("🚀 ~ file: bookAppointment.hbs ~ line 175 ~ .done ~ data", data)
                 let day = document.getElementById('day');
                 day.innerText = data.day ;
 
@@ -204,7 +203,6 @@
 
             })
             .fail((error) => {
-                console.log("🚀 ~ file: bookAppointment.hbs ~ line 207 ~ .fail ~ error", error)
                 let timesArea = document.querySelector('.times');
                 timesArea.innerHTML = '';
                 submitBtn.disabled = true;

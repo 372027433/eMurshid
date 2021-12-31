@@ -280,7 +280,6 @@ exports.renderBookAppointment = async (req, res) => {
     let sunday=[], monday=[], tuesday=[], wednesday=[], thursday = [];
     let foundTimes = false ;
     let advisorTimes = await AdvisorTimes.findOne({advisor: student.advisor_id})
-    // console.log("🚀 ~ file: student.controller.js ~ line 270 ~ advisorTimes", advisorTimes)
 
     if(advisorTimes){
         foundTimes = true ;
@@ -331,7 +330,6 @@ exports.showAvailabilityTimes = async (req, res) => {
     let dayNumber = day.getDay();
 
     if(dayNumber == 5 || dayNumber == 6){
-        console.log('holiday');
         return res.status(400).json({msg: 'this day is in weekend'});
     }
     
@@ -358,7 +356,6 @@ exports.showAvailabilityTimes = async (req, res) => {
         
         for(let reservedDays of dayReservedAppointments){
             if(obj.to == reservedDays.to && obj.from == reservedDays.from){
-                console.log('\t\tmatch');
                 availableTime.pop();
             }
         }
@@ -568,21 +565,18 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
 
         }
         else{
-            console.log('here')
             // get the file after it was filtered and was successfully uploaded to the server
             const proof = req.file;
-            console.log(proof)
+
             // upload file to AWS S3
         const result = await uploadFile(proof);
             //Delete the file from the server
         await unlinkFile(proof.path)
-        console.log(result)
             // get File Key from AWS S3 to save in DB
            const  proofURI = result.Key;
 
         //save the data in the DB
             const classExcuse = new Excuses ({type:'classAbsence',exam:false, dateFrom:dateFrom, dateTo: dateTo, status:'pending' , info:info , student:res.user.userId ,proof:proofURI})
-            console.log(classExcuse)
             classExcuse.save(function (err, excuse){
                 if (err) {
                     return console.error(err);
@@ -759,12 +753,10 @@ exports.renderPostNewExamExcuse = async (req, res) => {
         } else {
             // get the file after it was filtered and was successfully uploaded to the server
             const proof = req.file;
-            console.log(proof)
             // upload file to AWS S3
             const result = await uploadFile(proof);
             //Delete the file from the server
             await unlinkFile(proof.path)
-            console.log(result)
             // get File Key from AWS S3 to save in DB
             const proofURI = result.Key;
 
@@ -777,7 +769,6 @@ exports.renderPostNewExamExcuse = async (req, res) => {
                 student: res.user.userId,
                 proof: proofURI
             })
-            console.log(classExcuse)
             classExcuse.save(function (err, excuse) {
                 if (err) {
                     return console.error(err);
@@ -855,12 +846,10 @@ exports.submitcomp = async (req, res) => {
     } else {
         // get the file after it was filtered and was successfully uploaded to the server
         const proof = req.file;
-        console.log(proof)
         // upload file to AWS S3
         const result = await uploadFile(proof);
         //Delete the file from the server
         await unlinkFile(proof.path)
-        console.log(result)
         // get File Key from AWS S3 to save in DB
         const proofURI = result.Key;
 
@@ -875,7 +864,6 @@ exports.submitcomp = async (req, res) => {
             dateofdiss : "null",
             dateofsubmit : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
         });
-        console.log(complrecord)
         complrecord.save(function (err, excuse) {
             if (err) {
                 return console.error(err);
@@ -894,7 +882,6 @@ exports.submitcomp = async (req, res) => {
     }
 
    
-    console.log("uploaded sucssec")
     const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
     const getinarr = getstuinfo[0];
     res.render('studentPages/studentNewComplaint', {
@@ -941,7 +928,6 @@ exports.rendershowTheResultOfComplain = async (req, res) => {
 
 
     //**************************************** */
-    console.log(complaintforuser);
     res.render('studentPages/showTheResultOfComplain',{
         userName : student.name,
         compList: readydata.reverse(),
