@@ -180,7 +180,6 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                 if (err){
                     //save error
                     error = err;
-                    console.log(err)
                     // render without changes and return error message
                     res.render('studentPages/studentProfile', {
                         stuId: student.id,
@@ -305,7 +304,6 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
     {
         const student = await Students.findById(res.user.userId).select("-password").exec();
 
-
        const stuName  = student.name;
         const stuId = student.id;
         const  major = student.major;
@@ -406,7 +404,7 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
            const  proofURI = result.Key;
 
         //save the data in the DB
-            const classExcuse = new Excuses ({type:'classAbsence',exam:false, dateFrom:dateFrom, dateTo: dateTo, status:'pending' , info:info , student:res.user.userId ,proof:proofURI})
+            const classExcuse = new Excuses ({type:'classAbsence',exam:false, dateFrom:dateFrom, dateTo: dateTo, status:'pending' , info:info , student:res.user.userId ,proof:proofURI,semester:res.user.semester})
             console.log(classExcuse)
             classExcuse.save(function (err, excuse){
                 if (err) {
@@ -597,7 +595,8 @@ exports.renderPostNewExamExcuse = async (req, res) => {
                 status: 'pending',
                 info: info,
                 student: res.user.userId,
-                proof: proofURI
+                proof: proofURI,
+                semester: res.user.semester
             })
             console.log(classExcuse)
             classExcuse.save(function (err, excuse) {

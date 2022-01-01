@@ -14,6 +14,7 @@ const Staff = require('../models/staff.model')
 const AdvivsorStudents = require('../models/studentsAdvisor')
 const Courses =  require('../models/courses.model')
 const Majors =  require('../models/majors.model')
+const Semesters = require('../models/semesters.models')
 
 
 // functions and libraries
@@ -27,6 +28,7 @@ const AbsenceExcuse = require("../models/AbsenceExcuse.model");
 const {getFileStream} = require("../utils/s3");
 const util = require("util");
 const fs = require("fs");
+const Excuses = require("../models/AbsenceExcuse.model");
 
 // SENDER EMAIL CONFIGURED IN SEND_GRID
 const SENDGRID_SENDER_EMAIL = 'emurshid.iu@gmail.com'
@@ -198,6 +200,7 @@ exports.registerAdvisors = async (req, res) => {
 
     userObj.id = id;
     userObj.faculty_id = res.user.faculty;
+    userObj.college = res.user.college;
     
     userObj.email = `${id}@iu.edu.sa`;
     userObj.role = roles.advisor;
@@ -640,7 +643,7 @@ exports.renderGetManageMajors = async (req, res) => {
   }
 };
 
-
+// to be modified
 exports.renderPostManageMajors = async (req, res) => {
   if(!req.body){
     return res.sendStatus(400);
@@ -650,6 +653,83 @@ exports.renderPostManageMajors = async (req, res) => {
   else if(req.body.hasOwnProperty("deleteMajor")) {
   }
   }
+
+
+exports.renderGetManageSemesters = async (req, res) => {
+  // let d = new Date(Date.now());
+  //
+  // console.log(  d.toString())
+
+console.log(res.user)
+
+  res.render("advisingUnitPages/aauManageSemesters", {
+    layout: "advisingUnit",
+  });
+}
+
+
+exports.renderPostManageSemesters = async (req, res) => {
+  try {
+    console.log(req.body.period)
+    //check body
+    if (!req.body) {
+      return res.sendStatus(400);
+    }
+    //validate selection
+    if (req.body.period === 'Period') {
+      throw new Error('period not Selected')
+    }
+    //on add btn click
+    else if (req.body.hasOwnProperty("addSemester")) {
+      //get hijri date to generate code
+      let GregorianYear = (new Date()).getFullYear();
+      let HijriYear = Math.trunc((GregorianYear - 622) * (33 / 32));
+      let startDate = req.body.startDate
+      let endDate = req.body.endDate
+      let period = req.body.period
+      //get last two digits of hijri date and add period value to it ex 1441 + summer = 413
+      let code = HijriYear.toString().substring(2) + period
+
+
+      const semesterExist = await Semesters.exists({code:code})
+      if(semesterExist){
+        throw new Error('semester already Exits')
+      }
+      //create doc
+      const classSemester = await new Semesters({startDate: startDate, endDate: endDate, code: code})
+      //save doc
+      classSemester.save(function (err, excuse) {
+        if (err) {
+          throw new Error(err.message)
+        }
+        res.render('advisingUnitPages/aauManageSemesters', {
+          hasError: false,
+          successMsg: 'Semester was added successfully',
+          layout: 'advisingUnit',
+        })
+      });
+    }
+    //delete Btn click
+  else if (req.body.hasOwnProperty("deleteMajor")) {
+    res.render("advisingUnitPages/aauManageSemesters", {
+      layout: "advisingUnit",
+    });
+    }
+  } catch(e){
+      res.render("advisingUnitPages/aauManageSemesters", {
+        hasError: true,
+        errMsg: e.message,
+        layout:"advisingUnit"
+    });
+
+    }
+
+}
+
+
+
+
+
 
 
 

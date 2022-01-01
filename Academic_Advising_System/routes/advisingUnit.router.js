@@ -82,4 +82,8 @@ advisingUnitRouter.get('/showCourses',controller.renderGetShowCourses);
 
 advisingUnitRouter.get('/mangeMajors',controller.renderGetManageMajors);
 
+advisingUnitRouter.get('/manageSemesters',controller.renderGetManageSemesters);
+advisingUnitRouter.post('/manageSemesters',controller.renderPostManageSemesters);
+
+
 module.exports = advisingUnitRouter ;

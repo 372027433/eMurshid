@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const Students = require('../models/student.model')
 const Staff = require('../models/staff.model')
 const Colleges = require('../models/colleges.model')
+const Semesters = require('../models/semesters.models')
 
 // roles
 const roles = require('../utils/roles')
@@ -43,7 +44,8 @@ exports.login = async (req, res) => {
             let tokenBody = {
                 userId: student._id, // _id student in DB [not his uni id]
                 role: roles.student,
-                college: student.college._id
+                college: student.college._id,
+                semester: await getSemester()
 
             }
         console.log(tokenBody)
@@ -88,6 +90,7 @@ exports.login = async (req, res) => {
                 role: staff.role ,
                 faculty: staff.faculty_id,
                 college:staff.college._id,
+                semester:  await getSemester(),
             }
 
             let token = await jwt.sign(tokenBody, process.env.JWT_ACCESS_KEY);
@@ -134,4 +137,16 @@ exports.login = async (req, res) => {
 exports.logout = (req, res) => {
     res.clearCookie('authorization')
     res.status(200).redirect('/')
+}
+async function getSemester(){
+    let currentDate = new Date(Date.now())
+    let currentSemester =1;
+    const semesters = await Semesters.find({})
+    for (let semester of semesters){
+        if((semester.startDate.getTime() < currentDate)&&(semester.endDate.getTime() > currentDate)){
+            currentSemester = semester.code
+            break;
+        }
+    }
+    return currentSemester
 }
