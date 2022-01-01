@@ -1,0 +1,216 @@
+
+<div class="main-content">
+    <div class="content">
+        <div class="body-header">
+            <header>
+                <h1><span class="trn">Book An Appointment with my Advisor</span></h1>
+            </header>
+            <hr>
+        </div>
+        <div class="body-content">
+
+            <div>
+                select a date
+                
+                <input id="appointment-time-select" onchange="appointmentTimeSelection()" type="date" min="{{minDate}}" max="{{maxDate}}"> 
+            </div>
+            <div>
+                
+                <div class="day">
+                    <div style="text-align: left;" ><h4><span id="day"></span></h4></div>
+                    <div class="times">
+                        
+                    </div>
+                </div>
+            </div>
+
+            {{!-- {{#if foundTimes}}
+                <div class="day">
+                    <div style="text-align: left;" ><h4>Sunday</h4></div>
+                    <div class="times">
+                        {{#each sunday}}
+                               <button onclick="AddBookedTime(event)" id="sun-{{from}}-{{to}}" data-day="sunday" class="btn btn-outline-primary">{{from}}&nbsp;-&nbsp;{{to}}</button>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="day">
+                    <div style="text-align: left;" ><h4>Monday</h4></div>
+                    <div class="times">
+                        {{#each monday}}
+                                <button onclick="AddBookedTime(event)" id="mon-{{from}}-{{to}}" data-day="monday" class="btn btn-outline-primary">{{from}}&nbsp;-&nbsp;{{to}}</button>
+                        {{/each}}
+                    </div>
+                    
+                </div>
+                <div class="day">
+                    <div style="text-align: left;" ><h4>Tuesday</h4></div>
+                    <div class="times">
+                        {{#each tuesday}}
+                                <button onclick="AddBookedTime(event)" id="tue-{{from}}-{{to}}" data-day="tuesday" class="btn btn-outline-primary">{{from}}&nbsp;-&nbsp;{{to}}</button>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="day">
+                    <div style="text-align: left;" ><h4>Wednesday</h4></div>
+                    <div class="times">
+                        {{#each wednesday}}
+                                <button onclick="AddBookedTime(event)" id="wed-{{from}}-{{to}}" data-day="wednesday" class="btn btn-outline-primary">{{from}}&nbsp;-&nbsp;{{to}}</button>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="day">
+                    <div style="text-align: left;" ><h4>Thursday</h4></div>
+
+                    <div class="times">
+                        {{#each thursday}}
+                                <button onclick="AddBookedTime(event)" id="thu-{{from}}-{{to}}" data-day="thursday" class="btn btn-outline-primary">{{from}}&nbsp;-&nbsp;{{to}}</button>
+                        {{/each}}
+                    </div>
+                    
+                </div> --}}
+
+                <div class="my-3 border border-bottom"></div>
+                <div class="row justify-content-end">
+                    <span id="book-appointment-success-msg"></span>
+                    <button id="submit-btn" onclick="submitAppointmentTime()" class="w-25 mx-3 btn btn-outline-success" type="submit">Book Time</button>
+                </div>
+            {{!-- {{else}}
+                <div>
+                    <h4>Your Advisor did not add advising hours</h4>
+                </div>
+            {{/if}} --}}
+        </div>
+    </div>
+    <script>
+        let selectedTime = []; // to add selected time id
+
+        /**
+        * function activates on click btn
+        * deselect previous clicked btn && removes it from selectedTime && change its class
+        * add clicked time to selectedTime array && change its class
+         */
+        function AddBookedTime(elem){
+            
+            const currentSelectedTime = elem.target.id;
+
+            const prevSelectedTime = selectedTime[0];
+
+            if(selectedTime[0]) {
+                // here is reading things 
+                if(document.getElementById(prevSelectedTime)){
+
+                    document.getElementById(prevSelectedTime).classList.toggle('btn-outline-primary');
+                    document.getElementById(prevSelectedTime).classList.toggle('btn-primary');
+
+                }
+                selectedTime.pop();
+
+                selectedTime.push(currentSelectedTime);
+                document.getElementById(currentSelectedTime).classList.toggle('btn-outline-primary');
+                document.getElementById(currentSelectedTime).classList.toggle('btn-primary');
+
+            } else {
+                // no elem on array
+                selectedTime.push(currentSelectedTime);
+                document.getElementById(currentSelectedTime).classList.toggle('btn-outline-primary');
+                document.getElementById(currentSelectedTime).classList.toggle('btn-primary');
+            }
+        }
+        
+        function submitAppointmentTime(){
+
+            if(selectedTime.length == 0 ){
+                return alert('you have to book one time at least..!')
+            } else if(selectedTime.length > 1){
+                return alert('you cannot book more than one time..!')
+            }
+
+            let bookedTime = selectedTime[0];
+            let day = document.getElementById(bookedTime).dataset.day;
+            const selectedDate = document.getElementById('appointment-time-select').value ;
+
+            let time = {
+                from: bookedTime.split('-')[1],
+                to: bookedTime.split('-')[2],
+                day,
+                date: selectedDate,
+            }
+            
+            $.ajax({
+                method: 'post',
+                url: "/student/appointment/book",
+                data: {time}
+            })
+            .done((value) => {
+                
+                let msg = document.getElementById('book-appointment-success-msg');
+                msg.innerText = 'Appointment is created successfully';
+                msg.classList.toggle('alert');
+                msg.classList.toggle('alert-success'); 
+
+                setTimeout(() => {
+
+                    msg.innerText = '';
+                    msg.classList.toggle('alert');
+                    msg.classList.toggle('alert-success');
+
+                },1500);
+                setTimeout(() => {
+                   location.href='/student/appointments';
+                },2000)
+            })
+        }
+        
+        function appointmentTimeSelection(){
+            selectedTime = [];
+            let submitBtn = document.getElementById('submit-btn');
+            const selectedDate = document.getElementById('appointment-time-select').value ;
+            
+            $.ajax({
+                method: 'post',
+                url: "/student/appointment/show",
+                data: {date: selectedDate}
+            })
+            .done((data) => {
+                let day = document.getElementById('day');
+                day.innerText = data.day ;
+
+                let timesArea = document.querySelector('.times');
+                timesArea.innerHTML = '';
+
+                if(data.appointments.length > 0){
+                    submitBtn.disabled = false ;
+                    for(let obj of data.appointments){
+
+                        let btn = document.createElement('button');
+                        btn.innerText = `${obj.from}-${obj.to}` ;
+                        btn.setAttribute('id',`${data.day.substr(0,3)}-${obj.from}-${obj.to}`);
+                        btn.setAttribute('class', 'btn btn-outline-primary');
+                        btn.setAttribute('data-day',data.day);
+                        btn.setAttribute('onclick', 'AddBookedTime(event)' );
+
+                        timesArea.append(btn);
+                    }
+
+                } else {
+                    submitBtn.disabled = true;
+                    let div = document.createElement('div');
+                    div.setAttribute('style', 'grid-column-start: 1; grid-column-end:5');
+                    div.innerHTML = `<span>Appointments been Reserved or Advisor has no Times </span>`;
+                    timesArea.append(div);
+
+                }
+
+            })
+            .fail((error) => {
+                let timesArea = document.querySelector('.times');
+                timesArea.innerHTML = '';
+                submitBtn.disabled = true;
+                let div = document.createElement('div');
+                div.setAttribute('style', 'grid-column-start: 1; grid-column-end:5');
+                div.innerHTML = `<span>No appointments in week end days </span>`;
+                timesArea.append(div);
+            })
+        }   
+    </script>
+</div>

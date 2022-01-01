@@ -324,7 +324,7 @@ exports.showAvailabilityTimes = async (req, res) => {
     let isValidDate = day instanceof Date && !isNaN(day.valueOf());
 
     if(!isValidDate){
-        return res.status(400).json({msg: 'bad input'});
+        return res.status(400).json({msg: 'Incorrect Time format'});
     }
     let dayNumber = day.getDay();
 

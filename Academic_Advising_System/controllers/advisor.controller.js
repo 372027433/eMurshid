@@ -11,8 +11,11 @@ const message = require('../models/messages.model')
 // Students MODELS
 const Students = require('../models/student.model')
 
-// staff MODELS
-const staff = require('../models/staff.model')
+// Staff MODELS
+const Staff = require('../models/staff.model')
+
+// advisor times 
+const ReservedTimes = require('../models/ReservedTimes.model')
 
 // Advisor Times Model 
 const AdvisorTimes = require('../models/advisorTimes.model')
@@ -38,7 +41,7 @@ exports.renderMainPage = (req, res) => {
 }
 
 exports.renderPersonalProfile = async (req, res) => {
-    let advisor = await staff.findById(res.user.userId);
+    let advisor = await Staff.findById(res.user.userId);
     const advname = advisor.name;
     const advid = advisor.id;
     const advemail = advisor.email;
@@ -102,9 +105,49 @@ exports.renderOfficeHours = async (req, res) => {
     }
 }
 
-exports.renderAppointments = (req, res) => {
+exports.renderAppointments = async (req, res) => {
+
+    const times = await ReservedTimes.find({advisor: res.user.userId, isCompleted:false })
+        .populate([
+            {
+                path: 'student',
+                select: {name: 1,_id:0}
+            }
+        ])
+    
+    let arrayOfTimes = [];
+    for(let time of times){
+        let obj = {
+            student: time.student.name,
+            day: time.day,
+            date: new Date(time.date).toISOString().split('T')[0],
+            time: `${time.from} : ${time.to}`,
+            id: time._id,
+            createdAt: new Date(time.createdAt).toISOString().split('T')[0],
+        };        
+        arrayOfTimes.push(obj);
+    }
+
     res.render('advisorPages/advisorAppointments', {
-        layout: 'advisor'
+        layout: 'advisor',
+        times: arrayOfTimes
+    })
+}
+
+exports.completedAppointment = async(req,res) => {
+
+    const appointmentID = req.body.appointmentId ;
+    const appointment = await ReservedTimes.findOne({_id: appointmentID});
+    if(!appointment){
+        return res.status(400).json({
+            msg: 'this appointment is faked'
+        })
+    }
+    const updatedAppointment = await ReservedTimes.updateOne({_id: appointmentID},{isCompleted: true});
+
+    return res.status(200).json({
+        data: 'gone and backend',
+        updatedAppointment
     })
 }
 
@@ -140,7 +183,7 @@ exports.renderFindMessage = async (req, res) => {
 }
 
 exports.renderIssueComplaint = async (req, res) => {
-    let advisor = await staff.findById(res.user.userId);
+    let advisor = await Staff.findById(res.user.userId);
     const advname = advisor.name;
     const advid = advisor.id;
     const advemail = advisor.email;
@@ -378,7 +421,7 @@ function timeInMinutes(time){
 exports.submitcomp = async (req, res) => {
     let thedatenow = new Date();
 
-    const advisor = await staff.findById(res.user.userId).select("-password").exec();
+    const advisor = await Staff.findById(res.user.userId).select("-password").exec();
     const advname = advisor.name;
     const advid = advisor.id;
     const advemail = advisor.email;
