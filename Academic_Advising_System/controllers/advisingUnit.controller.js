@@ -721,17 +721,18 @@ exports.renderPostManageSemesters = async (req, res) => {
       // }
       let sDate = new Date(startDate)
       let eDate = new Date(endDate)
+      //validates that end date is greater than start date
       if (eDate.getTime() < sDate.getTime()){
         throw new Error('end date is before start date !')
       }
       // checks if time periods or code already exists
       const semesters = await Semesters.find({college :res.user.college }).exec()
+      //validates that a semester is not contradicting with another and doesn't have the same code
       for (let semester of semesters){
         if (((sDate.getTime() >=  semester.startDate.getTime())&& (eDate.getTime() <= semester.endDate.getTime()))||
         ((sDate.getTime() <= semester.startDate.getTime()) &&(eDate.getTime() >= semester.startDate.getTime()))||
         ((sDate.getTime() <= semester.endDate.getTime()) &&(eDate.getTime() >= semester.endDate.getTime()))||
             (semester.code === code )){
-        // if((sDate.getTime() < semester.endDate.getTime() )||(eDate.getTime() < semester.startDate.getTime())|| (semester.code === code )){
           throw new Error('an existing semester contradicts with the time period')
         }
       }
