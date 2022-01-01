@@ -19,6 +19,7 @@ advisorRouter.get('/requestReports',controller.renderRequestReports);
 advisorRouter.get('/officeHours',controller.renderOfficeHours);
 
 advisorRouter.get('/appointments',controller.renderAppointments);
+advisorRouter.put('/completedAppointment', controller.completedAppointment)
 
 advisorRouter.get('/messageStudents',controller.renderMessageStudents);
 

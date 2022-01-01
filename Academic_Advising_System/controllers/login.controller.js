@@ -26,15 +26,16 @@ exports.login = async (req, res) => {
             // if no student present with this id this gonna be a bad request
             if(!student) return res.status(400).render('signIn',{
                 err: true, 
-                errMsg: "Invalide id or password"
+                errMsg: "Invalid id or password"
             })
 
             // compare the passwords
             const comparedPasswords = await bcrypt.compare(password, student.password)
+
             // if passwords do not match then this is bad request
             if(!comparedPasswords) return res.status(400).render('signIn',{
                 err: true, 
-                errMsg: "Invalide id or password"
+                errMsg: "Invalid id or password"
             })
 
             /// we should have expiration data, but we don't have a way to refresh token
@@ -48,7 +49,8 @@ exports.login = async (req, res) => {
                 semester: await getSemester()
 
             }
-        console.log(tokenBody)
+            console.log("🚀 ~ file: login.controller.js ~ line 52 ~ exports.login= ~ tokenBody", tokenBody)
+
             let token = await jwt.sign(tokenBody,process.env.JWT_ACCESS_KEY);
 
             res.setHeader('Set-Cookie', `authorization=Bearer ${token}; HttpOnly`)
@@ -81,7 +83,7 @@ exports.login = async (req, res) => {
             const comparePassword = await bcrypt.compare(password, staff.password)
             if(!comparePassword) return res.status(400).render('signIn',{
                 err: true, 
-                errMsg: "Invalide id or password"
+                errMsg: "Invalid id or password"
             })
             
             /// ENHANCE ADD FACULITY ID HERE
@@ -116,7 +118,7 @@ exports.login = async (req, res) => {
                 break ;
     
                 default: 
-                    // not a user
+                    // not a user, get out ya bro
                     // return to login page
                     res.setHeader('Set-Cookie', `authorization= ; HttpOnly`)
                     return res.status(200).redirect('/')
