@@ -58,6 +58,10 @@ const excusesSchema = new Schema({
     exam : {
         type : Boolean,
         required : true
+    },
+    semester:{
+      type :String,
+      required:true
     }
 },{
     collection:'excuses',

@@ -15,6 +15,10 @@ const Complaint = require('../models/Complaint.model')
 const Students = require('../models/student.model')
 const Staff = require('../models/staff.model')
 const AdvivsorStudents = require('../models/studentsAdvisor')
+const Courses =  require('../models/courses.model')
+const Majors =  require('../models/majors.model')
+const Semesters = require('../models/semesters.models')
+
 
 
 // functions and libraries
@@ -26,6 +30,9 @@ const {passwordGenerator} = require('../utils/generatePassword');
 const {emailAndPasswordTemplateEmail} = require('../utils/emailAndPasswordTemplateEmail');
 const AbsenceExcuse = require("../models/AbsenceExcuse.model");
 const {getFileStream} = require("../utils/s3");
+const util = require("util");
+const fs = require("fs");
+const Excuses = require("../models/AbsenceExcuse.model");
 
 // SENDER EMAIL CONFIGURED IN SEND_GRID
 const SENDGRID_SENDER_EMAIL = 'emurshid.iu@gmail.com'
@@ -39,6 +46,9 @@ let transporter = nodemailer.createTransport(
   })
 );
 
+//
+const unlinkFile = util.promisify(fs.unlink)
+
 /**
  * ===================== CONTROLLERS ==================
  */
@@ -50,9 +60,8 @@ exports.renderMainPage = (req, res) => {
   });
 };
 
-exports.renderCollageStudents = async (req, res) => {
+exports.renderCollegeStudents = async (req, res) => {
   try{
-    console.log(res.user)
     let collegeStudents = await Students.find({faculty_id: res.user.faculty}).select('-password').populate('advisor_id')
 
     const students = []
@@ -68,7 +77,7 @@ exports.renderCollageStudents = async (req, res) => {
         
     }
 
-    res.render("advisingUnitPages/aauCollageStudents", {
+    res.render("advisingUnitPages/aauCollegeStudents", {
       layout: "advisingUnit",
       students: students, 
     });
@@ -229,7 +238,6 @@ exports.registerAdvisors = async (req, res) => {
 
   // passwordGenerator();
   const {name, id} = req.body ;
-  // console.log()
   // check from user Id
   if(/^[0-9]{1,8}$/.test(id)){
 
@@ -242,6 +250,7 @@ exports.registerAdvisors = async (req, res) => {
 
     userObj.id = id;
     userObj.faculty_id = res.user.faculty;
+    userObj.college = res.user.college;
     
     userObj.email = `${id}@iu.edu.sa`;
     userObj.role = roles.advisor;
@@ -286,8 +295,7 @@ exports.registerAdvisors = async (req, res) => {
       // transporter.sendMail(mailOptions, (err, info) => {
       //   if (err) {
       //     // if an is not sent
-      //     console.log(info) 
-      //   } 
+      //   }
       // });
 
       return res.render("advisingUnitPages/aauRegisterAdvisors", {
@@ -431,7 +439,8 @@ exports.registerStudents = async (req, res) => {
     let bulkStudentWrite = [];
     for (record of records) {
       let obj = JSON.parse(JSON.stringify(record));
-      obj.faculty_id = res.user.faculty,
+      // obj.faculty_id = res.user.faculty,
+      obj.college =  res.user.college,
       obj.email = `${record.id}@stu.iu.edu.sa`;
       obj.status = "undergraduate";
       bulkStudentWrite.push(obj);
@@ -489,7 +498,322 @@ exports.registerStudents = async (req, res) => {
   })
 };
 
-async function doSomething(){
+
+
+exports.renderPostAddCourses = (req,res)=>{
+
+  let { filename } = req.file;
+  let filepath = path.join(__dirname, "..", "uploads", filename);
+
+  let info = excelReader(filepath).then( async (rows) => {
+    // creating student credential .Phase-1
+    let coursesRecords = [];
+
+    if(rows[0][0].toLocaleLowerCase() !== 'code' || rows[0][1].toLocaleLowerCase() !== 'name' || rows[0][2].toLocaleLowerCase() !== 'hours'|| rows[0][3].toLocaleLowerCase() !== 'major1' || rows[0][4].toLocaleLowerCase() !== 'major2' ){
+      // checking file structure
+      // console.log('error')
+      throw new Error('file not formatted correctly')
+    }
+
+    for (let i = 1; i < rows.length; i++) {
+      let code = rows[i][0].toString();
+      let name = rows[i][1].toString();
+      let hours = rows[i][2].toString();
+      let major1 ;
+      let major2;
+      if(rows[i][3]!=null){
+        major1 = rows[i][3].toString();
+      }
+      if(rows[i][4]!=null){
+        major2 = rows[i][4].toString();
+      }
+
+
+      // let majorsArr =[]
+      //  await Majors.find({code:major1, code: major2}),(err,major)=>{
+      //   if(err){
+      //     throw new Error(`major for ${code} wasn't found in Database`)
+      //   }else {
+      //     majorsArr.push(major.id)
+      //   }
+      //  }
+
+      const major = await Majors.find({$or:[{code: major1},{code:major2}]}).select("_id").exec()
+      if (major) {
+        coursesRecords.push({
+          code: code,
+          name: name,
+          hours: hours,
+          major: major,
+          college : res.user.college
+        });
+      }
+      else{
+        throw new Error(`major for ${code} wasn't found in Database`)
+        }
+
+     //    await Majors.find({$or:[{code: major1},{code:major2}]},(err,major)=>{
+     //   console.log('major:->'+coursesRecords)
+     //   if(err){
+     //     console.log(err.msg)
+     //     throw new Error(`major for ${code} wasn't found in Database`)
+     //   }else {
+     //     coursesRecords.push({
+     //       code: code,
+     //       name: name,
+     //       hours: hours,
+     //       major: major,
+     //     });
+     //     console.log('coursesRecords:->'+coursesRecords)
+     //   }
+     // })
+    }
+    return coursesRecords;
+
+  });
+
+  info.then((records) => {
+    console.log('records:->'+records)
+    // Adding additional info to student object .Phase-2
+    if (records.length <= 0) return res.status(400).send("not enough courses"); // <- this method is wrong . should use .render
+
+    // create user
+    // let bulkStudentWrite = [];
+    // for (record of records) {
+    //   // let obj = JSON.parse(JSON.stringify(record));
+    //   record.code = res.user.faculty,
+    //       obj.email = `${record.id}@stu.iu.edu.sa`;
+    //   obj.status = "undergraduate";
+    //   bulkStudentWrite.push(obj);
+    // }
+
+    // return bulkStudentWrite;
+  })
+
+
+      info.then( async (records) => {
+
+
+        let registeredCourses = [];
+        for(let course of records){
+          let courseFound = await Courses.findOne({code: course.code}).exec();
+          if(Boolean(courseFound)){
+            registeredCourses.push(courseFound);
+          } else {
+            // here create the course
+            console.log('creating')
+             await Courses.create(course)
+
+            // console.log('inserted user', userInsert)
+          }
+
+        }
+        return registeredCourses
+
+      })
+      .then(async (registeredCourses) => {
+        // redirect to same page with info .Phase-5
+
+        let displayInfo = registeredCourses.length > 0 ;
+        await unlinkFile(filepath)
+        res.render("advisingUnitPages/aauAddCourses", {
+          layout: "advisingUnit",
+          successMsg: 'courses are added',
+          displayRegistered: displayInfo,
+          registeredCourses: registeredCourses,
+        });
+      })
+
+  info.catch(err => {
+    // Catch errors
+    // SHOULD RENDER TO AN ERROR PAGE
+    res.status(400).json({err:"file not formatted correctly"})
+  })
+};
+
+exports.renderGetAddCourses = async (req, res) => {
+  res.render("advisingUnitPages/aauAddCourses", {
+    layout: "advisingUnit",
+  });
+};
+
+exports.renderGetShowCourses = async (req, res) => {
+  try{
+    console.log(res.user)
+    let courses = await Courses.find({}).populate('major')
+    const coursesArr = []
+    for(let course of courses){
+      let courseObj = {}
+      courseObj['name'] = course.name
+      courseObj['code'] = course.code
+      courseObj['hours'] = course.hours
+      //check if major is undefined or not, add all related majors codes
+      let tempMajor = "";
+      for (let i =0 ; i<course.major.length ; i++){
+          if(typeof course.major[i] !== 'undefined' ) {
+            tempMajor += ' ' + course.major[i].code.toString()
+      }
+      }
+      courseObj['major'] =  tempMajor;
+      coursesArr.push(courseObj)
+
+    }
+
+    res.render("advisingUnitPages/aauShowCourses", {
+      layout: "advisingUnit",
+      courses: coursesArr,
+    });
+
+  } catch(e){
+    res.status(400).json({msg: 'error happening' + e})
+  }
+};
+
+
+
+exports.renderGetManageMajors = async (req, res) => {
+  try{
+    console.log(res.user.college)
+    let majors = await Majors.find({college : res.user.college}).exec()
+    const majorsArr = []
+    for(let major of majors){
+      let majorObj = {}
+      majorObj['name'] = major.name
+      majorObj['code'] = major.code
+
+      majorsArr.push(majorObj)
+    }
+
+    res.render("advisingUnitPages/aauManageMajors", {
+      layout: "advisingUnit",
+      majors: majorsArr,
+    });
+  } catch(e){
+    res.status(400).json({msg: 'error happening' + e})
+  }
+};
+
+// to be modified
+exports.renderPostManageMajors = async (req, res) => {
+  if(!req.body){
+    return res.sendStatus(400);
+  }
+  else if(req.body.hasOwnProperty("addMajor")) {
+  }
+  else if(req.body.hasOwnProperty("deleteMajor")) {
+  }
+  }
+
+
+exports.renderGetManageSemesters = async (req, res) => {
+  try {
+    let currentSemester;
+    const semestersArr = []
+   const semesters = await Semesters.find({college :res.user.college }).exec()
+      if (!semesters) {
+        throw new Error('no semesters found')
+      }
+        for(let semester of semesters){
+          if (res.user.semester === semester.code){
+            currentSemester = semester
+          }
+          let semesterObj = {}
+          semesterObj['startDate'] = semester.startDate
+          semesterObj['endDate'] = semester.endDate
+          semesterObj['code'] = semester.code
+          semestersArr.push(semesterObj)
+        }
+      res.render("advisingUnitPages/aauManageSemesters", {
+        hasError : false,
+        semesters: semestersArr,
+        currentStartDate: currentSemester.startDate,
+        currentEndDate: currentSemester.endDate,
+        currentCode: currentSemester.code,
+        layout: "advisingUnit",
+      });
+    }
+  catch (e) {
+    res.render("advisingUnitPages/aauManageSemesters", {
+      hasError: true,
+      err: e.message,
+      layout: "advisingUnit",
+    });
+  }
+}
+
+
+
+exports.renderPostManageSemesters = async (req, res) => {
+  try {
+    console.log(req.body.period)
+    //check body
+    if (!req.body) {
+      return res.sendStatus(400);
+    }
+    //validate selection
+    if (req.body.period === 'Period') {
+      throw new Error('period not Selected')
+    }
+    //on add btn click
+    else if (req.body.hasOwnProperty("addSemester")) {
+      //get hijri date to generate code
+      let GregorianYear = (new Date()).getFullYear();
+      let HijriYear = Math.trunc((GregorianYear - 622) * (33 / 32));
+      let startDate = req.body.startDate
+      let endDate = req.body.endDate
+      let period = req.body.period
+      //get last two digits of hijri date and add period value to it ex 1441 + summer = 413
+      let code = HijriYear.toString().substring(2) + period
+
+      //checks if semester code exits
+      // const semesterExist = await Semesters.exists({code:code})
+      // if(semesterExist){
+      //   throw new Error('semester already Exits')
+      // }
+      let sDate = new Date(startDate)
+      let eDate = new Date(endDate)
+      if (eDate.getTime() < sDate.getTime()){
+        throw new Error('end date is before start date !')
+      }
+      // checks if time periods or code already exists
+      const semesters = await Semesters.find({college :res.user.college }).exec()
+      for (let semester of semesters){
+        if (((sDate.getTime() >=  semester.startDate.getTime())&& (eDate.getTime() <= semester.endDate.getTime()))||
+        ((sDate.getTime() <= semester.startDate.getTime()) &&(eDate.getTime() >= semester.startDate.getTime()))||
+        ((sDate.getTime() <= semester.endDate.getTime()) &&(eDate.getTime() >= semester.endDate.getTime()))||
+            (semester.code === code )){
+        // if((sDate.getTime() < semester.endDate.getTime() )||(eDate.getTime() < semester.startDate.getTime())|| (semester.code === code )){
+          throw new Error('an existing semester contradicts with the time period')
+        }
+      }
+      //create doc
+      const classSemester = await new Semesters({startDate: startDate, endDate: endDate, code: code, college:res.user.college})
+      //save doc
+      classSemester.save(function (err, excuse) {
+        if (err) {
+          throw new Error(err.message)
+        }
+        res.render('advisingUnitPages/aauManageSemesters', {
+          hasError: false,
+          successMsg: 'Semester was added successfully',
+          layout: 'advisingUnit',
+        })
+      });
+    }
+    //delete Btn click
+  else if (req.body.hasOwnProperty("deleteMajor")) {
+    res.render("advisingUnitPages/aauManageSemesters", {
+      layout: "advisingUnit",
+    });
+    }
+  } catch(e){
+      res.render("advisingUnitPages/aauManageSemesters", {
+        hasError: true,
+        errMsg: e.message,
+        layout:"advisingUnit"
+    });
+
+    }
 
 }
 
@@ -499,7 +823,7 @@ async function doSomething(){
 
 exports.solvecomp = async (req, res) => {
   let thedatenow = new Date();
-  console.log("solve comp func is work")
+
   await Complaint.findOneAndUpdate(
     {"_id" : req.body.compid}, // specifies the document to update
     {
@@ -507,9 +831,7 @@ exports.solvecomp = async (req, res) => {
       $currentDate: { "lastModified": true }
     }
   )
-  console.log("solve comp updated data")
 
-  console.log(req.body.compid)
    // Complaint
      
    let x = await Complaint.find({}).populate('compfromstudent', 'name id -_id').populate('compfromadvisor', 'name id -_id');
