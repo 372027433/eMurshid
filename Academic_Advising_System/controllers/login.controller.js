@@ -68,7 +68,7 @@ exports.login = async (req, res) => {
 
         try {
             // query DB for the id
-            const staff = await Staff.findOne({id: id}).select('password role faculty_id college').populate('college').exec()
+            const staff = await Staff.findOne({id: id}).select('password role college').populate('college').exec()
             // once you get the id,
             // check if user exists
 
@@ -88,7 +88,6 @@ exports.login = async (req, res) => {
             let tokenBody = {
                 userId: staff._id , // _id staff in DB [not his uni id]
                 role: staff.role ,
-                faculty: staff.faculty_id,
                 college:staff.college._id,
                 semester:  await getSemester(),
             }

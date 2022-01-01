@@ -673,7 +673,6 @@ exports.renderGetShowCourses = async (req, res) => {
 
 exports.renderGetManageMajors = async (req, res) => {
   try{
-    console.log(res.user.college)
     let majors = await Majors.find({college : res.user.college}).exec()
     const majorsArr = []
     for(let major of majors){

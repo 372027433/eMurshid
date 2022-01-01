@@ -97,7 +97,7 @@ exports.renderPostPendingExcuses = async (req, res) => {
 exports.renderRegisteredStudents = async (req, res) => {
     try{
 
-        let collegeStudents = await Students.find({faculty_id: res.user.faculty}).select('-password').populate('advisor_id')
+        let collegeStudents = await Students.find({college: res.user.college}).select('-password').populate('advisor_id')
 
         const students = []
         for(let student of collegeStudents){

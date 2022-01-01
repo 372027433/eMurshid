@@ -24,6 +24,7 @@ const ReservedTimes = require('../models/ReservedTimes.model');
 //Absence Model
 const Excuses = require('../models/AbsenceExcuse.model')
 
+
 // Validator Results
 
 // Complaint MODEL
@@ -35,6 +36,7 @@ const {validationResult} = require ('express-validator/check')
 // const multer = require("multer");
 const {uploadFile} = require('../utils/s3')
 const util = require('util')
+const Majors = require("../models/majors.model");
 const unlinkFile = util.promisify(fs.unlink)
 
 
@@ -48,11 +50,11 @@ exports.renderMainPage = async (req, res) => {
 
 // Handle get request
 exports.renderStudentProfile = async (req, res) => {
-     const student = await Students.findById(res.user.userId).select("-password").exec();
+     const student = await Students.findById(res.user.userId).select("-password").populate('major').exec();
     res.render('studentPages/studentProfile', {
         stuId: student.id,
         stuName: student.name,
-        major: student.major,
+        major: student.major.name,
         marital_status: student.marital_status,
         family_members_count: student.family_members_count,
         order_in_family: student.order_in_family,
@@ -69,23 +71,42 @@ exports.renderStudentProfile = async (req, res) => {
 
 //Handle post Requests
 exports.renderStudentProfileEdit = async (req, res) =>{
-    // return all from DB except for password
 
-    const student = await Students.findById(res.user.userId).select("-password").exec();
-    let majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
+
+    // return all from DB except for password
+    const student = await Students.findById(res.user.userId).select("-password").populate('major').exec();
+    let majors = await Majors.find({college : res.user.college}).exec()
+    const majorsArr = []
+    for(let major of majors){
+        let majorObj = {}
+        majorObj['_id'] = major._id.toString()
+        majorObj['name'] = major.name
+        majorObj['code'] = major.code
+
+        majorsArr.push(majorObj)
+    }
+
+    // let majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
     if(!req.body){
         return res.sendStatus(400);
     }
     // on Edit button click activate Edit mode and render
     else if(req.body.hasOwnProperty("StuEditBtn")){
         // For keeping User inputs
-        let majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
-        for (let element in majorsSelection){
-            if (student.major === element){
-                majorsSelection[element] = true;
-                break;
-            }
-        }
+        // let majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
+        // for (let element in majorsSelection){
+        //     if (student.major === element){
+        //         majorsSelection[element] = true;
+        //         break;
+        //     }
+        // }
+        // let selectedMajor;
+        // for (let major of majorsArr){
+        //     if (student.major === major._id){
+        //          majorSelection = major._id
+        //         break;
+        //     }
+        // }
 
         let maritalSelection = {'single':false, 'married':false}
         for (let element in maritalSelection){
@@ -98,7 +119,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
         email: student.email,
         stuId: student.id,
         stuName: student.name,
-        major: student.major,
+        major: student.major._id.toString(),
         marital_status: student.marital_status,
         level: student.level,
         family_members_count: student.family_members_count,
@@ -108,9 +129,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
         reference_person: student.reference_person,
         reference_person_phone: student.reference_person_phone,
         advisor: student.advisor,
-        CS : majorsSelection["computer science"],
-        IT : majorsSelection["information technology"],
-        IS : majorsSelection["information system"],
+        majors : majorsArr,
         single : maritalSelection.single,
         married : maritalSelection.married,
         editMode: true,
@@ -132,13 +151,13 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                        invalid[element] =true
                 }
                 // For keeping User inputs
-             majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
-            for (let element in majorsSelection){
-                if (req.body.major === element){
-                    majorsSelection[element] = true;
-                break;
-                }
-            }
+            //  majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
+            // for (let element in majorsSelection){
+            //     if (req.body.major === element){
+            //         majorsSelection[element] = true;
+            //     break;
+            //     }
+            // }
 
             let maritalSelection = {'single':false, 'married':false}
             for (let element in maritalSelection){
@@ -150,7 +169,8 @@ exports.renderStudentProfileEdit = async (req, res) =>{
             return res.status(422).render('studentPages/studentProfile', {
                 stuId: student.id,
                 stuName: student.name,
-                major: req.body.major,
+                major: req.body.major.toString(),
+                majors : majorsArr,
                 marital_status: req.body.martialStatus,
                 family_members_count: req.body.familyMembersCount,
                 order_in_family: req.body.orderInFamily,
@@ -159,9 +179,9 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                 reference_person: req.body.referencePerson,
                 reference_person_phone: req.body.referencePersonPhone,
                 advisor: req.body.advisor,
-                CS : majorsSelection["computer science"],
-                IT : majorsSelection["information technology"],
-                IS : majorsSelection["information system"],
+                // CS : majorsSelection["computer science"],
+                // IT : majorsSelection["information technology"],
+                // IS : majorsSelection["information system"],
                 single : maritalSelection.single,
                 married : maritalSelection.married,
                 invalid : invalid,
@@ -194,7 +214,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                     res.render('studentPages/studentProfile', {
                         stuId: student.id,
                         stuName: student.name,
-                        major: student.major,
+                        major: student.major._id.toString(),
                         marital_status: student.marital_status,
                         family_members_count: student.family_members_count,
                         order_in_family: student.order_in_family,
@@ -210,12 +230,13 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                     });
                 }
                 else{
+                    console.log(docs.major.name)
                     // success => return new doc with success msg
                     res.render('studentPages/studentProfile', {
                         email: docs.email,
                         stuId: docs.id,
                         stuName: docs.name,
-                        major: docs.major,
+                        major: docs.major.name,
                         marital_status: docs.marital_status,
                         family_members_count: docs.family_members_count,
                         order_in_family: docs.order_in_family,
@@ -230,7 +251,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                         editMode : false,
                     });
                 }
-            });
+            }).populate('major');
         }
 }
 

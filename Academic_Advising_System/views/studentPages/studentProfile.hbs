@@ -38,6 +38,7 @@
                                 <div class="card-body pt-0">
                                     <form method="post" name="stuProfile" >
                                         <table class="table table-bordered">
+
                                             {{#if valErrors}}
                                             <h3 class="Errors">   {{valErrors}} </h3>
                                             {{/if}}
@@ -45,15 +46,14 @@
                                                 <th >Major</th>
                                                 <!--                                        <td width="2%">:</td>-->
                                                 <td>
-
-                                                    <select name="major" class="form-select"  aria-label="Select Major"  required>
-                                                        <option value="" selected>Select Major</option>
-                                                        <option value="computer science" {{#if CS}} selected {{/if}}>Computer Science</option>
-                                                        <option value="information technology" {{#if IT}} selected {{/if}}>Information Technology</option>
-                                                        <option value="information system" {{#if IS}} selected {{/if}}>Information System</option>
-                                                    </select>
-                                                </td>
+                                                <select name="major" class="form-select"  aria-label="Select Major" required>
+                                                    {{#each majors}}
+                                                        <option value="{{this._id}}" {{#when this._id 'eq' ../major}} selected {{/when}}>{{this.name}}</option>
+                                                {{/each}}
+                                            </select>
+                                            </td>
                                             </tr>
+
                                             <tr>
                                                 <th >Marital Status:</th>
                                                 <!--                                        <td width="2%">:</td>-->
