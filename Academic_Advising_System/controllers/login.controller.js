@@ -138,9 +138,10 @@ exports.logout = (req, res) => {
     res.clearCookie('authorization')
     res.status(200).redirect('/')
 }
+
 async function getSemester(){
     let currentDate = new Date(Date.now())
-    let currentSemester =1;
+    let currentSemester;
     const semesters = await Semesters.find({})
     for (let semester of semesters){
         if((semester.startDate.getTime() < currentDate)&&(semester.endDate.getTime() > currentDate)){

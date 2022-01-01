@@ -14,6 +14,7 @@ const semesters = new Schema({
       type: String,
         required:true
     },
+    college: { type: Schema.Types.ObjectId , ref : 'colleges'},
 })
 
 const Semesters = mongoose.model('semesters', semesters)

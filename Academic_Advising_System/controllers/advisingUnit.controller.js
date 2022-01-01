@@ -656,15 +656,39 @@ exports.renderPostManageMajors = async (req, res) => {
 
 
 exports.renderGetManageSemesters = async (req, res) => {
-  // let d = new Date(Date.now());
-  //
-  // console.log(  d.toString())
-
-console.log(res.user)
-
-  res.render("advisingUnitPages/aauManageSemesters", {
-    layout: "advisingUnit",
-  });
+  try {
+    let currentSemester;
+    const semestersArr = []
+   const semesters = await Semesters.find({college :res.user.college }).exec()
+      if (!semesters) {
+        throw new Error('no semesters found')
+      }
+        for(let semester of semesters){
+          if (res.user.semester === semester.code){
+            currentSemester = semester
+          }
+          let semesterObj = {}
+          semesterObj['startDate'] = semester.startDate
+          semesterObj['endDate'] = semester.endDate
+          semesterObj['code'] = semester.code
+          semestersArr.push(semesterObj)
+        }
+      res.render("advisingUnitPages/aauManageSemesters", {
+        hasError : false,
+        semesters: semestersArr,
+        currentStartDate: currentSemester.startDate,
+        currentEndDate: currentSemester.endDate,
+        currentCode: currentSemester.code,
+        layout: "advisingUnit",
+      });
+    }
+  catch (e) {
+    res.render("advisingUnitPages/aauManageSemesters", {
+      hasError: true,
+      err: e.message,
+      layout: "advisingUnit",
+    });
+  }
 }
 
 
@@ -690,13 +714,29 @@ exports.renderPostManageSemesters = async (req, res) => {
       //get last two digits of hijri date and add period value to it ex 1441 + summer = 413
       let code = HijriYear.toString().substring(2) + period
 
-
-      const semesterExist = await Semesters.exists({code:code})
-      if(semesterExist){
-        throw new Error('semester already Exits')
+      //checks if semester code exits
+      // const semesterExist = await Semesters.exists({code:code})
+      // if(semesterExist){
+      //   throw new Error('semester already Exits')
+      // }
+      let sDate = new Date(startDate)
+      let eDate = new Date(endDate)
+      if (eDate.getTime() < sDate.getTime()){
+        throw new Error('end date is before start date !')
+      }
+      // checks if time periods or code already exists
+      const semesters = await Semesters.find({college :res.user.college }).exec()
+      for (let semester of semesters){
+        if (((sDate.getTime() >=  semester.startDate.getTime())&& (eDate.getTime() <= semester.endDate.getTime()))||
+        ((sDate.getTime() <= semester.startDate.getTime()) &&(eDate.getTime() >= semester.startDate.getTime()))||
+        ((sDate.getTime() <= semester.endDate.getTime()) &&(eDate.getTime() >= semester.endDate.getTime()))||
+            (semester.code === code )){
+        // if((sDate.getTime() < semester.endDate.getTime() )||(eDate.getTime() < semester.startDate.getTime())|| (semester.code === code )){
+          throw new Error('an existing semester contradicts with the time period')
+        }
       }
       //create doc
-      const classSemester = await new Semesters({startDate: startDate, endDate: endDate, code: code})
+      const classSemester = await new Semesters({startDate: startDate, endDate: endDate, code: code, college:res.user.college})
       //save doc
       classSemester.save(function (err, excuse) {
         if (err) {
