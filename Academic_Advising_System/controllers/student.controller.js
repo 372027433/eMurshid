@@ -1,7 +1,7 @@
 //express imports
 const fs = require('fs');
 const path = require('path');
-
+const mongoose = require('mongoose');
 const studentRouter = require("../routes/student.router");
 const {renderMyMessages} = require("./student.controller");
 // define multer lib
@@ -15,6 +15,11 @@ const staff = require('../models/staff.model')
 // Students MODEL
 const Students = require('../models/student.model')
 
+// AdvisorTimes
+const AdvisorTimes = require('../models/advisorTimes.model');
+
+// reserved times model
+const ReservedTimes = require('../models/ReservedTimes.model');
 
 //Absence Model
 const Excuses = require('../models/AbsenceExcuse.model')
@@ -33,8 +38,10 @@ const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
 
 
-exports.renderMainPage = (req, res) => {
+exports.renderMainPage = async (req, res) => {
+    const student = await Students.findById(res.user.userId).select("-password").exec();
     res.render('studentPages/studentMain',{
+        userName : student.name,
         layout: 'student'
     })
 };
@@ -55,6 +62,7 @@ exports.renderStudentProfile = async (req, res) => {
         reference_person_phone: student.reference_person_phone,
         advisor: student.advisor,
         editMode : false,
+        userName : student.name,
         layout: 'student',
     });
 };
@@ -106,6 +114,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
         single : maritalSelection.single,
         married : maritalSelection.married,
         editMode: true,
+        userName : student.name,
         layout: 'student',
     });
         // On Update Button Click
@@ -158,6 +167,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                 invalid : invalid,
                 editMode : true,
                 valErrors : validationErrors.array()[0].msg,
+                userName : student.name,
                 layout: 'student',
             });
         }
@@ -195,6 +205,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                         advisor: student.advisor,
                         editMode : false,
                         errorMessage : error.message,
+                        userName : student.name,
                         layout: 'student',
                     });
                 }
@@ -215,6 +226,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                         advisor: docs.advisor,
                         layout: 'student',
                         successMessage : "Data Updated Successfully",
+                        userName : student.name,
                         editMode : false,
                     });
                 }
@@ -224,15 +236,17 @@ exports.renderStudentProfileEdit = async (req, res) =>{
 
 
 
-exports.renderContactAdvisor = (req, res) => {
+exports.renderContactAdvisor = async (req, res) => {
+    const student = await Students.findById(res.user.userId).select("-password").exec();
     res.render('studentPages/contactStudentToAdvisor', {
+        userName : student.name,
         layout: 'student'
     });
 };
 
 exports.renderMyMessages = async (req, res) => {
   let x = await message.find({"msgto" : `${res.user.userId}`}).populate('msgfrom','name -_id').exec(async function(err,posts){
-
+    const student = await Students.findById(res.user.userId).select("-password").exec();
     let resevedmsg = await message.find({"msgfrom" : `${res.user.userId}`}).populate('msgto','name -_id');
     // ther is ero her that the msg from advisor return null
     if(err){
@@ -245,6 +259,7 @@ exports.renderMyMessages = async (req, res) => {
          res.render('studentPages/studentMessages' , {
              messagesList : posts.reverse(),
              reseved : resevedmsg.reverse(),
+             userName : student.name,
              layout : 'student'
          })      
         } 
@@ -253,32 +268,187 @@ exports.renderMyMessages = async (req, res) => {
 };
 
 
-exports.renderBookAppointment = (req, res) => {
+exports.renderBookAppointment = async (req, res) => {
+
+    /**
+     * get the student advisor 
+     * // 
+     */
+    let student = await Students.findOne({_id: res.user.userId})
+
+    let sunday=[], monday=[], tuesday=[], wednesday=[], thursday = [];
+    let foundTimes = false ;
+    let advisorTimes = await AdvisorTimes.findOne({advisor: student.advisor_id})
+
+    if(advisorTimes){
+        foundTimes = true ;
+        advisorTimes.sunday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; sunday.push(obj)})
+        advisorTimes.monday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; monday.push(obj)})
+        advisorTimes.tuesday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; tuesday.push(obj)})
+        advisorTimes.wednesday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; wednesday.push(obj)})
+        advisorTimes.thursday.durations.forEach((time,index) => {let obj={}; obj['from']=time.from; obj['to']= time.to; thursday.push(obj)})
+    }
+    let now = Date.now();
+    let afterWeekTime = 14 * 24 * 60 * 60 * 1000 ;
+
+    let dateAfterWeek = new Date(now + afterWeekTime ).toISOString().split('T')[0];
+    let thisDay = new Date(now).toISOString().split('T')[0];
+
     res.render('studentPages/bookAppointment', {
-        layout: 'student'
+        layout: 'student',
+        minDate: thisDay,
+        maxDate: dateAfterWeek ,
+        foundTimes,
+        sunday,
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
     });
 };
 
-exports.renderUpdateMarks = (req, res) => {
+// add validation on date on req.body
+const datesObject = {
+    0: 'sunday',
+    1:'monday',
+    2:'tuesday',
+    3:'wednesday',
+    4:'thursday',
+    5:'friday',
+    6:'saturday',
+}
+exports.showAvailabilityTimes = async (req, res) => {
+
+    const day = new Date(req.body.date);
+
+    let isValidDate = day instanceof Date && !isNaN(day.valueOf());
+
+    if(!isValidDate){
+        return res.status(400).json({msg: 'bad input'});
+    }
+    let dayNumber = day.getDay();
+
+    if(dayNumber == 5 || dayNumber == 6){
+        return res.status(400).json({msg: 'this day is in weekend'});
+    }
+    
+    let selectedDay = datesObject[dayNumber];
+
+    const student = await Students.findOne({_id:res.user.userId});
+    const advisorTimes = await AdvisorTimes.findOne({advisor: student.advisor_id});
+
+    const selectedAdvisorTimes = advisorTimes[selectedDay].durations ;
+    
+    // based on the day selected will select the day
+    let now = day.getTime();
+    
+    const dayReservedAppointments = await ReservedTimes.find({
+        advisor: mongoose.Types.ObjectId(student.advisor_id),
+        date: {
+            $gte: now,
+            $lt: now + (24* 60 * 60 * 1000) -1,
+        }
+    });
+    const availableTime = [];
+    for(let obj of selectedAdvisorTimes){
+        availableTime.push({from:obj.from, to: obj.to});
+        
+        for(let reservedDays of dayReservedAppointments){
+            if(obj.to == reservedDays.to && obj.from == reservedDays.from){
+                availableTime.pop();
+            }
+        }
+    }
+
+    res.json({
+        day: selectedDay,
+        appointments: availableTime,
+    })
+}
+
+// check the object and see if it has the required params.
+
+exports.bookTimeWithAdvisor = async (req, res) => {
+
+    const student = await Students.findOne({_id:res.user.userId});
+    
+    let bookedTime = req.body.time; // will have to, from , day
+    
+    let appointmentDay = new Date(bookedTime.date).getTime();
+
+    let BookedAppointment = {
+        student: student._id,
+        advisor: student.advisor_id,
+        to: bookedTime.to,
+        day: bookedTime.day, 
+        from: bookedTime.from,
+        date: appointmentDay,
+    }
+
+    let createdAppointment = await ReservedTimes.create([BookedAppointment]);
+
+    res.json({
+        msg: 'you have successfully created appointment',
+        appointment: createdAppointment,
+    })
+}
+
+exports.renderReservedAppointments = async (req, res) => {
+    
+    let reservedTimes = await ReservedTimes.find({student:res.user.userId}); 
+
+    let appointments = [];
+    for(let time of reservedTimes){
+        let obj = {};
+        obj['isCanceled'] = time.isCanceled;
+        obj['accepted'] = time.accepted;
+        obj['isCompleted'] = time.isCompleted;
+        obj['to'] = time.to;
+        obj['from'] = time.from;
+        obj['day'] = time.day;
+        obj['date'] = (new Date(time.date).toISOString()).split('T')[0];
+
+        appointments.push(obj)
+    }
+    
+    res.render('studentPages/showAppointments', {
+        layout: 'student',
+        appointments 
+    });
+};
+ 
+
+exports.renderUpdateMarks = async (req, res) => {
+    const student = await Students.findById(res.user.userId).select("-password").exec();
+
     res.render('studentPages/studentUpdateMarks', {
+        userName : student.name,
         layout: 'student'
     });
 };
 
-exports.renderUpdateAbsence = (req, res) => {
+exports.renderUpdateAbsence = async (req, res) => {
+    const student = await Students.findById(res.user.userId).select("-password").exec();
     res.render('studentPages/studentUpdateAbsence', {
+        userName : student.name,
         layout: 'student'
     });
 };
 
 exports.renderNewComplaint = async (req, res) => {
-    const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
-    const getinarr = getstuinfo[0];
+    let thedatenow = new Date();
+
+    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const stuName = student.name;
+    const stuId = student.id;
+    const major = student.major;
+    const level = student.level;
     res.render('studentPages/studentNewComplaint', {
-        stuname :getinarr.name ,
-        stuid : getinarr.id,
-        stumajor : getinarr.major,
-        stuadvisor : getinarr.advisor_id.name,
+        stuName :stuName ,
+        stuId : stuId,
+        major : major,
+        level :level,
+        userName : student.name,
         layout: 'student'
     });
 };
@@ -293,6 +463,7 @@ exports.renderGetNewAbsenceExcuse = async (req, res) => {
         stuId : student.id,
         major : student.major,
         level : student.level,
+        userName : student.name,
         layout: 'student'
     });
 };
@@ -384,6 +555,7 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
                     dateFrom: dateFrom,
                     dateTo : dateTo,
                     info:info,
+                    userName : student.name,
                 },
                 errorMsg : 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code ,
                 layout: 'student',
@@ -391,21 +563,20 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
 
         }
         else{
-            console.log('here')
             // get the file after it was filtered and was successfully uploaded to the server
             const proof = req.file;
-            console.log(proof)
+
             // upload file to AWS S3
         const result = await uploadFile(proof);
             //Delete the file from the server
         await unlinkFile(proof.path)
-        console.log(result)
             // get File Key from AWS S3 to save in DB
            const  proofURI = result.Key;
 
         //save the data in the DB
+
             const classExcuse = new Excuses ({type:'classAbsence',exam:false, dateFrom:dateFrom, dateTo: dateTo, status:'pending' , info:info , student:res.user.userId ,proof:proofURI,semester:res.user.semester})
-            console.log(classExcuse)
+
             classExcuse.save(function (err, excuse){
                 if (err) {
                     return console.error(err);
@@ -416,6 +587,7 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
                     stuId : stuId,
                     major:major,
                     level:level,
+                    userName : student.name,
                     oldData : {
                         dateFrom: dateFrom,
                         dateTo : dateTo,
@@ -473,6 +645,7 @@ exports.renderGetNewExamExcuse = async (req,res) =>{
             stuId : student.id,
             major : student.major,
             level : student.level,
+            userName : student.name,
             layout: 'student'
         });
 }
@@ -573,18 +746,17 @@ exports.renderPostNewExamExcuse = async (req, res) => {
                     info: info,
                 },
                 errorMsg: 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code,
+                userName : student.name,
                 layout: 'student',
             })
 
         } else {
             // get the file after it was filtered and was successfully uploaded to the server
             const proof = req.file;
-            console.log(proof)
             // upload file to AWS S3
             const result = await uploadFile(proof);
             //Delete the file from the server
             await unlinkFile(proof.path)
-            console.log(result)
             // get File Key from AWS S3 to save in DB
             const proofURI = result.Key;
 
@@ -598,7 +770,6 @@ exports.renderPostNewExamExcuse = async (req, res) => {
                 proof: proofURI,
                 semester: res.user.semester
             })
-            console.log(classExcuse)
             classExcuse.save(function (err, excuse) {
                 if (err) {
                     return console.error(err);
@@ -613,6 +784,7 @@ exports.renderPostNewExamExcuse = async (req, res) => {
                         info: info,
                     },
                     successMsg: 'Your excuse was sent successfully',
+                    userName : student.name,
                     layout: 'student',
                 })
             });
@@ -645,6 +817,7 @@ exports.messagesend = async (req, res) => {
     messagerecord.save();
 
     res.render("studentPages/contactStudentToAdvisor",{
+        userName : student.name,
         layout: 'student' 
     })
     
@@ -652,16 +825,64 @@ exports.messagesend = async (req, res) => {
 
 exports.submitcomp = async (req, res) => {
     let thedatenow = new Date();
-    let complrecord = new Complaint({
-        compfrom : res.user.userId ,
-        disc : req.body.DisComp,
-        prove : "filepath",
-        diss : "null",
-        dateofdiss : "null",
-        dateofsubmit : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
-    });
-    complrecord.save();
-    console.log("uploaded sucssec")
+
+    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const stuName = student.name;
+    const stuId = student.id;
+    const major = student.major;
+    const level = student.level;
+    if (req.uploadError) {
+        console.log(req.uploadError)
+        res.status(422).render('studentPages/studentNewComplaint', {
+            hasError: true,
+            stuName: stuName,
+            stuId: stuId,
+            major: major,
+            level: level,
+            errorMsg: 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code,
+            userName : student.name,
+            layout: 'student',
+        })
+
+    } else {
+        // get the file after it was filtered and was successfully uploaded to the server
+        const proof = req.file;
+        // upload file to AWS S3
+        const result = await uploadFile(proof);
+        //Delete the file from the server
+        await unlinkFile(proof.path)
+        // get File Key from AWS S3 to save in DB
+        const proofURI = result.Key;
+
+        //save the data in the DB
+        const complrecord = new Complaint({
+            compfromstudent : res.user.userId ,
+            compfromadvisor : null,
+            role : false,
+            disc : req.body.DisComp,
+            prove : proofURI,
+            diss : "null",
+            dateofdiss : "null",
+            dateofsubmit : `${thedatenow.getDate()}/${thedatenow.getMonth()+1}/${thedatenow.getFullYear()}`
+        });
+        complrecord.save(function (err, excuse) {
+            if (err) {
+                return console.error(err);
+            }
+            res.render('studentPages/studentNewComplaint', {
+                hasError: false,
+                stuName: stuName,
+                stuId: stuId,
+                major: major,
+                level: level,
+                successMsg: 'Your complain was sent successfully',
+                userName : student.name,
+                layout: 'student',
+            })
+        });
+    }
+
+   
     const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
     const getinarr = getstuinfo[0];
     res.render('studentPages/studentNewComplaint', {
@@ -669,7 +890,48 @@ exports.submitcomp = async (req, res) => {
         stuid : getinarr.id,
         stumajor : getinarr.major,
         stuadvisor : getinarr.advisor_id.name,
+        userName : student.name,
         layout: 'student'
     });
     
 }
+
+
+
+exports.rendershowTheResultOfComplain = async (req, res) => {
+    const student = await Students.findById(res.user.userId).select("-password").exec();
+
+      
+   let complaintforuser = await Complaint.find({"compfromstudent": `${res.user.userId}`}).populate('compfromstudent', 'name id -_id').populate('compfromadvisor', 'name id -_id');
+   // ther is ero her that the msg from advisor return null
+  
+   let readydata = [] ;
+   for(let c = 0 ; c < complaintforuser.length;c++){
+     let tempobj ={};
+     tempobj = complaintforuser[c];
+     
+     let obj={
+       Complaintid:tempobj._id,
+      compfromstudent_id : tempobj.compfromstudent?.id ? tempobj.compfromstudent?.id : 'a6s5d4f6as54df64a' ,
+      compfromstudent_name : tempobj.compfromstudent?.name ? tempobj.compfromstudent.name : "khaled student",
+      compfromadvisor_id : tempobj.compfromadvisor?.id? tempobj.compfromadvisor.id : 'sd6f46sa54df987sdf' ,
+      compfromadvisor_name : tempobj.compfromadvisor?.name ? tempobj.compfromadvisor.name : 'saliem advisor',
+      role : tempobj.role,
+      disc : tempobj.disc,
+      prove : tempobj.prove,
+      dateofsubmit : tempobj.dateofsubmit,
+      diss : tempobj.diss,
+      dateofdiss : tempobj.dateofdiss
+     };
+     readydata.push(obj);       
+
+   }
+
+
+    //**************************************** */
+    res.render('studentPages/showTheResultOfComplain',{
+        userName : student.name,
+        compList: readydata.reverse(),
+        layout: 'student'
+    })
+};

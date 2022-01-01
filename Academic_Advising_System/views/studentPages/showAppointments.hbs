@@ -1,0 +1,51 @@
+
+<div class="main-content">
+    <div class="content">
+        <div class="body-header">
+            <header>
+                <h1><span class="trn">My Appointments</span></h1>
+            </header>
+            <hr>
+        </div>
+        <div class="body-content" style="text-align: initial;">
+
+            <div class="">
+                {{#each appointments}}
+                    {{log this}}
+                    {{#if isCompleted}}
+
+                    <div class="row my-2 py-3 px-1 border border-2 border-success bg-light">
+                        
+                    {{else}}
+                    
+                    <div class="row my-2 py-3 px-1 border border-2 border-danger bg-light">
+                        
+                    {{/if}}
+                    {{!-- <div class="row my-2 py-3 px-1 border border-2 border-dark bg-light"> --}}
+                        <div class="col-sm-12">
+                                <b>Time:</b> {{date}}
+                        </div>
+                        <div class="col-sm-12">
+                            <b>from:</b> {{from}} , <b>to:</b> {{to}}
+                        </div>
+                         <div class="col-sm-12">
+                            <b>Finished:</b> 
+                            {{#if isCompleted}}
+                                <span>Yes</span>
+                            {{else}}
+                                <span>No</span>
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+
+            {{!-- <div class="row">
+                <div class="border border-2 border-dark bg-light">
+                    <span><b>Time:</b></span> 10/10/2020<br>
+                    from: 10:00 , to 10:15
+                </div>
+            </div> --}}
+        </div>
+    </div>
+</div>

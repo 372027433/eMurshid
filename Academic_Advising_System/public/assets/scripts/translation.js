@@ -1,6 +1,9 @@
 let navTrans = {
 
     /* Student Nav */
+    "عربي": {
+        ar: "English",
+    },
     "personal file": {
         ar: 'الملف الشخصي',
     },
@@ -34,6 +37,16 @@ let navTrans = {
     "Excuses": {
         ar: "الأعذار",
     },
+    "Sign out": {
+        ar: "تسجيل خروج",
+    },
+  
+    "": {
+        ar: "",
+    },
+  
+    
+
     /* Advisor Nav */
     "personal profile": {
         ar: "الملف الشخصي",
@@ -67,6 +80,9 @@ let navTrans = {
         ar: "طلاب الكلية",
     },
     "resolve excuses": {
+        ar: "معالجة الأعذار",
+    },
+    "resolve Complaint": {
         ar: "معالجة الشكاوى",
     },
     "register students": {
@@ -185,8 +201,14 @@ let mainContentTrans = {
     "Resolve Excuses": {
         ar: "معالجة الأعذار",
     },
-    "": {
-        ar: "",
+    "student Information": {
+        ar: "معلومات الطالب",
+    },
+    "Discribe your Complaint and/or appeal case": {
+        ar: "شرح المشكلة",
+    },
+    "provid supporting documents": {
+        ar: "اثبات للمشكلة",
     },
 
 
@@ -215,6 +237,9 @@ let mainContentTrans = {
 
     "Resolve Excuses": {
         ar: "معالجة الأعذار",
+    },
+    "Resolve Complaint": {
+        ar: "معالجة الشكاوى",
     },
 
 

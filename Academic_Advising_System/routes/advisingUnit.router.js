@@ -63,6 +63,8 @@ advisingUnitRouter.get('/collegeStudents',controller.renderCollegeStudents);
 
 advisingUnitRouter.get('/resolveExcuses', controller.renderGetResolveExcuses );
 advisingUnitRouter.post('/resolveExcuses', controller.renderPostResolveExcuses);
+advisingUnitRouter.get('/SolvingComplains', controller.renderSolvingComplains)
+advisingUnitRouter.get('/SolvingComplains/proof/:key',controller.renderGetProof);
 advisingUnitRouter.get('/resolveExcuses/proof/:key',controller.renderGetProof);
 
 
@@ -75,6 +77,7 @@ advisingUnitRouter.get('/assign',controller.renderAssignStudentsToAdvisors);
 
 advisingUnitRouter.put('/assign',controller.assignStudentsToAdvisors);
 
+
 advisingUnitRouter.get('/addCourses',controller.renderGetAddCourses);
 advisingUnitRouter.post('/addCourses',upload,controller.renderPostAddCourses);
 
@@ -84,6 +87,9 @@ advisingUnitRouter.get('/mangeMajors',controller.renderGetManageMajors);
 
 advisingUnitRouter.get('/manageSemesters',controller.renderGetManageSemesters);
 advisingUnitRouter.post('/manageSemesters',controller.renderPostManageSemesters);
+
+advisingUnitRouter.post('/SolvingComplains/solvecomplan' , controller.solvecomp)
+
 
 
 module.exports = advisingUnitRouter ;

@@ -1,0 +1,128 @@
+<main class="main-content">
+    <div class="content">
+        <div class="body-header">
+            <header>
+                <h1><span class="trn">Resolve Complaint</span></h1>
+            </header>
+            <hr>
+        </div>
+        <div class="body-content">
+               <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+                <div class="container">
+
+                            <div id="conten" style="overflow: scroll;" class="users-container">
+                                                          
+                                <ul class="users">
+                                        {{#each compList}}
+                                                {{#if this.role}}
+                                                    <li class="person" data-chat="person1">
+                                                         <button type="button" style="background-color : #d9bc89;" class="person" data-bs-toggle="modal" data-bs-target="#a{{this.Complaintid}}" >
+                                                                       
+                                                        <div class="user" id="advisor">
+                                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Retail Admin">
+                                                            <span class="status offline"></span>
+                                                        </div>
+                                                        <p class="name-time">
+                                                            <span id="name" class="name" >{{this.compfromadvisor_name}}</span>
+                                                            <span id="id" style="color: black;" class="time">{{this.compfromadvisor_id}}</span>
+                                                            
+                                                        </p>
+                                                       </button>
+                                                    </li>
+
+                                                                                                                   <!-- Modal -->
+                                                                 <div class="modal fade" id="a{{this.Complaintid}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog" role="document">
+                                                                    <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">Complaint</h5>
+                                                                                                                                              
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                            <div class="user">
+                                                                                <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Retail Admin">
+                                                                                <span class="status offline"></span>
+                                                                            </div>
+                                                                        <form method="post"  id="msgcontaint" action="/advisingUnit/SolvingComplains/solvecomplan">
+                                                                        <input name="compid" id="compid" value="{{this.Complaintid}}" readonly style="display: none;">
+                                                                           <h5  dir="ltr">complaint form :<br>{{this.compfromadvisor_name}} <br> <input class="msgto" name="msgto" id="msgto" type="text" value="{{this.compfromadvisor_id}}" readonly required> </h5> 
+                                                                        {{!-- <h5  dir="ltr">The Title : <br> <input class="titelMsg" name="Titelmsg" id="Titelmsg" type="text" required> </h5>  --}}
+                                                                        <h5 dir="ltr">The Complaint :</h5>  <div><textarea readonly style="resize: initial; background: snow; margin: 8px; padding: 5px; height: 70px; width: 80%;">{{this.disc}}</textarea></div>
+                                                                        <h5 dir="ltr">The proof :</h5> <a href="/advisingUnit/SolvingComplains/proof/{{this.prove}}" target="_blank"> <b style="background:#0087b6 ;" class="submetbtn">proof </b> </a><br>
+                                                                          <h5 dir="ltr">The Decision  :</h5> <textarea class="Msg" name="diss" id="diss" type="text" required>{{this.diss}}</textarea> <br>
+                                                                          <br>
+                                                                          <h6>Date of submiting The Decision : {{this.dateofdiss}} </h6>
+                                                                        <button type="submit" class="submetbtn" >send</button>
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                       
+                                                                    </div>
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+
+                                                                
+                                                {{else}}
+                                                {{!-- --------------------student-------------------------- --}}
+                                                     <li class="person" data-chat="person1">
+                                                         <button type="button" class="person" style="background-color: #00669983;" data-bs-toggle="modal" data-bs-target="#a{{this.Complaintid}}" >
+                                                                       
+                                                        <div class="user" id="student">
+                                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar2.png" alt="Retail Admin">
+                                                            <span class="status offline"></span>
+                                                        </div>
+                                                        <p class="name-time">
+                                                            <span id="name" class="name" >{{this.compfromstudent_name}}</span>
+                                                            <span id="id" C class="time">{{this.compfromstudent_id}}</span>
+                                                            
+                                                        </p>
+                                                       </button>
+                                                    </li>
+
+                                                                                                                   <!-- Modal -->
+                                                                 <div class="modal fade" id="a{{this.Complaintid}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog" role="document">
+                                                                    <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">Complaint</h5>
+                                                                                                                                              
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                            <div class="user">
+                                                                                <img src="https://www.bootdey.com/img/Content/avatar/avatar2.png" alt="Retail Admin">
+                                                                                <span class="status offline"></span>
+                                                                            </div> 
+                                                                            {{!-- انتبه هنا بالاكشن لازم يتعدل --}}
+                                                                        <form method="post"  id="msgcontaint" action="/advisingUnit/SolvingComplains/solvecomplan">
+                                                                        <input name="compid" id="compid" value="{{this.Complaintid}}" readonly style="display: none;">
+                                                                        <input  id="role" value="{{this.role}}" readonly style="display: none;">
+                                                                        <h5  dir="ltr">complaint form :<br>Name :{{this.compfromstudent_name}} <br> ID : <input class="msgto" name="compfrom" id="compfrom" type="text" value="{{this.compfromstudent_id}}" readonly required><br></h5> 
+                                                                        {{!-- <h5  dir="ltr">The Title : <br> <input class="titelMsg" name="Titelmsg" id="Titelmsg" type="text" required> </h5>  --}}
+                                                                        <h5 dir="ltr">The Complaint :</h5>  <div><textarea readonly style="resize: initial; background: snow; margin: 8px; padding: 5px; height: 70px; width: 80%;">{{this.disc}}</textarea></div>
+                                                                        <h5 dir="ltr">The proof :</h5> <a href="/advisingUnit/SolvingComplains/proof/{{this.prove}}" target="_blank"> <b style="background:#0087b6 ;" class="submetbtn">proof </b> </a><br>
+                                                                        <h5 dir="ltr">The Decision  :</h5> <textarea class="Msg" name="diss" id="diss" type="text" required >{{this.diss}}</textarea> <br>
+                                                                        <h6>Date of submiting The Decision : {{this.dateofdiss}} </h6>
+                                                                        <button type="submit" class="submetbtn" >send</button>
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                       
+                                                                    </div>
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                
+                                                {{/if}}
+
+                                        {{/each}}
+                                        </div>
+                                </ul>
+                            </div>
+                        </div>
+                    <!-- Row end -->            
+        </div>
+    </div>
+</main>
