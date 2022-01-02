@@ -113,7 +113,6 @@ exports.renderGetResolveExcuses = async (req, res) => {
      
     let x = await Complaint.find({}).populate('compfromstudent', 'name id -_id').populate('compfromadvisor', 'name id -_id');
      // ther is ero her that the msg from advisor return null
-    console.log('\t\t\twe are here')
      let readydata = [] ;
      for(let c = 0 ; c < x.length;c++){
        let tempobj ={};
@@ -135,8 +134,6 @@ exports.renderGetResolveExcuses = async (req, res) => {
        readydata.push(obj);       
 
      }
-    //  console.log('ready state')
-     console.log(readydata)
 
     //  if (err) {
         //  res.render('advisingUnitPages/aauSolvingComplains', {
@@ -351,11 +348,8 @@ exports.assignStudentsToAdvisors =  async (req, res) => {
   const { studentsMongoId,
     studentId} = req.body.data
 
-    console.log('mogo',studentsMongoId)
-    console.log("studentId: ",studentId)
   try {
     let a = await AdvivsorStudents.findOne({advisor: advisorID})
-    console.log(a.students)
     a.students = [...a.students, ...studentsMongoId]
     a.save();
 
