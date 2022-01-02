@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser')
 const hbs = require('express-handlebars')
 // use to add either dean or advisingUnitMember
 const roles = require('./utils/roles');
-const faculty = require('./utils/facultyType')
+// const faculty = require('./utils/facultyType')
 let {addAdmins} = require('./utils/addAdminsToSystem')
 
 

@@ -18,12 +18,12 @@ const AdvivsorStudents = require('../models/studentsAdvisor')
 const Courses =  require('../models/courses.model')
 const Majors =  require('../models/majors.model')
 const Semesters = require('../models/semesters.models')
-
+const Colleges = require('../models/colleges.model')
 
 
 // functions and libraries
 const roles = require('../utils/roles')
-const college = require('../utils/facultyType')
+// const college = require('../utils/facultyType')
 
 // util Functions
 const {passwordGenerator} = require('../utils/generatePassword');
@@ -62,7 +62,7 @@ exports.renderMainPage = (req, res) => {
 
 exports.renderCollegeStudents = async (req, res) => {
   try{
-    let collegeStudents = await Students.find({faculty_id: res.user.faculty}).select('-password').populate('advisor_id')
+    let collegeStudents = await Students.find({college: res.user.college}).select('-password').populate('advisor_id')
 
     const students = []
     for(let student of collegeStudents){
@@ -249,7 +249,7 @@ exports.registerAdvisors = async (req, res) => {
     userObj.password = hashedPassword ;
 
     userObj.id = id;
-    userObj.faculty_id = res.user.faculty;
+    // userObj.faculty_id = res.user.faculty;
     userObj.college = res.user.college;
     
     userObj.email = `${id}@iu.edu.sa`;
@@ -322,8 +322,8 @@ exports.registerAdvisors = async (req, res) => {
 exports.renderAssignStudentsToAdvisors = async (req, res) => {
 
   // get all list of advisors
-  let advisors = await Staff.find({faculty_id:res.user.faculty, role: roles.advisor})
-  let students = await Students.find({faculty_id:res.user.faculty}, 'id name status advisor_id')
+  let advisors = await Staff.find({college:res.user.college, role: roles.advisor})
+  let students = await Students.find({college:res.user.college}, 'id name status advisor_id')
 
   let unassignedStudents = [];
   for(let i = 0; i< students.length; i++){

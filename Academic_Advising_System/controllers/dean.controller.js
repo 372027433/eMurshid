@@ -7,7 +7,7 @@ const {getFileStream} = require("../utils/s3");
 const Complaint = require('../models/Complaint.model')
 
 const Students = require('../models/student.model')
-const faculty = require('../utils/facultyType')
+// const faculty = require('../utils/facultyType')
 
 
 exports.renderMainPage = (req, res) => {    

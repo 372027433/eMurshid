@@ -440,10 +440,10 @@ exports.renderUpdateAbsence = async (req, res) => {
 exports.renderNewComplaint = async (req, res) => {
     let thedatenow = new Date();
 
-    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const student = await Students.findById(res.user.userId).select("-password").populate('major').exec();
     const stuName = student.name;
     const stuId = student.id;
-    const major = student.major;
+    const major = student.major.name;
     const level = student.level;
     res.render('studentPages/studentNewComplaint', {
         stuName :stuName ,
@@ -459,11 +459,11 @@ exports.renderNewComplaint = async (req, res) => {
 
 
 exports.renderGetNewAbsenceExcuse = async (req, res) => {
-    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const student = await Students.findById(res.user.userId).populate('major').select("-password").exec();
     res.render('studentPages/studentNewAbsenceExcuse', {
         stuName : student.name,
         stuId : student.id,
-        major : student.major,
+        major : student.major.name,
         level : student.level,
         userName : student.name,
         layout: 'student'
@@ -475,11 +475,11 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
         return res.sendStatus(400);
     }else
     {
-        const student = await Students.findById(res.user.userId).select("-password").exec();
+        const student = await Students.findById(res.user.userId).populate('major').select("-password").exec();
 
        const stuName  = student.name;
         const stuId = student.id;
-        const  major = student.major;
+        const  major = student.major.name;
         const level = student.level;
         const dateFrom = req.body.dateFrom;
         const dateTo = req.body.dateTo;
@@ -641,13 +641,12 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
 };
 
 exports.renderGetNewExamExcuse = async (req,res) =>{
-    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const student = await Students.findById(res.user.userId).populate('major').select("-password").exec();
     res.render('studentPages/studentNewExamExcuse',{
             stuName : student.name,
             stuId : student.id,
-            major : student.major,
+            major : student.major.name,
             level : student.level,
-            userName : student.name,
             layout: 'student'
         });
 }
@@ -658,10 +657,10 @@ exports.renderPostNewExamExcuse = async (req, res) => {
     if (!req.body) {
         return res.sendStatus(400);
     } else {
-        const student = await Students.findById(res.user.userId).select("-password").exec();
+        const student = await Students.findById(res.user.userId).populate('major').select("-password").exec();
         const stuName = student.name;
         const stuId = student.id;
-        const major = student.major;
+        const major = student.major.name;
         const level = student.level;
 
         const info0 = {
@@ -748,7 +747,6 @@ exports.renderPostNewExamExcuse = async (req, res) => {
                     info: info,
                 },
                 errorMsg: 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code,
-                userName : student.name,
                 layout: 'student',
             })
 
@@ -786,7 +784,6 @@ exports.renderPostNewExamExcuse = async (req, res) => {
                         info: info,
                     },
                     successMsg: 'Your excuse was sent successfully',
-                    userName : student.name,
                     layout: 'student',
                 })
             });
@@ -828,10 +825,10 @@ exports.messagesend = async (req, res) => {
 exports.submitcomp = async (req, res) => {
     let thedatenow = new Date();
 
-    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const student = await Students.findById(res.user.userId).populate('major').select("-password").exec();
     const stuName = student.name;
     const stuId = student.id;
-    const major = student.major;
+    const major = student.major.name;
     const level = student.level;
     if (req.uploadError) {
         console.log(req.uploadError)
@@ -885,12 +882,12 @@ exports.submitcomp = async (req, res) => {
     }
 
    
-    const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
+    const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name").populate('major');
     const getinarr = getstuinfo[0];
     res.render('studentPages/studentNewComplaint', {
         stuname :getinarr.name ,
         stuid : getinarr.id,
-        stumajor : getinarr.major,
+        stumajor : getinarr.major.name,
         stuadvisor : getinarr.advisor_id.name,
         userName : student.name,
         layout: 'student'
