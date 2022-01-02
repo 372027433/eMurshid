@@ -37,6 +37,13 @@ const studentSchema = new Schema({
         type: Number,
         max: [5, 'highest percent'],
     },
+
+    hasChangedPassword: {
+        type:Boolean, 
+        default: false, 
+    },
+
+
     level:{
         type: Number,
         max : [10, 'max level is 10']

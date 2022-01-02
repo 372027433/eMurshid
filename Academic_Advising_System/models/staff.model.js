@@ -30,6 +30,10 @@ const staffSchema = new Schema({
         enum: [advisor, advisingUnit, dean],
         required: true, 
     },
+    hasChangedPassword: {
+        type:Boolean, 
+        default: false, 
+    },
 
 },{
     collection:'staff',
