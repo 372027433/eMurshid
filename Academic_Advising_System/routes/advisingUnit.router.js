@@ -83,10 +83,15 @@ advisingUnitRouter.post('/addCourses',upload,controller.renderPostAddCourses);
 
 advisingUnitRouter.get('/showCourses',controller.renderGetShowCourses);
 
-advisingUnitRouter.get('/mangeMajors',controller.renderGetManageMajors);
+advisingUnitRouter.get('/manageMajors',controller.renderGetManageMajors);
+advisingUnitRouter.post('/manageMajors',controller.renderPostManageMajors);
+
 
 advisingUnitRouter.get('/manageSemesters',controller.renderGetManageSemesters);
 advisingUnitRouter.post('/manageSemesters',controller.renderPostManageSemesters);
+
+// advisingUnitRouter.get('/showSemesters',controller.renderGetShowSemesters);
+
 
 advisingUnitRouter.post('/SolvingComplains/solvecomplan' , controller.solvecomp)
 

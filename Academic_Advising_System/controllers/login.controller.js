@@ -61,6 +61,7 @@ exports.login = async (req, res) => {
         // Advisor or Acadmeic unit or Dean
 
         try {
+
             const staff = await Staff.findOne({ id: id }).select('password role hasChangedPassword faculty_id college').populate('college').exec()
 
             if (!staff) return res.status(400).render('signIn', {
@@ -75,11 +76,18 @@ exports.login = async (req, res) => {
             })
 
             let tokenBody = {
+
                 userId: staff._id, // _id staff in DB [not his uni id]
                 role: staff.role,
                 faculty: staff.faculty_id,
                 college: staff.college._id,
                 semester: await getSemester(),
+
+                userId: staff._id , // _id staff in DB [not his uni id]
+                role: staff.role ,
+                college:staff.college._id,
+                semester:  await getSemester(),
+
             }
 
             let token = await jwt.sign(tokenBody, process.env.JWT_ACCESS_KEY);

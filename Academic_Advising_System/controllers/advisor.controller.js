@@ -52,7 +52,8 @@ exports.renderPersonalProfile = async (req, res) => {
         email : advisor.email,
         role : advisor.role,
         phone : advisor.phone,
-        faculty_id :advisor.faculty_id
+        // faculty_id :advisor.faculty_id
+        college :advisor.college
     }
     res.render('advisorPages/advisorProfile', {
         advisor : advisorinfo,

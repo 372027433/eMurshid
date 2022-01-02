@@ -3,7 +3,8 @@ const roles = require('../utils/roles');
 
 const bcrypt = require("bcrypt");
 
-exports.addAdmins = async (role, id, name, faculty_id = "") => {
+//pass college Object_id
+exports.addAdmins = async (role, id, name, college = "") => {
   // check type of id
   if(role == roles.advisor) return console.log("go and sign the advisor from the advisingUnit page please..!")
   if (typeof id !== "number") {
@@ -31,7 +32,8 @@ exports.addAdmins = async (role, id, name, faculty_id = "") => {
     name,
     email: `${id}@iu.edu.sa`,
     role,
-    faculty_id,
+    // faculty_id,
+    college,
   };
 
   let createUser = await Staff.create(user);
