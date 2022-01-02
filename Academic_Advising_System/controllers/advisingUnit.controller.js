@@ -694,39 +694,83 @@ exports.renderGetManageMajors = async (req, res) => {
 
 // to be modified
 exports.renderPostManageMajors = async (req, res) => {
+  try{
   if(!req.body){
-    return res.sendStatus(400);
+    throw new Error('request is not delivered')
   }
   else if(req.body.hasOwnProperty("addMajor")) {
+    const majorExists = await Majors.exists({
+      $or:[
+        {code:req.body.majorCode}, {name:req.body.majorName}
+      ]})
+    if(majorExists){
+      throw new Error('Major Already Exits')
+    }
+  else{
+    const classMajor = await new Majors({
+      name: req.body.majorName,
+      code: req.body.majorCode,
+      college: res.user.college
+    })
+    //save doc
+     await classMajor.save(function (err, excuse) {
+      if (err) {
+        throw err
+      }
+      res.render('advisingUnitPages/aauManageMajors', {
+        hasError: false,
+        successMsg: 'Major was added successfully',
+        layout: 'advisingUnit',
+      })
+    });
+    }
   }
   else if(req.body.hasOwnProperty("deleteMajor")) {
+    //deletes and doesn't return the doc
+    await Majors.findOneAndDelete({code:req.body.majorCode}),function (err) {
+      if (err) {
+        throw err
+      }
+    }
+      res.render('advisingUnitPages/aauManageMajors', {
+        hasError: false,
+        successMsg: 'Major was Deleted Successfully',
+        layout: 'advisingUnit',
+      })
+    }
+  }catch (e){
+    res.render('advisingUnitPages/aauManageMajors', {
+      hasError: true,
+      errMsg: err.message,
+      layout: 'advisingUnit',
+    })
   }
-  }
+}
 
 
 exports.renderGetManageSemesters = async (req, res) => {
   try {
     let currentSemester;
-    const semestersArr = []
+    let semestersArr = []
    const semesters = await Semesters.find({college :res.user.college }).exec()
-      if (!semesters) {
-        throw new Error('no semesters found')
-      }
+      // if (!semesters) {
+      //   throw new Error('no semesters found')
+      // }
         for(let semester of semesters){
           if (res.user.semester === semester.code){
             currentSemester = semester
           }
           let semesterObj = {}
-          semesterObj['startDate'] = semester.startDate
-          semesterObj['endDate'] = semester.endDate
+          semesterObj['startDate'] = semester.startDate.toISOString().slice(0, 10)
+          semesterObj['endDate'] = semester.endDate.toISOString().slice(0, 10)
           semesterObj['code'] = semester.code
           semestersArr.push(semesterObj)
         }
       res.render("advisingUnitPages/aauManageSemesters", {
         hasError : false,
         semesters: semestersArr,
-        currentStartDate: currentSemester.startDate,
-        currentEndDate: currentSemester.endDate,
+        currentStartDate: currentSemester.startDate.toISOString().slice(0, 10),
+        currentEndDate: currentSemester.endDate.toISOString().slice(0, 10),
         currentCode: currentSemester.code,
         layout: "advisingUnit",
       });
@@ -750,7 +794,7 @@ exports.renderPostManageSemesters = async (req, res) => {
       return res.sendStatus(400);
     }
     //validate selection
-    if (req.body.period === 'Period') {
+    if ((req.body.period === 'Period') || (req.body.editPeriod === 'Period')) {
       throw new Error('period not Selected')
     }
     //on add btn click
@@ -771,22 +815,27 @@ exports.renderPostManageSemesters = async (req, res) => {
       // }
       let sDate = new Date(startDate)
       let eDate = new Date(endDate)
-      if (eDate.getTime() < sDate.getTime()){
+      if (eDate.getTime() < sDate.getTime()) {
         throw new Error('end date is before start date !')
       }
       // checks if time periods or code already exists
-      const semesters = await Semesters.find({college :res.user.college }).exec()
-      for (let semester of semesters){
-        if (((sDate.getTime() >=  semester.startDate.getTime())&& (eDate.getTime() <= semester.endDate.getTime()))||
-        ((sDate.getTime() <= semester.startDate.getTime()) &&(eDate.getTime() >= semester.startDate.getTime()))||
-        ((sDate.getTime() <= semester.endDate.getTime()) &&(eDate.getTime() >= semester.endDate.getTime()))||
-            (semester.code === code )){
-        // if((sDate.getTime() < semester.endDate.getTime() )||(eDate.getTime() < semester.startDate.getTime())|| (semester.code === code )){
+      const semesters = await Semesters.find({college: res.user.college}).exec()
+      for (let semester of semesters) {
+        if (((sDate.getTime() >= semester.startDate.getTime()) && (eDate.getTime() <= semester.endDate.getTime())) ||
+            ((sDate.getTime() <= semester.startDate.getTime()) && (eDate.getTime() >= semester.startDate.getTime())) ||
+            ((sDate.getTime() <= semester.endDate.getTime()) && (eDate.getTime() >= semester.endDate.getTime())) ||
+            (semester.code === code)) {
+          // if((sDate.getTime() < semester.endDate.getTime() )||(eDate.getTime() < semester.startDate.getTime())|| (semester.code === code )){
           throw new Error('an existing semester contradicts with the time period')
         }
       }
       //create doc
-      const classSemester = await new Semesters({startDate: startDate, endDate: endDate, code: code, college:res.user.college})
+      const classSemester = await new Semesters({
+        startDate: startDate,
+        endDate: endDate,
+        code: code,
+        college: res.user.college
+      })
       //save doc
       classSemester.save(function (err, excuse) {
         if (err) {
@@ -799,23 +848,57 @@ exports.renderPostManageSemesters = async (req, res) => {
         })
       });
     }
+    // else if (req.body.hasOwnProperty("editSemesterBtn")) {
+    //   let GregorianYear = (new Date()).getFullYear();
+    //   let HijriYear = Math.trunc((GregorianYear - 622) * (33 / 32));
+    //   let editStartDate = req.body.editStartDate
+    //   let editEndDate = req.body.editEndDate
+    //   let period = req.body.editPeriod
+    //   //get last two digits of hijri date and add period value to it ex 1441 + summer = 413
+    //   let code = HijriYear.toString().substring(2) + period
+    //   await Semesters.findOneAndUpdate({code: req.body.editCode}, {
+    //         startDate: req.body.editStartDate,
+    //         endDate: req.body.editEndDate,
+    //         period: req.body.editPeriod,
+    //         code: code,
+    //       }, {
+    //         // return updated doc
+    //         new: true,
+    //       }
+    //       ,
+    //       function (err, docs) {
+    //         if (err) {
+    //           throw err;
+    //         }
+    //       });
+    //   res.render("advisingUnitPages/aauManageSemesters", {
+    //     hasError: false,
+    //     successMsg: 'Semester was edited successfully',
+    //     layout: "advisingUnit",
+    //   });
+    // }
+
     //delete Btn click
-  else if (req.body.hasOwnProperty("deleteMajor")) {
-    res.render("advisingUnitPages/aauManageSemesters", {
-      layout: "advisingUnit",
-    });
-    }
-  } catch(e){
+    else if (req.body.hasOwnProperty("deleteSemesterBtn")) {
+      Semesters.deleteOne({code: req.body.deleteCode}, function (err) {
+        if (err) {
+          throw err;
+        }
+      });
       res.render("advisingUnitPages/aauManageSemesters", {
-        hasError: true,
-        errMsg: e.message,
-        layout:"advisingUnit"
-    });
-
+        hasError: false,
+        successMsg: 'Semester was deleted successfully',
+        layout: "advisingUnit",
+      });
     }
-
+  } catch (e) {
+    res.render("advisingUnitPages/aauManageSemesters", {
+      hasError: true,
+      errMsg: e.message,
+      layout: "advisingUnit"
+    });
+  }
 }
-
 
 
 //solving the complaint
@@ -871,7 +954,4 @@ exports.solvecomp = async (req, res) => {
     compList: readydata.reverse(),
     layout: 'advisingUnit'      
   })
-  //  }
-
-
 }

@@ -11,6 +11,13 @@
             <div>
                 <p id="informUserMsg"></p>
             </div>
+            <div>
+                {{#if hasError}}
+                    <h5 style="color: red"> {{errMsg}} </h5>
+                {{else}}
+                    <h5 style="color: green">  {{successMsg}}</h5>
+                {{/if}}
+            </div>
 
             <table id="majorsDisplayTable" class="display" style="width:100%">
                 <thead>
@@ -41,7 +48,7 @@
 
 
     <!-- Modal -->
-    <form name="manageMajors" method="post" action="/advisingUnit/mangeMajors">
+    <form name="manageMajors" method="post" action="/advisingUnit/manageMajors">
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -52,16 +59,16 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="formGroupExampleInput" class="form-label">Major's Name</label>
-                        <input type="text" class="form-control" id="formGroupExampleInput" >
+                        <input type="text" name="majorName" class="form-control" id="formGroupExampleInput" >
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput2" class="form-label">Major's code</label>
-                        <input type="text" class="form-control" id="formGroupExampleInput2" >
+                        <input type="text" name="majorCode" class="form-control" id="formGroupExampleInput2" >
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button name="addMajor" id="addMajor" type="button" class="btn btn-primary">Add</button>
-                    <button name="deleteMajor" id="deleteMajor" type="button" class="btn btn-danger">Delete</button>
+                    <button name="addMajor" id="addMajor" type="submit" class="btn btn-primary">Add</button>
+                    <button name="deleteMajor" id="deleteMajor" type="submit" class="btn btn-danger">Delete</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>

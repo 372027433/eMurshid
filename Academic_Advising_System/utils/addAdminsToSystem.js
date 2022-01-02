@@ -3,6 +3,7 @@ const roles = require('../utils/roles');
 
 const bcrypt = require("bcrypt");
 
+//pass college Object_id
 exports.addAdmins = async (role, id, name, college = "") => {
   // check type of id
   if(role == roles.advisor) return console.log("go and sign the advisor from the advisingUnit page please..!")
