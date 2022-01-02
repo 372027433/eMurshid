@@ -24,6 +24,7 @@ const ReservedTimes = require('../models/ReservedTimes.model');
 //Absence Model
 const Excuses = require('../models/AbsenceExcuse.model')
 
+
 // Validator Results
 
 // Complaint MODEL
@@ -35,6 +36,7 @@ const {validationResult} = require ('express-validator/check')
 // const multer = require("multer");
 const {uploadFile} = require('../utils/s3')
 const util = require('util')
+const Majors = require("../models/majors.model");
 const unlinkFile = util.promisify(fs.unlink)
 
 
@@ -48,11 +50,11 @@ exports.renderMainPage = async (req, res) => {
 
 // Handle get request
 exports.renderStudentProfile = async (req, res) => {
-     const student = await Students.findById(res.user.userId).select("-password").exec();
+     const student = await Students.findById(res.user.userId).select("-password").populate('major').exec();
     res.render('studentPages/studentProfile', {
         stuId: student.id,
         stuName: student.name,
-        major: student.major,
+        major: student.major.name,
         marital_status: student.marital_status,
         family_members_count: student.family_members_count,
         order_in_family: student.order_in_family,
@@ -60,6 +62,7 @@ exports.renderStudentProfile = async (req, res) => {
         present_address: student.present_address,
         reference_person: student.reference_person,
         reference_person_phone: student.reference_person_phone,
+        cgpa : student.cgpa,
         advisor: student.advisor,
         editMode : false,
         userName : student.name,
@@ -69,23 +72,26 @@ exports.renderStudentProfile = async (req, res) => {
 
 //Handle post Requests
 exports.renderStudentProfileEdit = async (req, res) =>{
-    // return all from DB except for password
 
-    const student = await Students.findById(res.user.userId).select("-password").exec();
-    let majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
+    // return all from DB except for password
+    const student = await Students.findById(res.user.userId).select("-password").populate('major').exec();
+    let majors = await Majors.find({college : res.user.college}).exec()
+    const majorsArr = []
+    for(let major of majors){
+        let majorObj = {}
+        majorObj['_id'] = major._id.toString()
+        majorObj['name'] = major.name
+        majorObj['code'] = major.code
+
+        majorsArr.push(majorObj)
+    }
+
+    // let majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
     if(!req.body){
         return res.sendStatus(400);
     }
     // on Edit button click activate Edit mode and render
     else if(req.body.hasOwnProperty("StuEditBtn")){
-        // For keeping User inputs
-        let majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
-        for (let element in majorsSelection){
-            if (student.major === element){
-                majorsSelection[element] = true;
-                break;
-            }
-        }
 
         let maritalSelection = {'single':false, 'married':false}
         for (let element in maritalSelection){
@@ -98,7 +104,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
         email: student.email,
         stuId: student.id,
         stuName: student.name,
-        major: student.major,
+        major: student.major._id.toString(),
         marital_status: student.marital_status,
         level: student.level,
         family_members_count: student.family_members_count,
@@ -107,10 +113,9 @@ exports.renderStudentProfileEdit = async (req, res) =>{
         present_address: student.present_address,
         reference_person: student.reference_person,
         reference_person_phone: student.reference_person_phone,
+        cgpa : student.cgpa,
         advisor: student.advisor,
-        CS : majorsSelection["computer science"],
-        IT : majorsSelection["information technology"],
-        IS : majorsSelection["information system"],
+        majors : majorsArr,
         single : maritalSelection.single,
         married : maritalSelection.married,
         editMode: true,
@@ -124,21 +129,13 @@ exports.renderStudentProfileEdit = async (req, res) =>{
         // DB Update Errors
             let error;
         if(!validationErrors.isEmpty()){
-                // for HandleBars CSS logic
+                // for HandleBars CSS logic (applying red border on each input error)
             let invalid ={ familyMembersCount:false , orderInFamily:false
-                , permanentAddress:false , presentAddress:false , referencePerson:false ,advisor:false }
+                , permanentAddress:false , presentAddress:false , referencePerson:false ,advisor:false, cgpa:false }
             for(let element in invalid ){
                     if (validationErrors.array().find(e => e.param === element))
                        invalid[element] =true
                 }
-                // For keeping User inputs
-             majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
-            for (let element in majorsSelection){
-                if (req.body.major === element){
-                    majorsSelection[element] = true;
-                break;
-                }
-            }
 
             let maritalSelection = {'single':false, 'married':false}
             for (let element in maritalSelection){
@@ -146,11 +143,14 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                     maritalSelection[element] = true;
                     break;
                 }
+
+
             }
             return res.status(422).render('studentPages/studentProfile', {
                 stuId: student.id,
                 stuName: student.name,
-                major: req.body.major,
+                major: req.body.major.toString(),
+                majors : majorsArr,
                 marital_status: req.body.martialStatus,
                 family_members_count: req.body.familyMembersCount,
                 order_in_family: req.body.orderInFamily,
@@ -158,10 +158,8 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                 present_address: req.body.presentAddress,
                 reference_person: req.body.referencePerson,
                 reference_person_phone: req.body.referencePersonPhone,
+                cgpa : req.body.cgpa,
                 advisor: req.body.advisor,
-                CS : majorsSelection["computer science"],
-                IT : majorsSelection["information technology"],
-                IS : majorsSelection["information system"],
                 single : maritalSelection.single,
                 married : maritalSelection.married,
                 invalid : invalid,
@@ -181,6 +179,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                 present_address: req.body.presentAddress,
                 reference_person: req.body.referencePerson,
                 reference_person_phone: req.body.referencePersonPhone,
+                cgpa : req.body.cgpa,
             },{
             // return updated doc
             new : true,
@@ -194,7 +193,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                     res.render('studentPages/studentProfile', {
                         stuId: student.id,
                         stuName: student.name,
-                        major: student.major,
+                        major: student.major._id.toString(),
                         marital_status: student.marital_status,
                         family_members_count: student.family_members_count,
                         order_in_family: student.order_in_family,
@@ -202,6 +201,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                         present_address: student.present_address,
                         reference_person: student.reference_person,
                         reference_person_phone: student.reference_person_phone,
+                        cgpa : student.cgpa,
                         advisor: student.advisor,
                         editMode : false,
                         errorMessage : error.message,
@@ -210,12 +210,13 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                     });
                 }
                 else{
+                    console.log(docs.major.name)
                     // success => return new doc with success msg
                     res.render('studentPages/studentProfile', {
                         email: docs.email,
                         stuId: docs.id,
                         stuName: docs.name,
-                        major: docs.major,
+                        major: docs.major.name,
                         marital_status: docs.marital_status,
                         family_members_count: docs.family_members_count,
                         order_in_family: docs.order_in_family,
@@ -223,6 +224,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                         present_address: docs.present_address,
                         reference_person: docs.reference_person,
                         reference_person_phone: docs.reference_person_phone,
+                        cgpa: docs.cgpa,
                         advisor: docs.advisor,
                         layout: 'student',
                         successMessage : "Data Updated Successfully",
@@ -230,7 +232,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                         editMode : false,
                     });
                 }
-            });
+            }).populate('major');
         }
 }
 
@@ -438,10 +440,10 @@ exports.renderUpdateAbsence = async (req, res) => {
 exports.renderNewComplaint = async (req, res) => {
     let thedatenow = new Date();
 
-    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const student = await Students.findById(res.user.userId).select("-password").populate('major').exec();
     const stuName = student.name;
     const stuId = student.id;
-    const major = student.major;
+    const major = student.major.name;
     const level = student.level;
     res.render('studentPages/studentNewComplaint', {
         stuName :stuName ,
@@ -457,11 +459,11 @@ exports.renderNewComplaint = async (req, res) => {
 
 
 exports.renderGetNewAbsenceExcuse = async (req, res) => {
-    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const student = await Students.findById(res.user.userId).populate('major').select("-password").exec();
     res.render('studentPages/studentNewAbsenceExcuse', {
         stuName : student.name,
         stuId : student.id,
-        major : student.major,
+        major : student.major.name,
         level : student.level,
         userName : student.name,
         layout: 'student'
@@ -473,11 +475,11 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
         return res.sendStatus(400);
     }else
     {
-        const student = await Students.findById(res.user.userId).select("-password").exec();
+        const student = await Students.findById(res.user.userId).populate('major').select("-password").exec();
 
        const stuName  = student.name;
         const stuId = student.id;
-        const  major = student.major;
+        const  major = student.major.name;
         const level = student.level;
         const dateFrom = req.body.dateFrom;
         const dateTo = req.body.dateTo;
@@ -639,13 +641,12 @@ exports.renderPostNewAbsenceExcuse = async (req, res) => {
 };
 
 exports.renderGetNewExamExcuse = async (req,res) =>{
-    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const student = await Students.findById(res.user.userId).populate('major').select("-password").exec();
     res.render('studentPages/studentNewExamExcuse',{
             stuName : student.name,
             stuId : student.id,
-            major : student.major,
+            major : student.major.name,
             level : student.level,
-            userName : student.name,
             layout: 'student'
         });
 }
@@ -656,10 +657,10 @@ exports.renderPostNewExamExcuse = async (req, res) => {
     if (!req.body) {
         return res.sendStatus(400);
     } else {
-        const student = await Students.findById(res.user.userId).select("-password").exec();
+        const student = await Students.findById(res.user.userId).populate('major').select("-password").exec();
         const stuName = student.name;
         const stuId = student.id;
-        const major = student.major;
+        const major = student.major.name;
         const level = student.level;
 
         const info0 = {
@@ -746,7 +747,6 @@ exports.renderPostNewExamExcuse = async (req, res) => {
                     info: info,
                 },
                 errorMsg: 'Upload Error : file should be in (pdf,jpg,jpeg,png) format and size should be less than 5Mb ;' + req.uploadError.code,
-                userName : student.name,
                 layout: 'student',
             })
 
@@ -784,7 +784,6 @@ exports.renderPostNewExamExcuse = async (req, res) => {
                         info: info,
                     },
                     successMsg: 'Your excuse was sent successfully',
-                    userName : student.name,
                     layout: 'student',
                 })
             });
@@ -826,10 +825,10 @@ exports.messagesend = async (req, res) => {
 exports.submitcomp = async (req, res) => {
     let thedatenow = new Date();
 
-    const student = await Students.findById(res.user.userId).select("-password").exec();
+    const student = await Students.findById(res.user.userId).populate('major').select("-password").exec();
     const stuName = student.name;
     const stuId = student.id;
-    const major = student.major;
+    const major = student.major.name;
     const level = student.level;
     if (req.uploadError) {
         console.log(req.uploadError)
@@ -883,12 +882,12 @@ exports.submitcomp = async (req, res) => {
     }
 
    
-    const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name");
+    const getstuinfo = await Students.find({"_id" : `${res.user.userId}`}).populate("advisor_id" , "name").populate('major');
     const getinarr = getstuinfo[0];
     res.render('studentPages/studentNewComplaint', {
         stuname :getinarr.name ,
         stuid : getinarr.id,
-        stumajor : getinarr.major,
+        stumajor : getinarr.major.name,
         stuadvisor : getinarr.advisor_id.name,
         userName : student.name,
         layout: 'student'
