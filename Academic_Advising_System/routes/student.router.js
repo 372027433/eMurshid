@@ -25,9 +25,11 @@ studentRouter.post('/studentProfile',
         body(['permanentAddress','presentAddress','referencePerson'] , ' only text values are valid in permanentAddress & presentAddress & referencePerson')
             .not().isEmpty().trim().escape()
             .matches('^[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z]+[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FFa-zA-Z-_ ]*$'),
-        body(['familyMembersCount','orderInFamily' , 'referencePersonPhone'],'only numbers are valid in family Members Count & order In Family & reference Person Phone')
+        body(['familyMembersCount','orderInFamily' , 'referencePersonPhone'],'only numbers are valid in family Members Count & order In Family & reference Person Phone & CGPA')
             .not().isEmpty().trim().escape()
-            .isNumeric()
+            .isNumeric(),
+        body('cgpa', 'cgpa must be a number between 0 and 5')
+            .isFloat({ min: 0, max: 5 })
     ]
     ,controller.renderStudentProfileEdit);
 

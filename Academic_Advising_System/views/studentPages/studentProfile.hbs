@@ -36,7 +36,7 @@
                                     <h3 class="mb-0"><i class="far fa-clone pr-1"></i>General Information</h3>
                                 </div>
                                 <div class="card-body pt-0">
-                                    <form method="post" name="stuProfile" >
+                                    <form method="post" name="stuProfile" novalidate >
                                         <table class="table table-bordered">
 
                                             {{#if valErrors}}
@@ -70,7 +70,7 @@
                                                 <!--                                        <td width="2%">:</td>-->
                                                 <td><input
                                                         {{#if invalid.familyMembersCount}}
-                                                        class = "invalid"
+                                                        class = "form-control invalid"
                                                         {{/if}}
                                                         class="form-control"  name="familyMembersCount" type="number" value="{{family_members_count}}" required></td>
                                             </tr>
@@ -79,7 +79,7 @@
                                                 <!--                                        <td width="2%">:</td>-->
                                                 <td><input
                                                     {{#if invalid.orderInFamily}}
-                                                    class = "invalid"
+                                                    class = "form-control invalid"
                                                     {{/if}}
                                                         class="form-control"  name="orderInFamily" type="number" value="{{order_in_family}}" required></td>
                                             </tr>
@@ -88,7 +88,7 @@
                                                 <!--                                        <td width="2%">:</td>-->
                                                 <td><input
                                                     {{#if invalid.permanentAddress}}
-                                                    class = "invalid"
+                                                    class = "form-control invalid"
                                                     {{/if}}
                                                         class="form-control"   name="permanentAddress" type="text" value="{{permanent_address}}" required></td>
                                             </tr>
@@ -97,7 +97,7 @@
                                                 <!--                                        <td width="2%">:</td>-->
                                                 <td><input
                                                     {{#if invalid.presentAddress}}
-                                                    class = "invalid"
+                                                    class = "form-control invalid"
                                                     {{/if}}
                                                         class="form-control"  name="presentAddress" type="text" value="{{present_address}}" required></td>
                                             </tr>
@@ -106,7 +106,7 @@
                                                 <!--                                        <td width="2%">:</td>-->
                                                 <td><input
                                                     {{#if invalid.referencePerson}}
-                                                    class = "invalid"
+                                                    class = "form-control invalid"
                                                     {{/if}}
                                                         class="form-control"  name="referencePerson" type="text" value="{{reference_person}}" required></td>
                                             </tr>
@@ -115,9 +115,18 @@
                                                 <!--                                        <td width="2%">:</td>-->
                                                 <td><input
                                                     {{#if invalid.referencePersonPhone}}
-                                                    class = "invalid"
+                                                    class = "form-control invalid"
                                                     {{/if}}
                                                       class="form-control"  name="referencePersonPhone" type="tel" value="{{reference_person_phone}}" required></td>
+                                            </tr>
+                                            <tr>
+                                                <th>CGPA (Cumulative Grade Point Average)</th>
+                                                <!--                                        <td width="2%">:</td>-->
+                                                <td><input
+                                                    {{#if invalid.cgpa}}
+                                                    class = "form-control invalid"
+                                                    {{/if}}
+                                                    class="form-control"  name="cgpa" type="number" value="{{cgpa}}" min="0" max="5" step="0.01" required></td>
                                             </tr>
 
                                         </table>
@@ -215,7 +224,11 @@
                                             <!--                                        <td width="2%">:</td>-->
                                             <td>{{reference_person_phone}}</td>
                                         </tr>
-
+                                        <tr>
+                                            <th> CGPA (Cumulative Grade Point Average)</th>
+                                            <!--                                        <td width="2%">:</td>-->
+                                            <td>{{cgpa}}</td>
+                                        </tr>
                                     </table>
                                     <form method="post">
                                     <button class="btn btn-primary" type="submit" name="StuEditBtn"  >Edit</button>

@@ -62,6 +62,7 @@ exports.renderStudentProfile = async (req, res) => {
         present_address: student.present_address,
         reference_person: student.reference_person,
         reference_person_phone: student.reference_person_phone,
+        cgpa : student.cgpa,
         advisor: student.advisor,
         editMode : false,
         userName : student.name,
@@ -71,7 +72,6 @@ exports.renderStudentProfile = async (req, res) => {
 
 //Handle post Requests
 exports.renderStudentProfileEdit = async (req, res) =>{
-
 
     // return all from DB except for password
     const student = await Students.findById(res.user.userId).select("-password").populate('major').exec();
@@ -92,21 +92,6 @@ exports.renderStudentProfileEdit = async (req, res) =>{
     }
     // on Edit button click activate Edit mode and render
     else if(req.body.hasOwnProperty("StuEditBtn")){
-        // For keeping User inputs
-        // let majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
-        // for (let element in majorsSelection){
-        //     if (student.major === element){
-        //         majorsSelection[element] = true;
-        //         break;
-        //     }
-        // }
-        // let selectedMajor;
-        // for (let major of majorsArr){
-        //     if (student.major === major._id){
-        //          majorSelection = major._id
-        //         break;
-        //     }
-        // }
 
         let maritalSelection = {'single':false, 'married':false}
         for (let element in maritalSelection){
@@ -128,6 +113,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
         present_address: student.present_address,
         reference_person: student.reference_person,
         reference_person_phone: student.reference_person_phone,
+        cgpa : student.cgpa,
         advisor: student.advisor,
         majors : majorsArr,
         single : maritalSelection.single,
@@ -143,21 +129,13 @@ exports.renderStudentProfileEdit = async (req, res) =>{
         // DB Update Errors
             let error;
         if(!validationErrors.isEmpty()){
-                // for HandleBars CSS logic
+                // for HandleBars CSS logic (applying red border on each input error)
             let invalid ={ familyMembersCount:false , orderInFamily:false
-                , permanentAddress:false , presentAddress:false , referencePerson:false ,advisor:false }
+                , permanentAddress:false , presentAddress:false , referencePerson:false ,advisor:false, cgpa:false }
             for(let element in invalid ){
                     if (validationErrors.array().find(e => e.param === element))
                        invalid[element] =true
                 }
-                // For keeping User inputs
-            //  majorsSelection = {'computer science':false , 'information technology':false , 'information system':false }
-            // for (let element in majorsSelection){
-            //     if (req.body.major === element){
-            //         majorsSelection[element] = true;
-            //     break;
-            //     }
-            // }
 
             let maritalSelection = {'single':false, 'married':false}
             for (let element in maritalSelection){
@@ -165,6 +143,8 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                     maritalSelection[element] = true;
                     break;
                 }
+
+
             }
             return res.status(422).render('studentPages/studentProfile', {
                 stuId: student.id,
@@ -178,6 +158,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                 present_address: req.body.presentAddress,
                 reference_person: req.body.referencePerson,
                 reference_person_phone: req.body.referencePersonPhone,
+                cgpa : req.body.cgpa,
                 advisor: req.body.advisor,
                 single : maritalSelection.single,
                 married : maritalSelection.married,
@@ -198,6 +179,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                 present_address: req.body.presentAddress,
                 reference_person: req.body.referencePerson,
                 reference_person_phone: req.body.referencePersonPhone,
+                cgpa : req.body.cgpa,
             },{
             // return updated doc
             new : true,
@@ -219,6 +201,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                         present_address: student.present_address,
                         reference_person: student.reference_person,
                         reference_person_phone: student.reference_person_phone,
+                        cgpa : student.cgpa,
                         advisor: student.advisor,
                         editMode : false,
                         errorMessage : error.message,
@@ -241,6 +224,7 @@ exports.renderStudentProfileEdit = async (req, res) =>{
                         present_address: docs.present_address,
                         reference_person: docs.reference_person,
                         reference_person_phone: docs.reference_person_phone,
+                        cgpa: docs.cgpa,
                         advisor: docs.advisor,
                         layout: 'student',
                         successMessage : "Data Updated Successfully",

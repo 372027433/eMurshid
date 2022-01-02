@@ -24,7 +24,7 @@ const studentSchema = new Schema({
         required: true, 
     },
     advisor_id : {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'staff',
     },
     status: String , // should be undergraduate
@@ -37,7 +37,6 @@ const studentSchema = new Schema({
         type: Number,
         max: [5, 'highest percent'],
     },
-
     level:{
         type: Number,
         max : [10, 'max level is 10']
