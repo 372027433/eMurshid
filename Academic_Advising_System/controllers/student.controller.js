@@ -23,7 +23,8 @@ const ReservedTimes = require('../models/ReservedTimes.model');
 
 //Absence Model
 const Excuses = require('../models/AbsenceExcuse.model')
-
+//Marks
+const Marks = require('../models/studentMarks.model')
 
 // Validator Results
 
@@ -37,6 +38,7 @@ const {validationResult} = require ('express-validator/check')
 const {uploadFile} = require('../utils/s3')
 const util = require('util')
 const Majors = require("../models/majors.model");
+const Courses = require("../models/courses.model");
 const unlinkFile = util.promisify(fs.unlink)
 
 
@@ -421,13 +423,181 @@ exports.renderReservedAppointments = async (req, res) => {
  
 
 exports.renderUpdateMarks = async (req, res) => {
-    const student = await Students.findById(res.user.userId).select("-password").exec();
-
+    // Marks.findOneAndUpdate({})
+    const student = await Students.findById(res.user.userId).select("-password").populate('major').exec();
+    let courses = await Courses.find({major:student.major}).populate('major')
+    const coursesArr = []
+    for(let course of courses){
+        let courseObj = {}
+        courseObj['name'] = course.name
+        courseObj['code'] = course.code
+        courseObj['hours'] = course.hours
+        //check if major is undefined or not, add all related majors codes
+        let tempMajor = "";
+        for (let i =0 ; i<course.major.length ; i++){
+            if(typeof course.major[i] !== 'undefined' ) {
+                tempMajor += ' ' + course.major[i].code.toString()
+            }
+        }
+        courseObj['major'] =  tempMajor;
+        coursesArr.push(courseObj)
+    }
     res.render('studentPages/studentUpdateMarks', {
         userName : student.name,
+        stuName: student.name,
+        stuId : student.id,
+        major : student.major.name,
+        courses: coursesArr,
         layout: 'student'
     });
 };
+
+exports.renderPostUpdateMarks = async (req, res) => {
+    console.log(req.body)
+    console.log(res.user.userId)
+    try {
+        if (!req.body) {
+            return res.sendStatus(400);
+        } else {
+            const student = await Students.findById(res.user.userId).populate('major').select("-password").exec();
+            const info0 = {
+                course: req.body.course0,
+                absence: req.body.absPer0,
+                other: req.body.otherMarks0,
+                firstMid: req.body.midterm01,
+                secondMid: req.body.midterm02,
+            }
+            const info1 = {
+                course: req.body.course1,
+                absence: req.body.absPer1,
+                other: req.body.otherMarks1,
+                firstMid: req.body.midterm11,
+                secondMid: req.body.midterm12,
+            }
+            const info2 = {
+                course: req.body.course2,
+                absence: req.body.absPer2,
+                other: req.body.otherMarks2,
+                firstMid: req.body.midterm21,
+                secondMid: req.body.midterm22,
+            }
+            const info3 = {
+                course: req.body.course3,
+                absence: req.body.absPer3,
+                other: req.body.otherMarks3,
+                firstMid: req.body.midterm31,
+                secondMid: req.body.midterm32,
+            }
+            const info4 = {
+                course: req.body.course4,
+                absence: req.body.absPer4,
+                other: req.body.otherMarks4,
+                firstMid: req.body.midterm41,
+                secondMid: req.body.midterm42,
+            }
+            const info5 = {
+                course: req.body.course5,
+                absence: req.body.absPer5,
+                other: req.body.otherMarks5,
+                firstMid: req.body.midterm51,
+                secondMid: req.body.midterm52,
+            }
+            const info6 = {
+                course: req.body.course6,
+                absence: req.body.absPer6,
+                other: req.body.otherMarks6,
+                firstMid: req.body.midterm61,
+                secondMid: req.body.midterm62,
+            }
+            const info7 = {
+                course: req.body.course7,
+                absence: req.body.absPer7,
+                other: req.body.otherMarks7,
+                firstMid: req.body.midterm71,
+                secondMid: req.body.midterm72,
+            }
+            const info8 = {
+                course: req.body.course8,
+                absence: req.body.absPer8,
+                other: req.body.otherMarks8,
+                firstMid: req.body.midterm81,
+                secondMid: req.body.midterm82,
+            }
+
+            const marks = [info0, info1, info2, info3, info4, info5, info6, info7, info8];
+            console.log(marks)
+            const classMarks = new Marks({student: res.user.userId, marks: marks, semester: res.user.semester})
+           await classMarks.save(function (err, excuse) {
+                if (err) {
+                    throw err
+                }
+            });
+                    res.render('studentPages/studentUpdateMarks', {
+                        userName: student.name,
+                        stuName: student.name,
+                        stuId: student.id,
+                        major: student.major.name,
+                        successMsg: 'Done',
+                        courses: coursesArr,
+                        layout: 'student'
+                    });
+                }
+
+
+        // await Marks.findOneAndUpdate({student: res.user.userId}, {
+        //         student: res.user.userId,
+        //         marks: marks,
+        //         semester: res.user.semester
+        //     }, {new: true,upsert: true});
+        //     console.log(mymarks)
+        //             res.render('studentPages/studentUpdateMarks', {
+        //                 userName: student.name,
+        //                 stuName: student.name,
+        //                 stuId: student.id,
+        //                 major: student.major.name,
+        //                 successMsg: 'Done',
+        //                 courses: coursesArr,
+        //                 layout: 'student'
+        //             });
+        //     }
+        // console.log(mymarks)
+    } catch (e) {
+        res.render('studentPages/studentUpdateMarks', {
+            errMsg: e.message,
+            layout: 'student'
+        })
+    }
+}
+
+
+//         const student = await Students.findById(res.user.userId).select("-password").populate('major').exec();
+//     let courses = await Courses.find({major:student.major}).populate('major')
+//     const coursesArr = []
+//     for(let course of courses){
+//         let courseObj = {}
+//         courseObj['name'] = course.name
+//         courseObj['code'] = course.code
+//         courseObj['hours'] = course.hours
+//         //check if major is undefined or not, add all related majors codes
+//         let tempMajor = "";
+//         for (let i =0 ; i<course.major.length ; i++){
+//             if(typeof course.major[i] !== 'undefined' ) {
+//                 tempMajor += ' ' + course.major[i].code.toString()
+//             }
+//         }
+//         courseObj['major'] =  tempMajor;
+//         coursesArr.push(courseObj)
+//     }
+//     res.render('studentPages/studentUpdateMarks', {
+//         userName : student.name,
+//         stuName: student.name,
+//         stuId : student.id,
+//         major : student.major,
+//         courses: coursesArr,
+//         layout: 'student'
+//     });
+// };
+
 
 exports.renderUpdateAbsence = async (req, res) => {
     const student = await Students.findById(res.user.userId).select("-password").exec();
@@ -793,12 +963,6 @@ exports.renderPostNewExamExcuse = async (req, res) => {
 }
 
 
-
-
-
-
-
-
 //msgto : res.user.advisor_id
 
 exports.messagesend = async (req, res) => {
@@ -925,7 +1089,6 @@ exports.rendershowTheResultOfComplain = async (req, res) => {
      readydata.push(obj);       
 
    }
-
 
     //**************************************** */
     res.render('studentPages/showTheResultOfComplain',{
