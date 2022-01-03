@@ -93,7 +93,14 @@ exports.renderRequestReports = async (req, res) => {
 
 exports.renderOfficeHours = async (req, res) => {
     try {
-        let advisorTimes = await AdvisorTimes.findOne({advisor: res.user.userId}).select('-advisor')
+        let advisorTimes = await AdvisorTimes.findOne({advisor: res.user.userId}).select('-advisor');
+        
+        if(!advisorTimes){
+            return res.render('advisorPages/advisorOfficeHours', {
+                layout: 'advisor',
+            })
+        };
+
         let sunday = [], monday = [], tuesday = [], wednesday = [],thursday = [];
         advisorTimes.sunday.time_slots.forEach((time,index) => { let obj = {};  obj['from'] = time.from; obj['to'] = time.to;  obj['id'] = index;  sunday.push(obj); })
         advisorTimes.monday.time_slots.forEach((time,index) => { let obj = {};  obj['from'] = time.from;  obj['to'] = time.to;  obj['id'] = index;  monday.push(obj); })
@@ -112,7 +119,7 @@ exports.renderOfficeHours = async (req, res) => {
         
     } catch(err) {
         console.log('errors')
-        res.render('errorPage')
+        // res.render('errorPage')
     }
 }
 
