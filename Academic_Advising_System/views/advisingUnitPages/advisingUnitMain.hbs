@@ -1,5 +1,5 @@
 <main class="main-content">
-    <div class="content">
+    <div style="height: unset;overflow:scroll" class="content">
         <div class="body-header">
             <header>
                 <h1><span class="trn">Advising Unit Page</span></h1>
@@ -7,9 +7,137 @@
             <hr>
         </div>
         <div class="body-content">
-            <ul>
-
-            </ul>
+            <div class="mb-4 row">
+                <div class="col-6">
+                    <canvas id="myChart" height="300"></canvas>
+                </div>
+                <div class="col-6">
+                    <canvas id="myChart2"></canvas>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <canvas id="myChart3"></canvas>
+                </div>
+            </div>
         </div>
     </div>
+    <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const studentsCount = {{ collegeStudentsCount }};
+        const advisorsCount = {{ collegeAdvisors }};
+        
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Advisors', "Students"],
+                datasets: [{
+                    label: 'College Stats',
+                    data: [advisorsCount, studentsCount],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const assignedStudents = {{ assignedStudents }};
+        const unassignedStudents = {{ unassignedStudents }};
+        const data = {
+            labels: [
+                'Assigned Students',
+                'unassigned Students',
+            ],
+            datasets: [{
+                label: 'My First Dataset',
+                data: [assignedStudents, unassignedStudents],
+                backgroundColor: [
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 99, 132)',
+                ],
+                hoverOffset: 4
+            }]
+        };
+
+
+        const ctx2 = document.getElementById('myChart2').getContext('2d');
+        const myChart2 = new Chart(ctx2, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+
+        //===============================
+
+        const lessThan1 = {{lessThan1}}
+        const between1and2 = {{between1and2}}
+        const between2and3 = {{between2and3}}
+        const between3and4 = {{between3and4}}
+        const between4and5 = {{between4and5}}
+        const ctx3 = document.getElementById('myChart3').getContext('2d');
+        const myChart3 = new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: ['less than 1', '1 - 2', '2 - 3','3 - 4', '4 - 5'],
+                datasets: [{
+                    label: 'Student College GPA',
+                    data: [lessThan1, between1and2,between2and3,between3and4,between4and5],
+                    backgroundColor: [
+
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+
+    </script>
 </main>
