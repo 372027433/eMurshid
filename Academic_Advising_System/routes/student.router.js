@@ -55,6 +55,7 @@ studentRouter.get('/appointments',controller.renderReservedAppointments);
 
 //student marks update router
 studentRouter.get('/updateMarks',controller.renderUpdateMarks);
+studentRouter.post('/updateMarks',controller.renderPostUpdateMarks);
 
 
 //update Absence Router

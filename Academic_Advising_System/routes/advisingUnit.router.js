@@ -90,6 +90,7 @@ advisingUnitRouter.post('/manageMajors',controller.renderPostManageMajors);
 advisingUnitRouter.get('/manageSemesters',controller.renderGetManageSemesters);
 advisingUnitRouter.post('/manageSemesters',controller.renderPostManageSemesters);
 
+
 // advisingUnitRouter.get('/showSemesters',controller.renderGetShowSemesters);
 
 
