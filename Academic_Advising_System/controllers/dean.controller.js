@@ -7,7 +7,7 @@ const {getFileStream} = require("../utils/s3");
 const Complaint = require('../models/Complaint.model')
 
 const Students = require('../models/student.model')
-const faculty = require('../utils/facultyType')
+// const faculty = require('../utils/facultyType')
 
 
 exports.renderMainPage = (req, res) => {    
@@ -97,7 +97,7 @@ exports.renderPostPendingExcuses = async (req, res) => {
 exports.renderRegisteredStudents = async (req, res) => {
     try{
 
-        let collegeStudents = await Students.find({faculty_id: res.user.faculty}).select('-password').populate('advisor_id')
+        let collegeStudents = await Students.find({college: res.user.college}).select('-password').populate('advisor_id')
 
         const students = []
         for(let student of collegeStudents){

@@ -8,7 +8,7 @@
             <hr>
         </div>
         <div class="body-content">
-            <form method="post"  id="compl" action="/student/compl">
+            <form method="post"  id="compl" action="/student/compl"  enctype="multipart/form-data">
                         <fieldset>
                            <div class="student-profile py-4">
                 <div class="container">
@@ -16,7 +16,7 @@
                         <div class="col-lg-12">
                             <div class="card shadow-sm">
                                 <div class="card-header bg-transparent border-0">
-                                    <h3 class="mb-0"><i class="far fa-clone pr-1"></i> student Information</h3>
+                                    <h3 class="mb-0"><i class="far fa-clone pr-1"></i><span class="trn">student Information</span></h3>
                                 </div>
                                 <div class="card-body pt-0">
                                     <span style="color: red"> {{errorMsg}} </span>
@@ -39,20 +39,23 @@
                                                 <th><span> Major </span></th>
                                                 <td>   <input class="form-control" name="stuMajor" id="stuMajor" value="{{major}}" disabled></td>
                                             </tr>
+
+
+                                            
                                         </table>
                         </fieldset>
                         <fieldset>
                             {{!-- disComp = Discribe your Complaint  --}}
-                            <legend>Discribe your Complaint and/or appeal case</legend>
+                            <legend><span class="trn">Discribe your Complaint and/or appeal case</span></legend>
                             <textarea name="DisComp" id="DisComp" class="takedatafromstu"></textarea>
                         </fieldset>
                         <fieldset>
-                            <legend>provid supporting documents</legend>
-                            <input type="file" id="avidFile" name="avidFile">
+                            <legend><span class="trn">provid supporting documents</span></legend>
+                            <input type="file" id="file" name="file">
                         </fieldset>
                         <br>
                 
-                <input type="submit" id="submit">
+                <input type="submit" id="submit" value="send">
             </form>
 
         </div>

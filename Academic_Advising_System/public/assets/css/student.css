@@ -1,0 +1,31 @@
+
+element.style {
+    text-align: left;
+}
+
+/* ============ Booking Appointment Page ==================== */
+.day {
+    margin: 0 0 25px;
+}
+.times > * {
+
+    margin: 1px 1px;
+    padding: 0 5px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+.times {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+/* ============ Booking Appointment Page ==================== */
+
+.appointments {
+    display: grid;
+    grid-template-columns: repeat(1,1fr);
+}
+
+/* ============== Booked Appointments page */
+.curvy {
+    border-radius: 10px;
+}

@@ -13,124 +13,121 @@ const roles = require('../utils/roles')
 
 exports.login = async (req, res) => {
 
-    // destructure req.body and get id and password
-    const {universityID, password} = req.body ;
-    const id = universityID ;
-    // check if id is 9 digits (nothing else) else check if it is less
-    if(/^[0-9]{9}$/.test(id)){
-       // we have 9 digits which is student
+    const { universityID, password } = req.body;
+    const id = universityID;
+    if (/^[0-9]{9}$/.test(id)) {
 
         try {
-            // get student from DB _id, id 
-            const student = await Students.findOne({id: id}).select('password college').populate('college').exec();
-            // if no student present with this id this gonna be a bad request
-            if(!student) return res.status(400).render('signIn',{
-                err: true, 
-                errMsg: "Invalide id or password"
+            const student = await Students.findOne({ id: id }).select('password college hasChangedPassword').populate('college').exec();
+            if (!student) return res.status(400).render('signIn', {
+                err: true,
+                errMsg: "Invalid id or password"
             })
 
-            // compare the passwords
             const comparedPasswords = await bcrypt.compare(password, student.password)
-            // if passwords do not match then this is bad request
-            if(!comparedPasswords) return res.status(400).render('signIn',{
-                err: true, 
-                errMsg: "Invalide id or password"
+
+            if (!comparedPasswords) return res.status(400).render('signIn', {
+                err: true,
+                errMsg: "Invalid id or password"
             })
 
-            /// we should have expiration data, but we don't have a way to refresh token
-            /// so keep token valid forever 
-
-            /// ENHANCE ADD FACULITY ID HERE
             let tokenBody = {
-                userId: student._id, // _id student in DB [not his uni id]
+                userId: student._id, 
                 role: roles.student,
                 college: student.college._id,
                 semester: await getSemester()
 
             }
-        console.log(tokenBody)
-            let token = await jwt.sign(tokenBody,process.env.JWT_ACCESS_KEY);
+
+            let token = await jwt.sign(tokenBody, process.env.JWT_ACCESS_KEY);
 
             res.setHeader('Set-Cookie', `authorization=Bearer ${token}; HttpOnly`)
-            // res.cookie('authorization', `Bearer ${token}`, { httpOnly: true }) // another way to set cookie
 
-            // WyDKiHIgCG -- AbodyPassword
+            const isPassEqualID = !student.hasChangedPassword;
+
+            if (isPassEqualID) {
+                return res.render('confirmPassword');
+            }
+
             return res.status(200).redirect('/student')
 
         }
-        catch(err){
+        catch (err) {
 
             console.log(err) // should add en error page that renders what should be displayed
         }
-    } else if (/^[0-9]{1,8}$/.test(id)){
+    } else if (/^[0-9]{1,8}$/.test(id)) {
 
         // Advisor or Acadmeic unit or Dean
 
         try {
-            // query DB for the id
-            const staff = await Staff.findOne({id: id}).select('password role faculty_id college').populate('college').exec()
-            // once you get the id,
-            // check if user exists
 
-            if(!staff) return res.status(400).render('signIn',{ 
+            const staff = await Staff.findOne({ id: id }).select('password role hasChangedPassword faculty_id college').populate('college').exec()
+
+            if (!staff) return res.status(400).render('signIn', {
                 err: true,
-                errMsg: "Invalide id or password"
-            }) // this rendering is not working because fetch made the reqesuts -> fall-back to form-submit
-            
-            // compare passwords
+                errMsg: "Invalid id or password"
+            }) 
+
             const comparePassword = await bcrypt.compare(password, staff.password)
-            if(!comparePassword) return res.status(400).render('signIn',{
-                err: true, 
-                errMsg: "Invalide id or password"
+            if (!comparePassword) return res.status(400).render('signIn', {
+                err: true,
+                errMsg: "Invalid id or password"
             })
-            
-            /// ENHANCE ADD FACULITY ID HERE
+
             let tokenBody = {
+
+                userId: staff._id, // _id staff in DB [not his uni id]
+                role: staff.role,
+                faculty: staff.faculty_id,
+                college: staff.college._id,
+                semester: await getSemester(),
+
                 userId: staff._id , // _id staff in DB [not his uni id]
                 role: staff.role ,
-                faculty: staff.faculty_id,
                 college:staff.college._id,
                 semester:  await getSemester(),
+
             }
 
             let token = await jwt.sign(tokenBody, process.env.JWT_ACCESS_KEY);
-            // assign cookie to responsce
             res.setHeader('Set-Cookie', `authorization=Bearer ${token}; HttpOnly`)
 
-            // go into switch statement to route to right page
 
-            // if we found the id then hash password and send it
-            // might add user name in the screen
-            switch(staff.role){
-    
-                case roles.advisor: 
+            const isPassEqualID = !staff.hasChangedPassword;
+
+            if (isPassEqualID) {
+                return res.render('confirmPassword');
+            }
+
+            switch (staff.role) {
+
+                case roles.advisor:
                     return res.status(200).redirect('/advisor')
-                break;
-    
-                case roles.advisingUnit: 
+                    break;
+
+                case roles.advisingUnit:
                     return res.status(200).redirect('/advisingUnit')
-                break ;
-    
-                case roles.dean : 
+                    break;
+
+                case roles.dean:
                     return res.status(200).redirect('/dean')
-                break ;
-    
-                default: 
-                    // not a user
-                    // return to login page
+                    break;
+
+                default:
                     res.setHeader('Set-Cookie', `authorization= ; HttpOnly`)
                     return res.status(200).redirect('/')
-    
-                break ;
+
+                    break;
             }
-        } catch(err){
+        } catch (err) {
 
             console.log(err)
         }
     } else {
-        return res.status(401).redirect('/') // fraud user
+        return res.status(401).redirect('/')  
     }
-    return res.status(401).redirect('/') // fraud user
+    return res.status(401).redirect('/')  
 
 }
 
@@ -139,12 +136,57 @@ exports.logout = (req, res) => {
     res.status(200).redirect('/')
 }
 
-async function getSemester(){
+exports.updatePassword = async (req, res) => {
+    const newPassword = req.body.newPass;
+
+    if (roles.student == res.user.role) {
+        let student = await Students.findOne({ _id: res.user.userId }).select('id');
+
+        if (student.id == newPassword) {
+            return res.render('confirmPassword',{
+                errMsg: 'الرجاء استخدام كلمة سر أخرى غير معرف الطالب'
+            });
+        }
+
+        let hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await Students.findOneAndUpdate({_id:res.user.userId}, {password:hashedPassword, hasChangedPassword:true});
+
+        return res.redirect('/student');
+
+
+    } else {
+
+        let staff = await Staff.findOne({ _id: res.user.userId }).select('id');
+
+        if (staff.id == newPassword) {
+            return res.render('confirmPassword');
+        }
+
+        let hashedPassword = await bcrypt.hash(newPassword, 10);
+        
+        await Staff.findOneAndUpdate({_id:res.user.userId}, {password:hashedPassword, hasChangedPassword:true}, {new: true});
+
+        if (roles.advisor == res.user.role) {
+            return res.status(200).redirect('/advisor')
+
+
+        } else if (roles.advisingUnit == res.user.role) {
+            return res.status(200).redirect('/advisingUnit')
+
+
+        } else if (roles.dean == res.user.role) {
+            return res.status(200).redirect('/dean')
+        }
+    }
+
+}
+async function getSemester() {
     let currentDate = new Date(Date.now())
     let currentSemester;
     const semesters = await Semesters.find({})
-    for (let semester of semesters){
-        if((semester.startDate.getTime() < currentDate)&&(semester.endDate.getTime() > currentDate)){
+    for (let semester of semesters) {
+        if ((semester.startDate.getTime() < currentDate) && (semester.endDate.getTime() > currentDate)) {
             currentSemester = semester.code
             break;
         }
