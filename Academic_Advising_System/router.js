@@ -20,6 +20,8 @@ router.get('/', (req,res) => {
     res.render('signIn');
 })
 
+router.post('/updatePassword',isAuthorized, loginController.updatePassword)
+
 router.post('/login', loginController.login)
 
 router.get('/logout',loginController.logout)

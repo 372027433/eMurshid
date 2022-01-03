@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>وحدة الإرشاد الأكاديمي</title>
     <link href="/assets/css/general.css" rel="stylesheet" />
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
     
     {{> externalLibraries}}
     
@@ -37,7 +37,7 @@
                     </a>
                   </li>
                     <li class="nav-item">
-                      <a href="/advisingUnit/collageStudents" class="nav-link py-3 border-bottom" title="collage Students" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="collage Students" >
+                      <a href="/advisingUnit/collegeStudents" class="nav-link py-3 border-bottom" title="collage Students" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="collage Students" >
                       <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/students.png" alt="#">
                     </a>
                     </li>
@@ -66,6 +66,29 @@
                       <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/assign students to advisors.png" alt="#">
                     </a>
                   </li>
+                    <li class="nav-item">
+                        <a href="/advisingUnit/manageSemesters" class="nav-link py-3 border-bottom" title="Manage Semesters" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Manage Semesters" >
+                            <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/assign students to advisors.png" alt="#">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/advisingUnit/manageMajors" class="nav-link py-3 border-bottom" title="Manage Majors" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Manage Semesters" >
+                            <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/assign students to advisors.png" alt="#">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link py-3 border-bottom"  class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+                           title="Courses" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false"
+                           data-bs-placement="right" data-bs-original-title="Courses">
+                            <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/dissatisfaction.png" alt="#">
+                        </a>
+                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+                            <li><a class="dropdown-item" href="/advisingUnit/addCourses"><span class="trn">Add Courses</span></a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/advisingUnit/showCourses"><span class="trn">Show Courses</span></a></li>
+                        </ul>
+                    </li>
+
                 </ul>
                 <hr>
                     <div class="dropdown">
@@ -146,8 +169,32 @@
                           <span class="trn">assign students to advisors</span>
                         </a>
                       </li>
-                        
+                        <li class="nav-item">
+                            <a href="/advisingUnit/manageSemesters" class="nav-link link-dark">
+                                <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/assign students to advisors.png" alt="#">
+                                <span class="trn">Manage Semesters</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/advisingUnit/manageMajors" class="nav-link link-dark">
+                                <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/assign students to advisors.png" alt="#">
+                                <span class="trn">Manage Majors</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                        <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="coursesDropdown"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/argument.png" alt="#">
+                            <span style="padding: 5px;" class="trn" >Courses Management </span>
+                        </a>
+                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                            <li><a class="dropdown-item" href="/advisingUnit/showCourses"><span class="trn">Add Courses</span></a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/advisingUnit/showCourses"><span class="trn">Show Courses</span></a></li>
+                        </ul>
+                    </li>
                     </ul>
+
                     <hr>
                     <div class="dropdown">
                       <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">

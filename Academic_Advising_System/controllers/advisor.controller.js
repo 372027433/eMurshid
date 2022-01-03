@@ -11,8 +11,11 @@ const message = require('../models/messages.model')
 // Students MODELS
 const Students = require('../models/student.model')
 
-// staff MODELS
-const staff = require('../models/staff.model')
+// Staff MODELS
+const Staff = require('../models/staff.model')
+
+// advisor times 
+const ReservedTimes = require('../models/ReservedTimes.model')
 
 // Advisor Times Model 
 const AdvisorTimes = require('../models/advisorTimes.model')
@@ -31,7 +34,7 @@ const unlinkFile = util.promisify(fs.unlink)
 
 
 exports.renderMainPage = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
     console.log(res.user)
     res.render('advisorPages/advisorMain', {
         userName : Ustaff.name,
@@ -40,8 +43,10 @@ exports.renderMainPage = async (req, res) => {
 }
 
 exports.renderPersonalProfile = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
-    let advisor = await staff.findById(res.user.userId);
+
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
+    let advisor = await Staff.findById(res.user.userId);
+
     const advname = advisor.name;
     const advid = advisor.id;
     const advemail = advisor.email;
@@ -52,7 +57,8 @@ exports.renderPersonalProfile = async (req, res) => {
         email : advisor.email,
         role : advisor.role,
         phone : advisor.phone,
-        faculty_id :advisor.faculty_id
+        // faculty_id :advisor.faculty_id
+        college :advisor.college
     }
     res.render('advisorPages/advisorProfile', {
         advisor : advisorinfo,
@@ -65,7 +71,7 @@ exports.renderPersonalProfile = async (req, res) => {
 }
 
 exports.renderMyStudents = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
     const studentofadvisor = await AdvivsorStudents.find({ "advisor": `${res.user.userId}` }).populate("students", "-password");
     let x = studentofadvisor[0];
     let y = x.students;
@@ -78,7 +84,7 @@ exports.renderMyStudents = async (req, res) => {
 }
 
 exports.renderRequestReports = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
     res.render('advisorPages/advisorRequestReports', {
         userName : Ustaff.name,
         layout: 'advisor'
@@ -111,15 +117,56 @@ exports.renderOfficeHours = async (req, res) => {
     }
 }
 
-exports.renderAppointments = (req, res) => {
+exports.renderAppointments = async (req, res) => {
+
+    const times = await ReservedTimes.find({advisor: res.user.userId, isCompleted:false })
+        .populate([
+            {
+                path: 'student',
+                select: {name: 1,_id:0}
+            }
+        ])
+    
+    let arrayOfTimes = [];
+    for(let time of times){
+        let obj = {
+            student: time.student.name,
+            day: time.day,
+            date: new Date(time.date).toISOString().split('T')[0],
+            time: `${time.from} : ${time.to}`,
+            id: time._id,
+            createdAt: new Date(time.createdAt).toISOString().split('T')[0],
+        };        
+        arrayOfTimes.push(obj);
+    }
+
     res.render('advisorPages/advisorAppointments', {
-        userName : Ustaff.name,
-        layout: 'advisor'
+
+        layout: 'advisor',
+        times: arrayOfTimes
+    })
+}
+
+exports.completedAppointment = async(req,res) => {
+
+    const appointmentID = req.body.appointmentId ;
+    const appointment = await ReservedTimes.findOne({_id: appointmentID});
+    if(!appointment){
+        return res.status(400).json({
+            msg: 'this appointment is faked'
+        })
+    }
+    const updatedAppointment = await ReservedTimes.updateOne({_id: appointmentID},{isCompleted: true});
+
+    return res.status(200).json({
+        data: 'gone and back',
+        updatedAppointment
+
     })
 }
 
 exports.renderMessageStudents = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
     const studentofadvisor = await AdvivsorStudents.find({ "advisor": `${res.user.userId}` }).populate("students", "-password");
     let x = studentofadvisor[0];
     let y = x.students;
@@ -131,7 +178,7 @@ exports.renderMessageStudents = async (req, res) => {
 }
 
 exports.renderFindMessage = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
     let x = await message.find({ "msgto": `${res.user.userId}` }).populate('msgfrom', 'name -_id').exec(function (err, posts) {
         // ther is ero her that the msg from advisor return null
         console.log(posts)
@@ -153,8 +200,9 @@ exports.renderFindMessage = async (req, res) => {
 }
 
 exports.renderIssueComplaint = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
-    let advisor = await staff.findById(res.user.userId);
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
+    let advisor = await Staff.findById(res.user.userId);
+
     const advname = advisor.name;
     const advid = advisor.id;
     const advemail = advisor.email;
@@ -176,7 +224,7 @@ exports.renderIssueComplaint = async (req, res) => {
 }
 
 exports.renderPostResolveExcuses = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
     const excuseId = req.body.exId;
     const advisorComment = req.body.advisorComment;
     if (req.body.hasOwnProperty('recommend')) {
@@ -231,7 +279,7 @@ exports.renderPostResolveExcuses = async (req, res) => {
 }
 
 exports.renderGetResolveExcuses = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
 
     await AbsenceExcuse.find({ status: 'pending' }).populate({ path: 'student', match: { advisor_id: res.user.userId } }).
         exec(function (err, doc) {
@@ -257,7 +305,7 @@ exports.renderGetResolveExcuses = async (req, res) => {
 }
 
 exports.renderGetProof = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
     let key = req.params.key
     const readStream = await getFileStream(key)
     await readStream.pipe(res)
@@ -265,7 +313,7 @@ exports.renderGetProof = async (req, res) => {
 
 
 exports.messagesend = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
     const z = await Students.find({ "id": `${req.body.msgto}` });
     const inarr = z[0];
     let thedatenow = new Date();
@@ -291,7 +339,7 @@ exports.messagesend = async (req, res) => {
 
 }
 exports.createTimeSchedules = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
     try {
 
         const time = req.body.times;
@@ -398,10 +446,10 @@ function timeInMinutes(time){
 
 
 exports.submitcomp = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
     let thedatenow = new Date();
 
-    const advisor = await staff.findById(res.user.userId).select("-password").exec();
+    const advisor = await Staff.findById(res.user.userId).select("-password").exec();
     const advname = advisor.name;
     const advid = advisor.id;
     const advemail = advisor.email;
@@ -475,7 +523,7 @@ exports.submitcomp = async (req, res) => {
 
 
 exports.renderadvisorshowTheResultOfComplain = async (req, res) => {
-    const Ustaff = await staff.findById(res.user.userId).select("-password").exec();
+    const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
           
    let complaintforuser = await Complaint.find({"compfromadvisor": `${res.user.userId}`}).populate('compfromstudent', 'name id -_id').populate('compfromadvisor', 'name id -_id');
    // ther is ero her that the msg from advisor return null

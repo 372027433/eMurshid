@@ -20,7 +20,7 @@ const staffSchema = new Schema({
         type: String,
         required: true,
     },
-    faculty_id: {type: String },
+    college: { type: Schema.Types.ObjectId , ref : 'colleges'},
     phone: {
         type: Number,
         max: [9999999999, 'phone numbers do not have more than 10 digits'],
@@ -29,7 +29,12 @@ const staffSchema = new Schema({
         type: String,
         enum: [advisor, advisingUnit, dean],
         required: true, 
-    }
+    },
+    hasChangedPassword: {
+        type:Boolean, 
+        default: false, 
+    },
+
 },{
     collection:'staff',
     timestamps: true,

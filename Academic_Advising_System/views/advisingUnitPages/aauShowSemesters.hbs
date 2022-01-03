@@ -1,0 +1,40 @@
+<main class="main-content">
+    <div class="content">
+        <div class="body-header">
+            <header>
+                <h1><span class="trn">College Students</span></h1>
+            </header>
+            <hr>
+        </div>
+        <div class="body-content">
+
+            <div>
+                <p id="informUserMsg"></p>
+            </div>
+
+            <table id="semesterDisplayTable" class="display" style="width:100%">
+                <thead>
+                <tr>
+                    <th>start Date</th>
+                    <th>End Date</th>
+                    <th>Code</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each semesters}}
+                    <tr>
+                        <td>{{this.startDate}}</td>
+                        <td>{{this.endDate}}</td>
+                        <td>{{this.code}}</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<script>
+    $(document).ready(function() {
+        $('#semesterDisplayTable').DataTable();
+    });
+</script>

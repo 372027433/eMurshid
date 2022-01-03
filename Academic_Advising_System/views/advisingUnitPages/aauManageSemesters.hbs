@@ -1,0 +1,176 @@
+<main class="main-content">
+    <div class="content" >
+        <div class="body-header">
+            <header>
+                <h1><span class="trn">College Semesters</span></h1>
+            </header>
+            <hr>
+        </div>
+        <div class="body-content" style=" height: 800px;overflow-y:scroll;" >
+
+            <div>
+                <p id="informUserMsg"></p>
+            </div>
+            <div>
+                {{#if hasError}}
+                    <h5 style="color: red"> {{errMsg}} </h5>
+                    {{else}}
+                    <h5 style="color: green">  {{successMsg}}</h5>
+                {{/if}}
+            </div>
+
+            <div class="mb-3" >
+
+                <table id="semesterDisplayTable" class="display" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>start Date</th>
+                        <th>End Date</th>
+                        <th>Code</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each semesters}}
+                        <tr>
+                            <td>{{this.startDate}}</td>
+                            <td>{{this.endDate}}</td>
+                            <td>{{this.code}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+
+                <label for="formGroupExampleInput" class="form-label">Current Semester</label>
+                <table  >
+                    <th>
+                        Start Date:
+                    </th>
+                    <td>
+                        <input  class="form-control" name="currentStartDate" id="currentStartDate" value="{{currentStartDate}}" readonly disabled></td>
+                    </td>
+                    <th>
+                        End Date:
+                    </th>
+                    <td>
+                        <input  class="form-control" name="currentEndDate" id="currentEndDate" value="{{currentEndDate}}" readonly disabled></td>
+                    </td>
+                    <th>
+                        code
+                    </th>
+                    <td>
+                        <input  class="form-control" name="currentCode" id="currentCode" value="{{currentCode}}" readonly disabled></td>
+                    </td>
+                    <th>
+                    </th>
+                </table>
+
+            </div>
+            <label for="formGroupExampleInput" class="form-label">Add a New Semester</label>
+
+            <form name="manageSemesters" method="post" action="/advisingUnit/manageSemesters">
+                <table >
+                    <th>
+                     Start Date:
+                    </th>
+                    <td>
+                        <input  class="form-control" name="startDate" id="startDate" type="date" required></td>
+                    </td>
+                    <th>
+                      End Date:
+                    </th>
+                    <td>
+                        <input class="form-control" name="endDate" id="endDate"   type="date" required>
+                    </td>
+                    <th>
+                        Period
+                    </th>
+                    <td>
+                        <select name="period" class="form-select" aria-label="dateSelection" required>
+                            <option selected> Period</option>
+                            <option value="1">Spring</option>
+                            <option value="2">Fall</option>
+                            <option value="3">Summer</option>
+                        </select>
+                    </td>
+
+                    <td>
+                        <button  name="addSemester" type="submit" class="btn btn-primary" >Add</button>
+                    </td>
+                </table>
+            </form>
+
+<!--            <div>-->
+<!--            <label for="formGroupExampleInput" class="form-label">Edit an existing Semester</label>-->
+<!--            <form name="editSemesters" method="post" action="/advisingUnit/manageSemesters">-->
+<!--                <table>-->
+<!--                    <tr>-->
+<!--                    <th>-->
+<!--                        code :-->
+<!--                    </th>-->
+<!--                    <td>-->
+<!--                        <input  class="form-control" name="editCode" id="editCode" type="text" pattern="\d{3}" placeholder="code of the semester to edit" required></td>-->
+<!--                    </td>-->
+<!--                    <th>-->
+<!--                       New Start Date:-->
+<!--                    </th>-->
+<!--                    <td>-->
+<!--                        <input  class="form-control" name="editStartDate" id="editStartDate" type="date" required></td>-->
+<!--                    </td>-->
+<!--                    </tr>-->
+<!--                    <th>-->
+<!--                       New End Date:-->
+<!--                    </th>-->
+<!--                    <td>-->
+<!--                        <input class="form-control" name="editEndDate" id="editEndDate"   type="date" required>-->
+<!--                    </td>-->
+
+<!--                    <th>-->
+<!--                       New Period-->
+<!--                    </th>-->
+<!--                    <td>-->
+<!--                        <select name="editPeriod" class="form-select" aria-label="dateSelection" required>-->
+<!--                            <option selected> Period</option>-->
+<!--                            <option value="1">Spring</option>-->
+<!--                            <option value="2">Fall</option>-->
+<!--                            <option value="3">Summer</option>-->
+<!--                        </select>-->
+<!--                    </td>-->
+<!--                        <tr>-->
+<!--                    <td >-->
+<!--                        <button  name="editSemester" type="submit" class="btn btn-primary" >Edit</button>-->
+<!--                    </td>-->
+<!--                        </tr>-->
+<!--                </table>-->
+<!--            </form>-->
+<!--            </div>-->
+            <div>
+            <label for="deleteSemesterTable" class="form-label">Delete Semester</label>
+                <form name="deleteSemesterForm" method="post" action="/advisingUnit/manageSemesters">
+            <table name="deleteSemesterTable" id="deleteSemesterTable">
+
+                <th>
+                    Code :
+                </th>
+            <td>
+                <input  class="form-control" name="deleteCode" id="deleteCode" type="text" pattern="\d{3}" placeholder="code of the semester to Delete" required></td>
+                </td>
+
+                    <td>
+                        <button  name="deleteSemesterBtn" type="submit" class="btn btn-danger" >Delete</button>
+                    </td>
+            </table>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function() {
+            $('#semesterDisplayTable').DataTable();
+        });
+    </script>
+
+
+</main>

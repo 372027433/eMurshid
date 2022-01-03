@@ -24,22 +24,11 @@ const studentSchema = new Schema({
         required: true, 
     },
     advisor_id : {
-        type: mongoose.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'staff',
     },
-    faculty_id: {
-        type: String,
-        enum: [
-            computer_colege,
-            engineering_college,
-            science_college
-        ]
-    }, // should be Faculity IDs which taken from advisingUnit since each advisingUnit will add their students
-    // so once added we will be adding advisingUnitMemberFaculityID and add to student
-    // and advisors
-    
     status: String , // should be undergraduate
-    major: String,
+    major: { type: Schema.Types.ObjectId , ref : 'majors'},
     phone: {
         type: Number,
         max: [9999999999, 'phone numbers do not have more than 10 digits'],
@@ -49,12 +38,19 @@ const studentSchema = new Schema({
         max: [5, 'highest percent'],
     },
 
+    hasChangedPassword: {
+        type:Boolean, 
+        default: false, 
+    },
+
+
     level:{
         type: Number,
         max : [10, 'max level is 10']
     },
-    
-    // student Personal Information
+    college: { type: Schema.Types.ObjectId , ref : 'colleges'},
+
+        // student Personal Information
     marital_status: String,
     family_members_count: Number,
     order_in_family: String,

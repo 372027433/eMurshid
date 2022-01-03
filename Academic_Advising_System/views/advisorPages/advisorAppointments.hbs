@@ -1,5 +1,7 @@
-<div class="main-content" name="main-content" id="main-content">
-    <div class="content">
+
+<main class="main-content" name="main-content" id="main-content">
+    <div style="height: unset;overflow:scroll" class="content">
+
         <div class="body-header">
             <header>
                 <h1><span class="trn">Mange Appointments</span></h1>
@@ -7,9 +9,47 @@
             <hr>
         </div>
         <div class="body-content">
-            <ul>
+            <div class="row">
+                {{#each times}} 
 
-            </ul>
+                    <div id="app-{{id}}" class="appointment p-1 m-2 col-sm-12 col-md-5 col-xl-3 border border-1 bg-light">
+                        <span>Student: {{student}} </span> <br>
+                        <span>day: {{day}} </span> <br>
+                        <span>date: {{date}}</span> <br>
+                        <span>time: {{time}}</span> <br>
+                        <span>finished: <input type="checkbox" id="{{id}}" value="appointmentID"></span> <br>
+                        <span><button type="button" onclick="appointmentCompleted('{{id}}')" class="btn btn-success">submit</button></span>
+                    </div>
+
+                {{/each}}
+
+            </div>
         </div>
     </div>
+    <script>
+        function appointmentCompleted(id){
+
+            let elem = document.getElementById(id)
+
+
+            if(elem.checked){
+                $.ajax({
+                    method: 'put',
+                    url: "/advisor/completedAppointment",
+                    data: {appointmentId: id}
+                })
+                .done((data) => {
+
+                    let deletedElem = document.getElementById(`app-${id}`)
+                    deletedElem.remove();
+                })
+                .fail((error) => {
+                    return alert("this appointment is already cancelled")
+                })
+                
+            } else {
+                return alert("select element please")
+            }
+        }
+    </script>
 </main>

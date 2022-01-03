@@ -1,89 +1,318 @@
-<div class="main-content" name="main-content" id="main-content">
-    <div class="content">
-        <div class="body-header">
-            <header>
-                <h1><span class="trn">Update Marks</span></h1>
-            </header>
-            <hr>
-        </div>
-        <div class="body-content">
-            <fieldset>
-                <legend> Student Info </legend>
-                <div id="stuInfo" style="text-align: ;">
-                    <p>Name : abdallah hasan abu elsoud</p>
-                    <p>ID : 372029223</p>
-                    <p>Level : 10</p>
-                    <p>Major : CS</p>
-                {{!-- <h5>Name :</h5><P>abdallah hasan abu els soud</P>
-                <div><h5>ID : </h5 ><p>372029223</p>
-                <h5>Level : </h5><p>10</p>
-                <h5>Major : </h5><p>CS</p> --}}
-                </div>
-            </fieldset>
-            <br>
-            <fieldset>
-                <legend> courses </legend>
-            <table>
-                <tr>
-                    <th>code</th>
-                    <th>course Name</th>
-                    <th>Med Term Marks</th>
-                    <th>Other Marks</th>
-                    <th>% of Abcences</th>
-                </tr>
-                <tr>
-                   <td><input type="text" class="code"></td>
-                   <td><input type="text" class="code"></td>
-                   <td><input type="text" class="code"></td>
-                   <td><input type="text" class="code"></td>
-                   <td><input type="text" class="code"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                </tr>
-                   <tr>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                </tr>
-                   <tr>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                </tr>
-                   <tr>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                </tr>
-                   <tr>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                    <td><input type="text" class="code"></td>
-                </tr>
-             </table>
-             </fieldset>
-             <fieldset>
-                 <legend>suggested improvment (from advisor)</legend>
-                 <textarea readonly class="takedata"></textarea>
-             </fieldset>
-             <fieldset>
-               <legend>comments about the report and improvment</legend>
-                 <textarea  class="takedatafromstu"></textarea>
-             </fieldset>
 
+<style>
+    .plus{
+        width: 50px;
+        height: 50px;
+        margin: 100px auto;
+        color: #000;
+        border: 1px solid;
+        border-radius: 50%;
+        outline: 10px solid;
+        outline-offset: -35px;
+    }
+
+    .close{
+        width: 50px;
+        height: 50px;
+        margin: 100px auto;
+        color: #000;
+        border: 1px solid;
+        border-radius: 50%;
+        outline: 10px solid;
+        outline-offset: -35px;
+        transform: rotate(45deg);
+    }
+</style>
+
+
+<div class="main-content" name="main-content" id="main-content">
+<div class="content">
+    <div class="body-header">
+        <header>
+            <h1><span class="trn">UpdateMarks</span></h1>
+        </header>
+        <hr>
+    </div>
+
+    <div class="student-profile py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-transparent border-0">
+                            <h3 class="mb-0"><i class="far fa-clone pr-1"></i> student Information</h3>
+                        </div>
+                        <div class="card-body pt-0">
+                            <span style="color: green"> {{successMsg}}</span>
+                            <span style="color: red"> {{errorMsg}} </span>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Name</th>
+                                    <td>   <input class="form-control" name="stuName" id="stuName" value="{{stuName}}" disabled></td>
+
+                                </tr>
+                                <tr>
+                                    <th>ID</th>
+                                    <td>   <input class="form-control" name="stuId" id="stuId" value="{{stuId}}" disabled></td>
+                                </tr>
+                                <tr>
+                                    <th><span> Major </span></th>
+                                    <td>   <input class="form-control" name="stuMajor" id="stuMajor" value="{{major}}" disabled></td>
+                                </tr>
+                            </table>
+                            <!--                                <div class="card-body pt-0">-->
+                            {{!-- <select id="type" name="type" class="form-select"  aria-label="Select Excuse Type" required >
+                                <option value="" selected>Select Excuse Type</option>
+                                <option value="absence"  >ab</option>
+                                <option value="exam" >exam</option>
+                            </select> --}}
+
+                            <form method="post"  name="updateMarks" action="/student/updateMarks" >
+                                <table id="infoTable" >
+                                    <tbody>
+                                    <tr style="text-align: center;">
+<!--                                        <th >code</th>-->
+                                        <th>Course</th>
+                                        <th>Absence Percentage</th>
+                                        <th>Total for quizzes and HWs</th>
+                                        <!--                                            <button name="addQ" id="addQ" class="btn btn-success" type="button" onclick="addQuiz()" >+</button>-->
+                                        <th>Mid-Term <button name="removeQ" id="removeQ" class="btn btn-danger" type="button" onclick="removeQuiz()" >-</button> </th>
+                                        <th>Mid-Term-2 </th>
+                                    </tr>
+                                    <tr>
+<!--                                        <td><input name="code0" class="form-control" type="text" required></td>-->
+                                        <td><input name="course0" class="form-control" list="coursesList" id="exampleDataList" placeholder="Type to search...">
+                                            <datalist id="coursesList">
+                                                {{#each courses}}
+                                                <option name="{{this._id}}" value="{{this.name}}">
+                                                {{/each}}
+                                            </datalist></td>
+                                        <td><input name="absPer0" class="form-control" type="text" required ></td>
+                                        <td><input name="otherMarks0" class="form-control" type="text" required></td>
+                                        <td><input name="midterm01" class="form-control" type="text" required></td>
+                                        <td><input name="midterm02" class="form-control" type="text" required></td>
+                                    </tr>
+
+                                    <tr>
+                                        <!--                                        <td><input name="code0" class="form-control" type="text" required></td>-->
+                                        <td><input name="course1" class="form-control" list="coursesList" id="exampleDataList" placeholder="Type to search...">
+                                            <datalist id="coursesList">
+                                                {{#each courses}}
+                                                <option name="{{this._id}}" value="{{this.name}}">
+                                                {{/each}}
+                                            </datalist></td>
+                                        <td><input name="absPer1" class="form-control" type="text" required ></td>
+                                        <td><input name="otherMarks1" class="form-control" type="text" required></td>
+                                        <td><input name="midterm11" class="form-control" type="text" required></td>
+                                        <td><input name="midterm12" class="form-control" type="text" required></td>
+                                    </tr>
+
+                                    <tr>
+                                        <!--                                        <td><input name="code0" class="form-control" type="text" required></td>-->
+                                        <td><input name="course2" class="form-control" list="coursesList" id="exampleDataList" placeholder="Type to search...">
+                                            <datalist id="coursesList">
+                                                {{#each courses}}
+                                                <option name="{{this._id}}" value="{{this.name}}">
+                                                {{/each}}
+                                            </datalist></td>
+                                        <td><input name="absPer2" class="form-control" type="text" required ></td>
+                                        <td><input name="otherMarks2" class="form-control" type="text" required></td>
+                                        <td><input name="midterm21" class="form-control" type="text" required></td>
+                                        <td><input name="midterm22" class="form-control" type="text" required></td>
+                                    </tr>
+
+                                    <tr>
+                                        <!--                                        <td><input name="code0" class="form-control" type="text" required></td>-->
+                                        <td><input name="course3" class="form-control" list="coursesList" id="exampleDataList" placeholder="Type to search...">
+                                            <datalist id="coursesList">
+                                                {{#each courses}}
+                                                <option name="{{this._id}}" value="{{this.name}}">
+                                                {{/each}}
+                                            </datalist></td>
+                                        <td><input name="absPer3" class="form-control" type="text" required ></td>
+                                        <td><input name="otherMarks3" class="form-control" type="text" required></td>
+                                        <td><input name="midterm31" class="form-control" type="text" required></td>
+                                        <td><input name="midterm32" class="form-control" type="text" required></td>
+                                    </tr>
+
+                                    <tr>
+                                        <!--                                        <td><input name="code0" class="form-control" type="text" required></td>-->
+                                        <td><input name="course4" class="form-control" list="coursesList" id="exampleDataList" placeholder="Type to search...">
+                                            <datalist id="coursesList">
+                                                {{#each courses}}
+                                                <option name="{{this._id}}" value="{{this.name}}">
+                                                {{/each}}
+                                            </datalist></td>
+                                        <td><input name="absPer4" class="form-control" type="text" required ></td>
+                                        <td><input name="otherMarks4" class="form-control" type="text" required></td>
+                                        <td><input name="midterm41" class="form-control" type="text" required></td>
+                                        <td><input name="midterm42" class="form-control" type="text" required></td>
+                                    </tr>
+
+                                    <tr>
+                                        <!--                                        <td><input name="code0" class="form-control" type="text" required></td>-->
+                                        <td><input name="course5" class="form-control" list="coursesList" id="exampleDataList" placeholder="Type to search...">
+                                            <datalist id="coursesList">
+                                                {{#each courses}}
+                                                <option name="{{this._id}}" value="{{this.name}}">
+                                                {{/each}}
+                                            </datalist></td>
+                                        <td><input name="absPer5" class="form-control" type="text" required ></td>
+                                        <td><input name="otherMarks5" class="form-control" type="text" required></td>
+                                        <td><input name="midterm51" class="form-control" type="text" required></td>
+                                        <td><input name="midterm52" class="form-control" type="text" required></td>
+                                    </tr>
+
+                                    <tr>
+                                        <!--                                        <td><input name="code0" class="form-control" type="text" required></td>-->
+                                        <td><input name="course6" class="form-control" list="coursesList" id="exampleDataList" placeholder="Type to search...">
+                                            <datalist id="coursesList">
+                                                {{#each courses}}
+                                                <option name="{{this._id}}" value="{{this.name}}">
+                                                {{/each}}
+                                            </datalist></td>
+                                        <td><input name="absPer6" class="form-control" type="text" required ></td>
+                                        <td><input name="otherMarks6" class="form-control" type="text" required></td>
+                                        <td><input name="midterm61" class="form-control" type="text" required></td>
+                                        <td><input name="midterm62" class="form-control" type="text" required></td>
+                                    </tr>
+
+                                    <tr>
+                                        <!--                                        <td><input name="code0" class="form-control" type="text" required></td>-->
+                                        <td><input name="course7" class="form-control" list="coursesList" id="exampleDataList" placeholder="Type to search...">
+                                            <datalist id="coursesList">
+                                                {{#each courses}}
+                                                <option name="{{this._id}}" value="{{this.name}}">
+                                                {{/each}}
+                                            </datalist></td>
+                                        <td><input name="absPer7" class="form-control" type="text" required ></td>
+                                        <td><input name="otherMarks7" class="form-control" type="text" required></td>
+                                        <td><input name="midterm71" class="form-control" type="text" required></td>
+                                        <td><input name="midterm72" class="form-control" type="text" required></td>
+                                    </tr>
+
+                                    <tr>
+                                        <!--                                        <td><input name="code0" class="form-control" type="text" required></td>-->
+                                        <td><input name="course8" class="form-control" list="coursesList" id="exampleDataList" placeholder="Type to search...">
+                                            <datalist id="coursesList">
+                                                {{#each courses}}
+                                                <option name="{{this._id}}" value="{{this.name}}">
+                                                {{/each}}
+                                            </datalist></td>
+                                        <td><input name="absPer8" class="form-control" type="text" required ></td>
+                                        <td><input name="otherMarks8" class="form-control" type="text" required></td>
+                                        <td><input name="midterm81" class="form-control" type="text" required></td>
+                                        <td><input name="midterm82" class="form-control" type="text" required></td>
+                                    </tr>
+
+
+
+                                    </tbody>
+
+                                </table>
+                                <div>
+<!--                                    <button name="btn" id="btn" class="btn btn-primary" type="button" onclick="add()" >add</button>-->
+                                    <button name="btn" id="removeBtn" class="btn btn-primary" type="button" onclick="remove()"  >remove row</button>
+                                </div>
+
+                                <div class="row">
+                                    <div class="row">
+                                        <div class="col-3"></div>
+                                        <button class="btn btn-primary col-3" type="submit" name="stuUpdateBtn" >update</button>
+                                        <button class="btn btn-secondary col-3" type="button" name="cancel" onclick="location.href='/student/studentProfile'" >cancel</button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>                  
+    </div>
+    </div>
+
+
+
+
+
+
+<script type="text/javascript">
+
+    let table = document.getElementById('infoTable');
+    let dynamicId = table.tBodies[0].rows.length -1;
+    // let dynamicQuiz = $("#infoTable").children('tbody').children('tr').children('td').length - 1;
+    let dynamicQuiz = 1;
+    function add(){
+        $("#infoTable tr:last-child").after(''+
+                '<tr>' +
+                ' <td><input id="courseName" name="courseName" class="form-control" type="text" required ></td>' +
+                ' <td><input id="courseName" name="courseName" class="form-control" type="text" required ></td>'+
+                '<td><input id="section"  name="section" class="form-control" type="text" required ></td>'+
+                '<td><input id="lecturer" name="lecturer" class="form-control" type="text" required ></td>'+
+                ' </tr>')
+        for(let i=0;i<dynamicQuiz -3;i++){
+            $("#infoTable tr:last-child td:last-child").after(''+
+                    '<td><input id="lecturer" name="lecturer" class="form-control" type="text" required ></td>')
+        }
+
+        $('#code').attr('name', 'code' + dynamicId).attr('id', 'code' + dynamicId)
+        $('#courseName').attr('name', 'courseName' + dynamicId).attr('id', 'courseName' + dynamicId)
+        $('#section').attr('name', 'section' + dynamicId).attr('id', 'section' + dynamicId)
+        $('#lecturer').attr('name', 'lecturer' + dynamicId).attr('id', 'lecturer' + dynamicId)
+        dynamicId++
+        if (dynamicId > 9){
+            $('#btn').prop('disabled', true);
+        }
+        if (dynamicId > 0)
+            $('#removeBtn').prop('disabled', false);
+    }
+    function remove(){
+        if (dynamicId < 2)
+            $('#removeBtn').prop('disabled', true);
+        else if (dynamicId > 9){
+            $('#btn').prop('disabled', false);
+        }
+        $('#infoTable tr:last-child').remove();
+        dynamicId--
+    }
+
+
+    // console.log(dynamicQuiz)
+    // function addQuiz() {
+    //     $("#infoTable th:last-child").after('' +
+    //             '<th> Quiz/HW </th>')
+    //     $("#infoTable td:last-child").after(`` +
+    //             `<td> <input class="form-control" id='quizHw${dynamicId}' type="text" required > </td>`)
+    //     // $('#quizHW').attr('name', 'quizHW' + dynamicQuiz).attr('id', 'quizHW' + dynamicQuiz)
+    //     // $('#courseName').attr('name', 'courseName' + dynamicId).attr('id', 'courseName' + dynamicId)
+    //     // $('#section').attr('name', 'section' + dynamicId).attr('id', 'section' + dynamicId)
+    //     // $('#lecturer').attr('name', 'lecturer' + dynamicId).attr('id', 'lecturer' + dynamicId)
+    //
+    //     dynamicQuiz++
+    //
+    //     if (dynamicQuiz > 4) {
+    //         $('#addQ').prop('disabled', true);
+    //     }
+    //     if (dynamicQuiz > 1)
+    //         $('#removeQ').prop('disabled', false);
+    // }
+
+    function removeQuiz(){
+        if (dynamicQuiz < 2)
+            $('#removeQ').prop('disabled', true);
+        else if (dynamicQuiz > 0){
+            $('#addQ').prop('disabled', false);
+        }
+        $('#infoTable td:last-child').remove();
+        $('#infoTable th:last-child').remove();
+        dynamicQuiz--
+    }
+
+
+
+
+</script>
+
