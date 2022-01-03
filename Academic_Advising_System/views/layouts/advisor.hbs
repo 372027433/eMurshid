@@ -22,83 +22,279 @@
     <!-- header  -->
     {{> header }}
     <!-- /header  -->
-    <div class="content-container">
+      <div  class="content-container">
 
-      <nav class="navigation">
-        {{!-- <div class="toggle-bar">
-          <button type="button" id="toggle-btn" class="toggle-btn btn dn">
-            <!-- need to review how to embed SVG image -->
-            <img src="/assets/img/toggle-btn-26.svg" alt="toggle btn" />
-          </button>
-        </div> --}}
-        <div class="nav-body">
-          <div class="brown-img">
-            {{!-- <button type="button" class="btn">
-              <img src="/assets/img/close-button.svg" height="20px" class="close-nav" alt="close navigation button" />
-            </button> --}}
-          </div>
-          <div class="nav-links">
-            <ul>
-                <li onclick="location.href='/advisor/personalProfile';" >
-                    <span class="trn">personal profile</span>
-              </li>
-                <li onclick="location.href='/advisor/myStudents';" >
-                    <span class="trn">my students</span>
-              </li>
-                <li onclick="location.href='/advisor/requestReports';" >
-                    <span class="trn">request reports from students</span>
-              </li>
-<!--                persentage absence report-->
-<!--              <li>-->
-<!--                <a href="#"><span class="trn">request marks and results report</span></a>-->
-<!--              </li>-->
-                <li onclick="location.href='/advisor/officeHours';" >
-                    <span class="trn">update Office Hours</span>
-              </li>
-                <li onclick="location.href='/advisor/appointments';" >
-                    <span class="trn">mange appointments</span>
-              </li>
-                <li onclick="location.href='/advisor/messageStudents';" >
-                    <span class="trn">message students</span>
-              </li>
-                <li onclick="location.href='/advisor/findMessage';" >
-                    <span class="trn">search for a message</span>
-              </li>
-                <li onclick="location.href='/advisor/issueComplaint';" >
-                    <span class="trn">issue a complaint to academic advising unit</span>
-              </li>
-                <li onclick="location.href='/advisor/resolveExcuses';" >
-                    <span class="trn">resolve Excuses</span>
-              </li> 
-                <li onclick="location.href='/advisor/advisorshowTheResultOfComplain';" >
-                    <span class="trn">Show solved complaint</span>
-              </li> 
-            </ul>
-          </div>
-        </div>
-      </nav>
+       <div  id="sidebarshort">
+             <div class="d-flex flex-column flex-shrink-0 bg-light" style="width: 4.5rem;">
+               <a onclick="openNav()" >   <img class="bi me-2" style= "" width="25" height="25"  src="/assets/img/toggle-btn.svg" alt="#"></a>      
+     
+                </a>
+                <hr>
+                <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+                  <li class="nav-item">
+                      <a href="/advisor" class="nav-link py-3 border-bottom" title="Home" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/home.png" alt="#">
+                    </a>
+                  </li>
+                    <li class="nav-item">
+                      <a href="/advisor/personalProfile" class="nav-link py-3 border-bottom" title="personal Profile" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="personal Profile" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/user.png" alt="#">
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                    <a href="/advisor/myStudents" class="nav-link py-3 border-bottom" title="my Students" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="my Students" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/students.png" alt="#">
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                    <a href="/advisor/requestReports" class="nav-link py-3 border-bottom" title="request Reports" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="request Reports" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/contract.png" alt="#">
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/advisor/officeHours" class="nav-link py-3 border-bottom" title="office Hours" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="office Hours" >
+                        <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/work.png" alt="#">
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/advisor/appointments" class="nav-link py-3 border-bottom" title="appointments" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="appointments" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/calendar.png" alt="#">
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/advisor/messageStudents" class="nav-link py-3 border-bottom" title="message Students" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="messageStudents" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/send.png" alt="#">
+                    </a>
+                  </li>
+                          <li class="nav-item">
+                    <a href="/advisor/findMessage" class="nav-link py-3 border-bottom" title="find Message" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="find Message" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/email.png" alt="#">
+                    </a>
+                  </li>
+                          <li class="nav-item">
+                    <a href="/advisor/issueComplaint" class="nav-link py-3 border-bottom" title="issue Complaint" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="issue Complaint" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/dissatisfaction.png" alt="#">
+                    </a>
+                  </li>
+                          <li class="nav-item">
+                    <a href="/advisor/resolveExcuses" class="nav-link py-3 border-bottom" title="resolve Excuses" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="messageStudents" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/addStudent.png" alt="#">
+                    </a>
+                  </li>
+                          <li class="nav-item">
+                    <a href="/advisor/advisorshowTheResultOfComplain" class="nav-link py-3 border-bottom" title="show The Result Of Complain" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="show The Result Of Complain" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/presentation.png" alt="#">
+                    </a>
+                  </li>
+                </ul>
+                <hr>
+                    <div class="dropdown">
+                      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="/assets/img/profile.png" alt="*" class="rounded-circle me-2" width="32" height="32">
+                        </a>
+                      <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                        <li><a class="dropdown-item" id="translateBtn" onclick="toggleLang()" ><span class="trn">عربي</span></a></li>
+                              <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" onclick="logout()"><span class="trn">Sign out</span></a></li>
+                      </ul>
+                    </div>
+                </div>
 
-      {{!-- all the code from under here should change --}}
+            </div>
+
+
+               <div id="sidebarlong" style="display: none; ">
+              <nav class="navigation">
+                {{!-- <div class="toggle-bar">
+                  <button type="button" id="toggle-btn" class="toggle-btn btn dn">
+                    <!-- need to review how to embed SVG image -->
+                    <img src="/assets/img/toggle-btn-26.svg" alt="toggle btn" />
+                  </button>
+                </div> --}}
+                <div class="">
+                  {{!-- <button id="OpenSidebar" class="openbtn" onclick="openNav()">&#9776; Open Sidebar</button> --}}
+                  {{!-- <div class="brown-img"> --}}
+                    {{!-- <button type="button" class="btn">
+                      <img src="/assets/img/close-button.svg" height="20px" class="close-nav" alt="close navigation button" />
+                    </button> --}}
+                  {{!-- </div> --}}
+
+                  <div  class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;hight: 100%;">
+                    <span class="fs-4">
+                    <a href="javascript:void(0)" id="closebtnforsidebar" onclick="closeNav()" class="nav-link link-dark ">  <img class="bi me-2" href="javascript:void(0)"   style= "" width="50" height="50" src="/assets/img/cancel.png" alt="#"></span>
+                    </a>     
+                    <hr class="dropdown-divider">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                      <li class="nav-item">
+                          <a href="/advisor" class="nav-link link-dark " >
+                          <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/home.png" alt="#">
+                            <span class="trn">Home</span>
+                        </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/advisor/personalProfile" class="nav-link link-dark " >
+                            <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/user.png" alt="#">
+                            <span class="trn">personal profile</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/advisor/myStudents" class="nav-link link-dark " >
+                            <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/argument.png" alt="#">
+                            <span class="trn">my students</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/advisor/requestReports" class="nav-link link-dark">
+                            <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/contract.png" alt="#">
+                            <span class="trn">request reports from students</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/advisor/officeHours" class="nav-link link-dark">
+                            <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/work.png" alt="#">
+                            <span class="trn">update Office Hours</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/advisor/appointments" class="nav-link link-dark">
+                            <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/calendar.png" alt="#">
+                            <span class="trn">mange appointments</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                        <a href="/advisor/messageStudents" class="nav-link link-dark">
+                          <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/send.png" alt="#">
+                          <span class="trn">message students</span>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/advisor/findMessage" class="nav-link link-dark">
+                          <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/email.png" alt="#">
+                          <span class="trn">search for a message</span>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/advisor/issueComplaint" class="nav-link link-dark">
+                          <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/dissatisfaction.png" alt="#">
+                          <span class="trn">issue a complaint to academic advising unit</span>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/advisor/resolveExcuses" class="nav-link link-dark">
+                          <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/addStudent.png" alt="#">
+                          <span class="trn">resolve Excuses</span>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/advisor/advisorshowTheResultOfComplain" class="nav-link link-dark">
+                          <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/presentation.png" alt="#">
+                          <span class="trn">Show solved complaint</span>
+                        </a>
+                      </li>
+                        
+                    </ul>
+                    <hr>
+                    <div class="dropdown">
+                      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="/assets/img/profile.png" alt="" class="rounded-circle me-2" width="32" height="32">
+                        <strong>{{userName}}</strong>
+                      </a>
+                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                          <li><a class="dropdown-item" id="translateBtn" onclick="toggleLang()" ><span class="trn">عربي</span></a></li>
+                                <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" onclick="logout()"><span class="trn">Sign out</span></a></li>
+                      </ul>
+                    </div>
+                </div>
+              </nav>
+
+
+            {{!-- <div class="nav-links">
+              <ul>
+                <li onclick="location.href='/student/studentProfile';" >
+                    <span class="trn">personal file</span>
+                </li>
+                <li onclick="location.href='/student/contactAdvisor';">
+                    <span class="trn">contact my advisor</span>
+                </li>
+                <li onclick="location.href='/student/studentMessages';">
+                    <span class="trn">my messages</span>
+                </li>
+                <li onclick="location.href='/student/bookAnAppointment';">
+                    <span class="trn">book an appointment with advisor</span>
+                </li>
+                <li onclick="location.href='/student/updateMarks';">
+                    <span class="trn">update marks</span>
+                </li>
+
+                <li onclick="location.href='/student/updateAbsence';">
+                    <span class="trn">update absence percentage</span>
+                </li>
+                <li onclick="location.href='/student/newComplaint';">
+
+                   <span class="trn">issue a complaint to academic advising unit</span>
+                    <!--                    must add follow up -->
+                </li>
+                  <li  onclick="$('#excusesDropDownMenu').toggle()">
+                      <span  class="trn" >Excuses</span>
+                      <span>
+                          <i class="arrow down"></i>
+                      </span>
+                          <ul style="background: #1e506c" class="" id="excusesDropDownMenu" aria-labelledby="dropdownMenuLink" >
+                              <li class="cusDropDownItem" onclick="location.href='/student/newAbsenceExcuse'" ><span class="trn">Submit Absence Excuse</span></li>
+                              <li class="cusDropDownItem" onclick="location.href='/student/newExamExcuse'" ><span class="trn">Submit Make-up Exam Excuse</span></li>
+                              <li class="cusDropDownItem" onclick="location.href='/student/showExcuses'" > <span class="trn">Show Submitted Excuses Status</span></li>
+                          </ul>
+                  </li>
+              </ul>
+            </div> --}}
+          </div>
+        </nav>
+
+        {{!-- all the code from under here should change --}}
 
         {{{body}}}
+      </div>
+        {{!-- until here should we change the things --}}
+      </div>
 
-      {{!-- until here should we change the things --}}
+      {{!-- The footer should be once in all pages --}}
+
+      <!-- /footer  -->
+      {{> footer }}
+      <!-- /footer  -->
 
     </div>
 
-    {{!-- The footer should be once in all pages --}}
+    <!-- scripts at the bottom to reduce load time -->
+    {{> pageScripts}}
+    {{!-- ====================================================== --}}
+  </body>
+
+  <script>
+    let w = window.innerWidth;
     
-    <!-- /footer  -->
-      {{> footer }}
-    <!-- /footer  -->
+    function openNav() {
+      console.log("open my love")
+      document.getElementById("sidebarlong").style.display = "block";
+      document.getElementById("sidebarshort").style.display = "none";
+      if(w<900){
+        document.getElementById("main-content").style.display = "none";  
+      }
+        
+    }
 
-  </div>
-
-  <!-- scripts at the bottom to reduce load time -->
-  {{> pageScripts}}
- 
-
-  {{!-- ====================================================== --}}
-</body>
+    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+    function closeNav() {
+      console.log("close my love")
+        document.getElementById("sidebarlong").style.display = "none";
+        document.getElementById("sidebarshort").style.display = "block";
+         if(w<900){
+        document.getElementById("main-content").style.display = "block";  
+      }
+      
+    }
+      
+  </script>
 
 </html>

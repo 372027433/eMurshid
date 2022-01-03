@@ -301,11 +301,16 @@
   </body>
 
   <script>
+    let w = window.innerWidth;
+    
     function openNav() {
       console.log("open my love")
       document.getElementById("sidebarlong").style.display = "block";
-        document.getElementById("sidebarshort").style.display = "none";
-    
+      document.getElementById("sidebarshort").style.display = "none";
+      if(w<900){
+        document.getElementById("main-content").style.display = "none";  
+      }
+        
     }
 
     /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
@@ -313,6 +318,10 @@
       console.log("close my love")
         document.getElementById("sidebarlong").style.display = "none";
         document.getElementById("sidebarshort").style.display = "block";
+         if(w<900){
+        document.getElementById("main-content").style.display = "block";  
+      }
+      
     }
       
   </script>

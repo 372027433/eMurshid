@@ -23,46 +23,137 @@
     <!-- /header  -->
 
     <div class="content-container">
-      
-      <nav class="navigation">
-        {{!-- <div class="toggle-bar">
-          <button type="button" id="toggle-btn" class="toggle-btn btn dn">
-            <!-- need to review how to embed SVG image -->
-            <img src="/assets/img/toggle-btn-26.svg" alt="toggle btn" />
-          </button>
-        </div> --}}
-        <div class="nav-body">
-          <div class="brown-img">
-            {{!-- <button type="button" class="btn">
-              <img src="/assets/img/close-button.svg" height="20px" class="close-nav" alt="close navigation button" />
-            </button> --}}
-          </div>
-          <div class="nav-links">
-            <ul>
-                <li onclick="location.href='/dean/resolvedExcuses';" >
-                    <span class="trn">resolved excuses</span>
-              </li>
-                <li onclick="location.href='/dean/pendingExcuses';" >
-                    <span class="trn">pending students excuses</span>
-              </li>
-                <li onclick="location.href='/dean/complaints';" >
-                    <span class="trn">complaints</span>
-              </li>
-<!--              <li>-->
-<!--                <a href="#"><span class="trn">resolve problems between students and advisors</span></a>-->
-<!--              </li>-->
-                <li onclick="location.href='/dean/registeredStudents';" >
-                   <span class="trn">registered collage students</span>
 
-                </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+
+            <div style="height: 100%;" id="sidebarshort">
+             <div class="d-flex flex-column flex-shrink-0 bg-light" style="width: 4.5rem;">
+               <a onclick="openNav()" >   <img class="bi me-2" style= "" width="25" height="25"  src="/assets/img/toggle-btn.svg" alt="#"></a>      
+     
+                </a>
+                <hr>
+                <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+                  <li class="nav-item">
+                      <a href="/dean" class="nav-link py-3 border-bottom" title="Home" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/home.png" alt="#">
+                    </a>
+                  </li>
+                   
+                    <li class="nav-item">
+                    <a href="/dean/resolvedExcuses" class="nav-link py-3 border-bottom" title="resolve Excuses" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="resolve Excuses" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/argument.png" alt="#">
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                    <a href="/dean/pendingExcuses" class="nav-link py-3 border-bottom" title="pending Excuses" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="pending Excuses" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/dissatisfaction.png" alt="#">
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/dean/complaints" class="nav-link py-3 border-bottom" title="complaints" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="complaints" >
+                        <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/addStudent.png" alt="#">
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/dean/registeredStudents" class="nav-link py-3 border-bottom" title="registeredStudents" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="registered Students" >
+                      <img class="bi me-2" style= "" width="30" height="30" src="/assets/img/assign students to advisors.png" alt="#">
+                    </a>
+                  </li>
+                </ul>
+                <hr>
+                    <div class="dropdown">
+                      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="/assets/img/profile.png" alt="*" class="rounded-circle me-2" width="32" height="32">
+                        </a>
+                      <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                        <li><a class="dropdown-item" id="translateBtn" onclick="toggleLang()" ><span class="trn">عربي</span></a></li>
+                              <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" onclick="logout()"><span class="trn">Sign out</span></a></li>
+                      </ul>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div id="sidebarlong" style="display: none; ">
+              <nav class="navigation">
+                {{!-- <div class="toggle-bar">
+                  <button type="button" id="toggle-btn" class="toggle-btn btn dn">
+                    <!-- need to review how to embed SVG image -->
+                    <img src="/assets/img/toggle-btn-26.svg" alt="toggle btn" />
+                  </button>
+                </div> --}}
+                <div class="">
+                  {{!-- <button id="OpenSidebar" class="openbtn" onclick="openNav()">&#9776; Open Sidebar</button> --}}
+                  {{!-- <div class="brown-img"> --}}
+                    {{!-- <button type="button" class="btn">
+                      <img src="/assets/img/close-button.svg" height="20px" class="close-nav" alt="close navigation button" />
+                    </button> --}}
+                  {{!-- </div> --}}
+
+                  <div  class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;hight: 100%;">
+                    <span class="fs-4">
+                    <a href="javascript:void(0)" id="closebtnforsidebar" onclick="closeNav()" class="nav-link link-dark ">  <img class="bi me-2" href="javascript:void(0)"   style= "" width="50" height="50" src="/assets/img/cancel.png" alt="#"></span>
+                    </a>     
+                    <hr class="dropdown-divider">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                      <li class="nav-item">
+                          <a href="/dean" class="nav-link link-dark " >
+                          <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/home.png" alt="#">
+                            <span class="trn">Home</span>
+                        </a>
+                        </li>
+                       
+                        <li class="nav-item">
+                          <a href="/dean/resolvedExcuses" class="nav-link link-dark " >
+                            <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/argument.png" alt="#">
+                            <span class="trn">resolved excuses</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/dean/pendingExcuses" class="nav-link link-dark">
+                            <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/dissatisfaction.png" alt="#">
+                            <span class="trn">pending students excuses</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/dean/complaints" class="nav-link link-dark">
+                            <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/addStudent.png" alt="#">
+                             <span class="trn">complaints</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                        <a href="/dean/registeredStudents" class="nav-link link-dark">
+                          <img class="bi me-2" style= "" width="20" height="20" src="/assets/img/assign students to advisors.png" alt="#">
+                          <span class="trn">registered collage students</span>
+                        </a>
+                      </li>
+                        
+                    </ul>
+                    <hr>
+                    <div class="dropdown">
+                      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="/assets/img/profile.png" alt="" class="rounded-circle me-2" width="32" height="32">
+                        <strong>{{userName}}</strong>
+                      </a>
+                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                          <li><a class="dropdown-item" id="translateBtn" onclick="toggleLang()" ><span class="trn">عربي</span></a></li>
+                                <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" onclick="logout()"><span class="trn">Sign out</span></a></li>
+                      </ul>
+                    </div>
+                </div>
+              </nav>
+            </div>
+             {{{body}}}
+    </div>
+
+
+   
 
       {{!-- all the code from under here should change --}}
 
-        {{{body}}}
+       
 
       {{!-- until here should we change the things --}}
       
@@ -78,7 +169,31 @@
 
   <!-- scripts at the bottom to reduce load time -->
   {{> pageScripts}}
+  <script>
+    let w = window.innerWidth;
+    
+    function openNav() {
+      console.log("open my love")
+      document.getElementById("sidebarlong").style.display = "block";
+      document.getElementById("sidebarshort").style.display = "none";
+      if(w<900){
+        document.getElementById("main-content").style.display = "none";  
+      }
+        
+    }
 
+    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+    function closeNav() {
+      console.log("close my love")
+        document.getElementById("sidebarlong").style.display = "none";
+        document.getElementById("sidebarshort").style.display = "block";
+         if(w<900){
+        document.getElementById("main-content").style.display = "block";  
+      }
+      
+    }
+      
+  </script>
   {{!-- ====================================================== --}}
 </body>
 

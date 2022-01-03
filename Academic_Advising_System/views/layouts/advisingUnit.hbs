@@ -22,10 +22,9 @@
       <!-- header  -->
       {{> header }}
       <!-- /header  -->
-      <div class="content-container">
+      <div  class="content-container">
 
-        
-        <div style="height: 100%;" id="sidebarshort">
+       <div style="height: 100%;" id="sidebarshort">
              <div class="d-flex flex-column flex-shrink-0 bg-light" style="width: 4.5rem;">
                <a onclick="openNav()" >   <img class="bi me-2" style= "" width="25" height="25"  src="/assets/img/toggle-btn.svg" alt="#"></a>      
      
@@ -106,8 +105,7 @@
 
             </div>
 
-
-            <div id="sidebarlong" style="display: none; ">
+               <div id="sidebarlong" style="display: none; ">
               <nav class="navigation">
                 {{!-- <div class="toggle-bar">
                   <button type="button" id="toggle-btn" class="toggle-btn btn dn">
@@ -210,42 +208,99 @@
                       </ul>
                     </div>
                 </div>
+                </div>
               </nav>
-            </div>
+               </div>
+               {{{body}}}
+      </div>
+
+            {{!-- <div class="nav-links">
+              <ul>
+                <li onclick="location.href='/student/studentProfile';" >
+                    <span class="trn">personal file</span>
+                </li>
+                <li onclick="location.href='/student/contactAdvisor';">
+                    <span class="trn">contact my advisor</span>
+                </li>
+                <li onclick="location.href='/student/studentMessages';">
+                    <span class="trn">my messages</span>
+                </li>
+                <li onclick="location.href='/student/bookAnAppointment';">
+                    <span class="trn">book an appointment with advisor</span>
+                </li>
+                <li onclick="location.href='/student/updateMarks';">
+                    <span class="trn">update marks</span>
+                </li>
+
+                <li onclick="location.href='/student/updateAbsence';">
+                    <span class="trn">update absence percentage</span>
+                </li>
+                <li onclick="location.href='/student/newComplaint';">
+
+                   <span class="trn">issue a complaint to academic advising unit</span>
+                    <!--                    must add follow up -->
+                </li>
+                  <li  onclick="$('#excusesDropDownMenu').toggle()">
+                      <span  class="trn" >Excuses</span>
+                      <span>
+                          <i class="arrow down"></i>
+                      </span>
+                          <ul style="background: #1e506c" class="" id="excusesDropDownMenu" aria-labelledby="dropdownMenuLink" >
+                              <li class="cusDropDownItem" onclick="location.href='/student/newAbsenceExcuse'" ><span class="trn">Submit Absence Excuse</span></li>
+                              <li class="cusDropDownItem" onclick="location.href='/student/newExamExcuse'" ><span class="trn">Submit Make-up Exam Excuse</span></li>
+                              <li class="cusDropDownItem" onclick="location.href='/student/showExcuses'" > <span class="trn">Show Submitted Excuses Status</span></li>
+                          </ul>
+                  </li>
+              </ul>
+            </div> --}}
+          {{!-- </div>
+        </nav> --}}
+
         {{!-- all the code from under here should change --}}
 
-          {{{body}}}
+        
 
         {{!-- until here should we change the things --}}
       </div>
 
-    {{!-- The footer should be once in all pages  --}}
+      {{!-- The footer should be once in all pages --}}
 
-    <!-- /footer  -->
+      <!-- /footer  -->
       {{> footer }}
-    <!-- /footer  -->
-    
+      <!-- /footer  -->
+
     </div>
 
     <!-- scripts at the bottom to reduce load time -->
     {{> pageScripts}}
-      <script>
-        function openNav() {
-          console.log("open my love")
-          document.getElementById("sidebarlong").style.display = "block";
-            document.getElementById("sidebarshort").style.display = "none";
-        
-        }
-
-        /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-        function closeNav() {
-          console.log("close my love")
-            document.getElementById("sidebarlong").style.display = "none";
-            document.getElementById("sidebarshort").style.display = "block";
-        }
-      
-      </script>
-
     {{!-- ====================================================== --}}
   </body>
+
+  <script>
+    let w = window.innerWidth;
+    
+    function openNav() {
+      console.log("open my love")
+      document.getElementById("sidebarlong").style.display = "block";
+      document.getElementById("sidebarshort").style.display = "none";
+      if(w<900){
+        document.getElementById("main-content").style.display = "none";  
+      }
+        
+    }
+
+    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+    function closeNav() {
+      console.log("close my love")
+        document.getElementById("sidebarlong").style.display = "none";
+        document.getElementById("sidebarshort").style.display = "block";
+         if(w<900){
+        document.getElementById("main-content").style.display = "block";  
+      }
+      
+    }
+      
+  </script>
+
+
 </html>
