@@ -610,7 +610,8 @@ exports.renderUpdateAbsence = async (req, res) => {
 exports.renderNewComplaint = async (req, res) => {
     let thedatenow = new Date();
 
-    const student = await Students.findById(res.user.userId).select("-password").populate('major').exec();
+    const student = await Students.findById(res.user.userId).select("-password").populate('major');
+    console.log("🚀 ~ file: student.controller.js ~ line 614 ~ exports.renderNewComplaint= ~ student", student)
     const stuName = student.name;
     const stuId = student.id;
     const major = student.major.name;

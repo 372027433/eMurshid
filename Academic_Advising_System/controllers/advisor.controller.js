@@ -102,7 +102,6 @@ exports.renderOfficeHours = async (req, res) => {
         advisorTimes.thursday.time_slots.forEach((time,index) => { let obj = {}; obj['from'] = time.from; obj['to'] = time.to; obj['id'] = index; thursday.push(obj); })
    
         res.render('advisorPages/advisorOfficeHours', {
-            userName : Ustaff.name,
             layout: 'advisor',
             sunday,
             monday,
@@ -212,7 +211,7 @@ exports.renderIssueComplaint = async (req, res) => {
         email : advisor.email,
         role : advisor.role
     }
-    console.log(advisorinfo)
+
     res.render('advisorPages/advisorIssueComplaint', {
         advisorifo : advisorinfo,
         advname: advname,
