@@ -53,7 +53,7 @@ advisorRouter.post("/compl" ,
 ]
 , controller.submitcomp);
 
-
+advisorRouter.get('/SolvingComplains/proof/:key',controller.renderGetProof);
 
 
 

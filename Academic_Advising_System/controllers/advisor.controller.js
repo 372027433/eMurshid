@@ -94,7 +94,7 @@ exports.renderRequestReports = async (req, res) => {
 exports.renderOfficeHours = async (req, res) => {
     try {
         let advisorTimes = await AdvisorTimes.findOne({advisor: res.user.userId}).select('-advisor');
-        
+
         if(!advisorTimes){
             return res.render('advisorPages/advisorOfficeHours', {
                 layout: 'advisor',
@@ -527,7 +527,11 @@ exports.submitcomp = async (req, res) => {
     
 }
 
-
+exports.renderGetProof = async (req, res) => {
+  let key = req.params.key
+  const readStream = await getFileStream(key)
+  await readStream.pipe(res)
+}
 exports.renderadvisorshowTheResultOfComplain = async (req, res) => {
     const Ustaff = await Staff.findById(res.user.userId).select("-password").exec();
           
